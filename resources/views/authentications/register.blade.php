@@ -18,7 +18,9 @@
         <!-- Logo -->
         <div class="app-brand justify-content-center mt-5">
           <a href="{{url('/')}}" class="app-brand-link gap-2">
-            <span class="app-brand-logo demo">@include('_partials.macros',["height"=>20])</span>
+            <span class="app-brand-logo demo">
+            <img src="{{asset('assets/img/logo/wings.png')}}" alt="auth-tree" height="40">
+            </span>
             <span class="app-brand-text demo text-heading fw-semibold">Personal Assessement</span>
           </a>
         </div>

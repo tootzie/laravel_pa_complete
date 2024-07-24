@@ -18,7 +18,7 @@ $navbarDetached = ($navbarDetached ?? '');
       <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
         <a href="{{url('/')}}" class="app-brand-link gap-2">
           <span class="app-brand-logo demo">
-            @include('_partials.macros',["height"=>20])
+            <img src="{{asset('assets/img/logo/wings.png')}}" alt="auth-tree" height="40">
           </span>
           <span class="app-brand-text demo menu-text fw-semibold ms-1">{{config('variables.templateName')}}</span>
         </a>
@@ -39,19 +39,19 @@ $navbarDetached = ($navbarDetached ?? '');
 
       <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <!-- Search -->
-        <div class="navbar-nav align-items-center">
+        <!-- <div class="navbar-nav align-items-center">
           <div class="nav-item d-flex align-items-center">
             <i class="mdi mdi-magnify mdi-24px lh-0"></i>
             <input type="text" class="form-control border-0 shadow-none bg-body" placeholder="Search..." aria-label="Search...">
           </div>
-        </div>
+        </div> -->
         <!-- /Search -->
         <ul class="navbar-nav flex-row align-items-center ms-auto">
 
           <!-- Place this tag where you want the button to render. -->
-          <li class="nav-item lh-1 me-3">
+          <!-- <li class="nav-item lh-1 me-3">
             <a class="github-button" href="https://github.com/themeselection/materio-bootstrap-html-laravel-admin-template-free" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star themeselection/materio-bootstrap-html-laravel-admin-template-free on GitHub">Star</a>
-          </li>
+          </li> -->
 
           <!-- User -->
           <li class="nav-item navbar-dropdown dropdown-user dropdown">
@@ -70,8 +70,8 @@ $navbarDetached = ($navbarDetached ?? '');
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <h6 class="mb-0">John Doe</h6>
-                      <small class="text-muted">Admin</small>
+                      <h6 class="mb-0">{{ auth()->user()->name }}</h6>
+                      <small class="text-muted">PT Wings Surya - HRD</small>
                     </div>
                   </div>
                 </a>
@@ -85,13 +85,13 @@ $navbarDetached = ($navbarDetached ?? '');
                   <span class="align-middle">My Profile</span>
                 </a>
               </li>
-              <li>
+              <!-- <li>
                 <a class="dropdown-item" href="javascript:void(0);">
                   <i class='mdi mdi-cog-outline me-1 mdi-20px'></i>
                   <span class="align-middle">Settings</span>
                 </a>
-              </li>
-              <li>
+              </li> -->
+              <!-- <li>
                 <a class="dropdown-item" href="javascript:void(0);">
                   <span class="d-flex align-items-center align-middle">
                     <i class="flex-shrink-0 mdi mdi-credit-card-outline me-1 mdi-20px"></i>
@@ -99,14 +99,17 @@ $navbarDetached = ($navbarDetached ?? '');
                     <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
                   </span>
                 </a>
-              </li>
+              </li> -->
               <li>
                 <div class="dropdown-divider my-1"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="javascript:void(0);">
+                <a class="dropdown-item" href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                   <i class='mdi mdi-power me-1 mdi-20px'></i>
                   <span class="align-middle">Log Out</span>
+                  <form id="logout-form" action="{{ route('logout') }}" method="post">
+                    @csrf
+                  </form>
                 </a>
               </li>
             </ul>

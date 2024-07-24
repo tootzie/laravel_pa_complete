@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\PenilaianController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,9 +18,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth'], function() {
-    Route::get('/', function () {
-        return view('welcome');
-    })->name('welcome');
+
+    Route::controller(DashboardController::class)->group(function(){
+        Route::get('/', 'index')->name('dashboard');
+    });
+
+    Route::controller(PenilaianController::class)->group(function(){
+        Route::get('/penilaian', 'index')->name('penilaian');
+    });
 
 });
 
@@ -31,9 +38,8 @@ Route::controller(LoginController::class)->group(function() {
     //REGISTER
     Route::get('/register', 'register')->name('register');
     Route::post('/store', 'store')->name('store');
-    // Route::get('/login', 'login')->name('login');
-    // Route::post('/authenticate', 'authenticate')->name('authenticate');
-    // Route::get('/dashboard', 'dashboard')->name('dashboard');
+
+    //LOGOUT
     Route::post('/logout', 'logout')->name('logout');
 });
 
