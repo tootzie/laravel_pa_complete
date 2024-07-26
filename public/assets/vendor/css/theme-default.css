@@ -164,7 +164,15 @@ button.list-group-item-primary.active {
   color: #9055fd;
   border-color: #c8aafe;
   background: transparent;
+  align-content: start;
 }
+
+.fixed-width-dropdown {
+    min-width: 145px; /* Minimum width for consistency */
+    width: auto; /* Allow the width to adjust based on content */
+    white-space: nowrap;
+}
+
 .btn-outline-primary.waves-effect .waves-ripple {
   background: radial-gradient(rgba(144, 85, 253, 0.2) 0, rgba(144, 85, 253, 0.3) 40%, rgba(144, 85, 253, 0.4) 50%, rgba(144, 85, 253, 0.5) 60%, rgba(255, 255, 255, 0) 70%);
 }

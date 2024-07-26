@@ -185,11 +185,11 @@
   const totalProfitLineChartEl = document.querySelector('#totalProfitLineChart'),
     totalProfitLineChartConfig = {
       chart: {
-        height: 90,
+        height: 200,
         type: 'line',
         parentHeightOffset: 0,
         toolbar: {
-          show: false
+          show: true
         }
       },
       grid: {
@@ -202,35 +202,45 @@
         },
         yaxis: {
           lines: {
-            show: false
+            show: true
           }
         },
         padding: {
           top: -15,
           left: -7,
           right: 9,
-          bottom: -15
+          bottom: 0
         }
       },
-      colors: [config.colors.primary],
+      colors: [config.colors.warning, config.colors.primary],
       stroke: {
-        width: 3
+        width: 3,
+        curve: 'smooth'
       },
       series: [
         {
-          data: [0, 20, 5, 30, 15, 45]
+            name: 'Sebelum Revisi', // Name for the first data series
+            data: [0, 0, 0, 0, 3, 0, 0, 2, 0, 0, 3, 0, 0]
+        },
+        {
+            name: 'Setelah Revisi', // Name for the second data series
+            data: [0, 0, 0, 1, 2, 2, 0, 3, 0, 0, 0, 0, 0]
         }
       ],
       tooltip: {
+        enabled: true,
         shared: false,
-        intersect: true,
-        x: {
-          show: false
+        // intersect: true,
+        y: {
+            formatter: function (val) {
+                return val
+            }
         }
       },
       xaxis: {
+        categories: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'],
         labels: {
-          show: false
+          show: true
         },
         axisTicks: {
           show: false
@@ -240,31 +250,9 @@
         }
       },
       yaxis: {
+        categories: ['0', '2', '4', '6', '8', '10'],
         labels: {
-          show: false
-        }
-      },
-      tooltip: {
-        enabled: false
-      },
-      markers: {
-        size: 6,
-        strokeWidth: 3,
-        strokeColors: 'transparent',
-        strokeWidth: 3,
-        colors: ['transparent'],
-        discrete: [
-          {
-            seriesIndex: 0,
-            dataPointIndex: 5,
-            fillColor: cardColor,
-            strokeColor: config.colors.primary,
-            size: 6,
-            shape: 'circle'
-          }
-        ],
-        hover: {
-          size: 7
+          show: true
         }
       },
       responsive: [
@@ -272,7 +260,7 @@
           breakpoint: 1350,
           options: {
             chart: {
-              height: 80
+              height: 190
             }
           }
         },
@@ -280,7 +268,7 @@
           breakpoint: 1200,
           options: {
             chart: {
-              height: 100
+              height: 210
             }
           }
         },
@@ -288,7 +276,7 @@
           breakpoint: 768,
           options: {
             chart: {
-              height: 110
+              height: 220
             }
           }
         }

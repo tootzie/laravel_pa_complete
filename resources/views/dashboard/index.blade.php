@@ -23,7 +23,7 @@
         <div>
             <label for="tahunDropdown" class="form-label">Tahun</label>
             <div class="btn-group">
-                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">2024</button>
+                <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">2024</button>
                 <ul class="dropdown-menu" id="tahunDropdown">
                 <li><a class="dropdown-item" href="javascript:void(0);">2023</a></li>
                 <li><a class="dropdown-item" href="javascript:void(0);">2022</a></li>
@@ -38,7 +38,7 @@
         <div>
             <label for="periodeDropdown" class="form-label">Periode</label>
             <div class="btn-group">
-                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">1: Jan-Jul</button>
+                <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">1: Jan-Jul</button>
                 <ul class="dropdown-menu" id="periodeDropdown">
                 <li><a class="dropdown-item" href="javascript:void(0);">2: Aug-Des</a></li>
                 </ul>
@@ -57,11 +57,16 @@
     <div class="col-md-12">
         <div class="card h-100">
           <div class="card-header pb-0">
-            <h4 class="mb-0">$86.4k</h4>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Administrasi</button>
+                <ul class="dropdown-menu" id="tahunDropdown">
+                <li><a class="dropdown-item" href="javascript:void(0);">Produksi</a></li>
+                </ul>
+            </div>
           </div>
+          <br>
           <div class="card-body">
             <div id="totalProfitLineChart" class="mb-3"></div>
-            <h6 class="text-center mb-0">Total Profit</h6>
           </div>
         </div>
     </div>
