@@ -2456,6 +2456,12 @@ textarea.form-control-lg {
   border-radius: var(--bs-border-radius-lg);
 }
 
+.form-check-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
 .form-check {
   display: block;
   min-height: 1.378125rem;

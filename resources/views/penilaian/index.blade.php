@@ -114,9 +114,9 @@
                         <td class="text-truncate">Jessica Clarensia</td>
                         <td><span class="badge bg-label-primary rounded-pill">Revisi Head of Dept</span></td>
                         <td>
-                            <button type="button" class="btn btn-icon btn-warning">
+                            <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}">
                                 <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </button>
+                            </a>
                         </td>
                     </tr>
                     <tr>
@@ -136,9 +136,9 @@
                         <td class="text-truncate">-</td>
                         <td><span class="badge bg-label-secondary rounded-pill">Belum Dinilai</span></td>
                         <td>
-                            <button type="button" class="btn btn-icon btn-warning">
+                            <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail') }}">
                                 <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </button>
+                            </a>
                         </td>
                     </tr>
                     <tr>
@@ -180,9 +180,9 @@
                         <td class="text-truncate">Jessica Clarensia</td>
                         <td><span class="badge bg-label-info rounded-pill">Penilaian Awal</span></td>
                         <td>
-                            <button type="button" class="btn btn-icon btn-warning">
+                            <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}">
                                 <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </button>
+                            </a>
                         </td>
                     </tr>
                     <tr>
@@ -224,9 +224,9 @@
                         <td class="text-truncate">-</td>
                         <td><span class="badge bg-label-secondary rounded-pill">Belum Dinilai</span></td>
                         <td>
-                            <button type="button" class="btn btn-icon btn-warning">
+                            <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail') }}">
                                 <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </button>
+                            </a>
                         </td>
                     </tr>
                     <tr>
@@ -268,9 +268,9 @@
                         <td class="text-truncate">Jessica Clarensia</td>
                         <td><span class="badge bg-label-primary rounded-pill">Revisi Head of Dept</span></td>
                         <td>
-                            <button type="button" class="btn btn-icon btn-warning">
+                            <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}">
                                 <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </button>
+                            </a>
                         </td>
                     </tr>
                 </tbody>

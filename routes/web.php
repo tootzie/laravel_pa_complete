@@ -17,20 +17,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => 'auth'], function() {
+Route::group(['middleware' => 'auth'], function () {
 
-    Route::controller(DashboardController::class)->group(function(){
+    Route::controller(DashboardController::class)->group(function () {
         Route::get('/', 'index')->name('dashboard');
     });
 
-    Route::controller(PenilaianController::class)->group(function(){
+    Route::controller(PenilaianController::class)->group(function () {
         Route::get('/penilaian', 'index')->name('penilaian');
+        Route::get('/penilaian/detail', 'penilaian_detail')->name('penilaian-detail');
+        Route::get('/penilaian/detail-awal', 'penilaian_detail_awal')->name('penilaian-detail-awal');
     });
-
 });
 
 //AUTH
-Route::controller(LoginController::class)->group(function() {
+Route::controller(LoginController::class)->group(function () {
     //LOGIN
     Route::get('/login', 'login')->name('login');
     Route::post('/authenticate', 'authenticate')->name('authenticate');

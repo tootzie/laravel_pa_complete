@@ -10,4 +10,14 @@ class PenilaianController extends Controller
     {
         return view('penilaian.index');
     }
+
+    public function penilaian_detail()
+    {
+        return view('penilaian.penilaian-detail');
+    }
+
+    public function penilaian_detail_awal()
+    {
+        return view('penilaian.penilaian-detail-awal');
+    }
 }

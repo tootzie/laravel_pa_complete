@@ -33,8 +33,9 @@
     @php
       $activeClass = null;
       $currentRouteName =  Route::currentRouteName();
+      $currentUrl = url()->current();
 
-      if ($currentRouteName === $menu->slug) {
+      if (str_contains($currentUrl, $menu->slug) || $currentRouteName === $menu->slug) {
           $activeClass = 'active';
       }
       elseif (isset($menu->submenu)) {
@@ -50,7 +51,6 @@
             $activeClass = 'active open';
           }
         }
-
       }
     @endphp
 
