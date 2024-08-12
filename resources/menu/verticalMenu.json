@@ -11,6 +11,21 @@
         "icon": "menu-icon tf-icons mdi mdi-counter",
         "slug": "penilaian",
         "url": "/penilaian"
+    },
+    {
+        "menuHeader": "Overview"
+    },
+    {
+        "name": "Summary",
+        "icon": "menu-icon tf-icons mdi mdi-chart-line",
+        "slug": "summary",
+        "url": "/summary"
+    },
+    {
+        "name": "Laporan Perusahaan",
+        "icon": "menu-icon tf-icons mdi mdi-domain",
+        "slug": "company",
+        "url": "/company"
     }
   ]
 }

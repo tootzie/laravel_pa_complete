@@ -112,11 +112,16 @@
                         <td class="text-truncate"> A+</td>
                         <td class="text-truncate">10 Juli 2024, 10:00</td>
                         <td class="text-truncate">Jessica Clarensia</td>
-                        <td><span class="badge bg-label-primary rounded-pill">Revisi Head of Dept</span></td>
+                        <td><span class="badge bg-label-warning rounded-pill">Revisi Head of Dept</span></td>
                         <td>
-                            <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}">
-                                <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </a>
+                            <div class="action-buttons">
+                                <a type="button" class="btn btn-icon btn-success" href="#">
+                                    <span class="tf-icons mdi mdi-eye-outline"></span>
+                                </a>
+                                <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}">
+                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -136,9 +141,14 @@
                         <td class="text-truncate">-</td>
                         <td><span class="badge bg-label-secondary rounded-pill">Belum Dinilai</span></td>
                         <td>
-                            <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail') }}">
-                                <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </a>
+                            <div class="action-buttons">
+                                <a type="button" class="btn btn-icon btn-success" href="#">
+                                    <span class="tf-icons mdi mdi-eye-outline"></span>
+                                </a>
+                                <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail') }}">
+                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -158,9 +168,14 @@
                         <td class="text-truncate">Catherina Setiawati</td>
                         <td><span class="badge bg-label-success rounded-pill">Revisi GM (Final)</span></td>
                         <td>
-                            <button type="button" class="btn btn-icon btn-warning" disabled>
-                                <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </button>
+                            <div class="action-buttons">
+                                <a type="button" class="btn btn-icon btn-success" href="#">
+                                    <span class="tf-icons mdi mdi-eye-outline"></span>
+                                </a>
+                                <a type="button" class="btn btn-icon btn-warning disabled-anchor" href="{{ url('/penilaian/detail-awal') }}">
+                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -180,9 +195,14 @@
                         <td class="text-truncate">Jessica Clarensia</td>
                         <td><span class="badge bg-label-info rounded-pill">Penilaian Awal</span></td>
                         <td>
-                            <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}">
-                                <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </a>
+                            <div class="action-buttons">
+                                <a type="button" class="btn btn-icon btn-success" href="#">
+                                    <span class="tf-icons mdi mdi-eye-outline"></span>
+                                </a>
+                                <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}">
+                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -202,9 +222,14 @@
                         <td class="text-truncate">Effendi Harsono</td>
                         <td><span class="badge bg-label-success rounded-pill">Revisi GM (Final)</span></td>
                         <td>
-                            <button type="button" class="btn btn-icon btn-warning" disabled>
-                                <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </button>
+                            <div class="action-buttons">
+                                <a type="button" class="btn btn-icon btn-success" href="#">
+                                    <span class="tf-icons mdi mdi-eye-outline"></span>
+                                </a>
+                                <a type="button" class="btn btn-icon btn-warning disabled-anchor" href="{{ url('/penilaian/detail-awal') }}">
+                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -224,9 +249,14 @@
                         <td class="text-truncate">-</td>
                         <td><span class="badge bg-label-secondary rounded-pill">Belum Dinilai</span></td>
                         <td>
-                            <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail') }}">
-                                <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </a>
+                            <div class="action-buttons">
+                                <a type="button" class="btn btn-icon btn-success" href="#">
+                                    <span class="tf-icons mdi mdi-eye-outline"></span>
+                                </a>
+                                <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail') }}">
+                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -246,9 +276,14 @@
                         <td class="text-truncate">Effendi Harsono</td>
                         <td><span class="badge bg-label-success rounded-pill">Revisi GM (Final)</span></td>
                         <td>
-                            <button type="button" class="btn btn-icon btn-warning" disabled>
-                                <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </button>
+                            <div class="action-buttons">
+                                <a type="button" class="btn btn-icon btn-success" href="#">
+                                    <span class="tf-icons mdi mdi-eye-outline"></span>
+                                </a>
+                                <a type="button" class="btn btn-icon btn-warning disabled-anchor" href="{{ url('/penilaian/detail-awal') }}">
+                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <tr class="border-transparent">
@@ -266,11 +301,16 @@
                         <td class="text-truncate">A+</td>
                         <td class="text-truncate">10 Juli 2024, 10:00</td>
                         <td class="text-truncate">Jessica Clarensia</td>
-                        <td><span class="badge bg-label-primary rounded-pill">Revisi Head of Dept</span></td>
+                        <td><span class="badge bg-label-warning rounded-pill">Revisi Head of Dept</span></td>
                         <td>
-                            <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}">
-                                <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                            </a>
+                            <div class="action-buttons">
+                                <a type="button" class="btn btn-icon btn-success" href="#">
+                                    <span class="tf-icons mdi mdi-eye-outline"></span>
+                                </a>
+                                <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}" >
+                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -278,6 +318,8 @@
         </div>
     </div>
 </div>
+
+
 
 <br>
 @endsection

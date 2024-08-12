@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
@@ -18,6 +20,48 @@ class LoginController extends Controller
     public function register()
     {
         return view('authentications.register');
+    }
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->stateless()->redirect();
+    }
+
+
+    public function handleGoogleCallback(Request $request)
+    {
+        try {
+            $user = Socialite::driver('google')->stateless()->user();
+
+            // Check if the email exists in the 'users' table
+            $existingUser = User::where('email', $user->email)->first();
+
+            if (!$existingUser) {
+                return redirect()->route('login')->withErrors(['email' => 'Maaf anda tidak diijinkan untuk mengakses halaman ini']);
+            }
+
+            $finduser = User::where('google_id', $user->id)->first();
+            if($finduser){
+                Auth::guard('web')->login($finduser);
+                $request->session()->regenerate();
+
+                return redirect()->route('dashboard');
+            } else {
+                $newUser = User::create([
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'google_id'=> $user->id,
+                    'avatar'=> $user->avatar,
+                    'password' => encrypt('123456dummy')
+                ]);
+
+                Auth::guard('web')->login($newUser);
+                $request->session()->regenerate();
+                return redirect()->route('dashboard');
+            }
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 
     public function store(Request $request)

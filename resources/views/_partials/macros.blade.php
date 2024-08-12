@@ -1,5 +1,5 @@
 @php
-$color = $color ?? '#9055FD';
+$color = $color ?? '#D40E12';
 @endphp
 <span style="color:{{ $color }};">
   <svg width="30" height="{{ $height }}" viewBox="0 0 250 196" fill="none" xmlns="http://www.w3.org/2000/svg">

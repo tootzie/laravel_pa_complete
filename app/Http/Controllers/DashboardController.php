@@ -10,4 +10,9 @@ class DashboardController extends Controller
     {
         return view('dashboard.index');
     }
+
+    public function summary()
+    {
+        return view('dashboard.summary');
+    }
 }

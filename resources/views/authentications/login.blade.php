@@ -26,12 +26,12 @@
                 <!-- /Logo -->
 
                 <div class="card-body mt-2">
-                    <h4 class="mb-2">Halo!👋</h4>
-                    <p class="mb-4">Sign in dulu yuk</p>
+                    <!-- <h4 class="mb-2">Halo!👋</h4>
+                    <p class="mb-4">Sign in dulu yuk</p> -->
 
                     <form id="formAuthentication" class="mb-3" action="{{url('/authenticate')}}" method="post">
                         @csrf
-                        <div class="form-floating form-floating-outline mb-3">
+                        <!-- <div class="form-floating form-floating-outline mb-3">
                             <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Masukkan email" autofocus>
 
                             <label for="email">Email</label>
@@ -40,8 +40,8 @@
                                         {{ $message }}
                                     </div>
                             @enderror
-                        </div>
-                        <div class="mb-3">
+                        </div> -->
+                        <!-- <div class="mb-3">
                             <div class="form-password-toggle">
                                 <div class="input-group input-group-merge">
                                     <div class="form-floating form-floating-outline">
@@ -56,7 +56,7 @@
                                     <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- <div class="mb-3 d-flex justify-content-between">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="remember-me">
@@ -68,17 +68,31 @@
                                 <span>Lupa Password?</span>
                             </a>
                         </div> -->
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
-                        </div>
+                        </div> -->
+
+                        <button type="button" class="btn btn-primary w-100 mb-4" onclick="window.location.href='/auth/google'">
+                            <span class="tf-icons mdi mdi-google me-1"></span>Sign in dengan Google
+                        </button>
+
+                        @if ($errors->any())
+                            <div class="mt-3">
+                                <div class="alert alert-danger">
+                                    @foreach ($errors->all() as $error)
+                                        <p>{{ $error }}</p>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </form>
 
-                    <p class="text-center">
+                    <!-- <p class="text-center">
                         <span>Belum punya akun?</span>
                         <a href="{{url('/register')}}">
                             <span>Buat disini</span>
                         </a>
-                    </p>
+                    </p> -->
                 </div>
             </div>
             <!-- /Login -->
