@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PenilaianController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +37,24 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         Route::get('/company/detail', 'company_detail')->name('company-detail');
         Route::get('/company/department', 'company_department')->name('company-department');
         Route::get('/company/employee', 'company_employee')->name('company-employee');
+    });
+
+    Route::controller(UserController::class)->group(function (){
+        //User Akses
+        Route::get('/user-akses', 'userAkses')->name('user-akses');
+        Route::get('/user-akses/create', 'userAksesCreate')->name('user-akses-create');
+        Route::post('/user-akses/store', 'userAksesStore')->name('user-akses-store');
+        Route::get('/user-akses/edit/{id}', 'userAksesEdit')->name('user-akses-edit');
+        Route::patch('/user-akses/update/{id}', 'userAksesUpdate')->name('user-akses-update');
+        Route::post('/user-akses/delete/{id}', 'userAksesDelete')->name('user-akses-delete');
+
+        //User Role
+        Route::get('/user-roles', 'userRoles')->name('user-roles');
+        Route::get('/user-roles/create', 'userRolesCreate')->name('user-roles-create');
+        Route::post('/user-roles/store', 'userRolesStore')->name('user-roles-store');
+        Route::get('/user-roles/edit/{id}', 'userRolesEdit')->name('user-roles-edit');
+        Route::patch('/user-roles/update/{id}', 'userRolesUpdate')->name('user-roles-update');
+        Route::post('/user-roles/delete/{id}', 'userRolesDelete')->name('user-roles-delete');
     });
 });
 

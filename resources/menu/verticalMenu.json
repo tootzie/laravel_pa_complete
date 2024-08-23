@@ -13,9 +13,6 @@
         "url": "/penilaian"
     },
     {
-        "menuHeader": "Overview"
-    },
-    {
         "name": "Summary",
         "icon": "menu-icon tf-icons mdi mdi-chart-line",
         "slug": "summary",
@@ -26,6 +23,23 @@
         "icon": "menu-icon tf-icons mdi mdi-domain",
         "slug": "company",
         "url": "/company"
-    }
+    },
+    {
+        "name": "User",
+        "icon": "menu-icon tf-icons mdi mdi-account-outline",
+        "slug": "user",
+        "submenu": [
+          {
+            "url": "/user-akses",
+            "name": "Akses User",
+            "slug": "user-akses"
+          },
+          {
+            "url": "/user-roles",
+            "name": "Role User",
+            "slug": "user-roles"
+          }
+        ]
+      }
   ]
 }

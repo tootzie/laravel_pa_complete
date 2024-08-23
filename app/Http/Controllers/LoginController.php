@@ -47,15 +47,20 @@ class LoginController extends Controller
 
                 return redirect()->route('dashboard');
             } else {
-                $newUser = User::create([
+                // $newUser = User::create([
+                //     'name' => $user->name,
+                //     'google_id'=> $user->id,
+                //     'avatar'=> $user->avatar,
+                //     'password' => encrypt('123456dummy')
+                // ]);
+                $existingUser->update([
                     'name' => $user->name,
-                    'email' => $user->email,
                     'google_id'=> $user->id,
                     'avatar'=> $user->avatar,
                     'password' => encrypt('123456dummy')
                 ]);
 
-                Auth::guard('web')->login($newUser);
+                Auth::guard('web')->login($existingUser);
                 $request->session()->regenerate();
                 return redirect()->route('dashboard');
             }
