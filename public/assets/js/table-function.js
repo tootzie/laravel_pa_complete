@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.querySelector('.input-group input');
-    const tableRows = document.querySelectorAll('table tbody tr');
+    // const searchInput = document.querySelector('.input-group input');
+    // const tableRows = document.querySelectorAll('table tbody tr');
 
     // searchInput.addEventListener('input', function () {
     //     const query = searchInput.value.toLowerCase();
@@ -10,16 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
     //         row.style.display = isVisible ? '' : 'none';
     //     });
     // });
-
-    searchInput.addEventListener('input', function () {
-        clearTimeout(this.searchTimeout);
-        this.searchTimeout = setTimeout(() => {
-            const query = searchInput.value.trim();
-            const url = new URL(window.location.href);
-            url.searchParams.set('search', query);
-            window.location.href = url.toString();
-        }, 300);
-    });
 
     const table = document.querySelector('table');
     const headers = table.querySelectorAll('thead th');

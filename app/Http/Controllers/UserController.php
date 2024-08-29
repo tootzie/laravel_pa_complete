@@ -7,16 +7,27 @@ use App\Models\UserRoles;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
 {
     public function userAkses(Request $request)
     {
 
-        $query = User::with('userRole');
+        $search = $request->input('search');
 
-        //Get user data
-        $users = User::with('userRole')->paginate(10);
+        $users = User::with('userRole')->when($search, function ($query, $search) {
+            // Get all columns from the 'users' table
+            $columns = Schema::getColumnListing('users');
+
+            $query->where(function($query) use ($search, $columns) {
+                foreach ($columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $search . '%');
+                }
+            });
+
+            return $query;
+        })->paginate(10);
 
 
         return view('user.user-akses.index', compact('users'));
@@ -98,7 +109,16 @@ class UserController extends Controller
         $search = $request->input('search');
 
         $roles = UserRoles::when($search, function ($query, $search) {
-            return $query->where('name', 'like', '%' . $search . '%');
+            // Get all columns from the 'users' table
+            $columns = Schema::getColumnListing('users');
+
+            $query->where(function($query) use ($search, $columns) {
+                foreach ($columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $search . '%');
+                }
+            });
+
+            return $query;
         })->paginate(10);
 
         return view('user.user-roles.index', compact('roles'));

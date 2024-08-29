@@ -19,10 +19,13 @@
 <h5 class="pb-1 mb-4">Role User</h5>
 
 <!-- SEARCH BAR -->
-<div class="input-group input-group-merge">
-    <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-magnify"></i></span>
-    <input type="text" class="form-control" placeholder="Search..." value="{{ request()->input('search') }}" aria-label="Search..." aria-describedby="basic-addon-search31" />
-</div>
+<form method="GET" action="{{ url('/user-roles') }}">
+    <div class="input-group input-group-merge">
+        <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-magnify"></i></span>
+        <input type="text" class="form-control" name="search" value="{{ request()->input('search') }}" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon-search31" />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
 
 <br>
 <br>
