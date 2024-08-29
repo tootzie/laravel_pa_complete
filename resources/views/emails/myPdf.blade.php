@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Wings Personal Assessement Result</title>
+    <title>Wings Performance Appraisal Result</title>
 </head>
 
 <body>

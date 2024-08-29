@@ -20,7 +20,7 @@
                         <span class="app-brand-logo demo">
                         <img src="{{asset('assets/img/logo/wings.png')}}" alt="auth-tree" height="40">
                         </span>
-                        <span class="app-brand-text demo text-heading fw-semibold">Personal Assessement</span>
+                        <span class="app-brand-text demo text-heading fw-semibold">Performance Appraisal</span>
                     </a>
                 </div>
                 <!-- /Logo -->

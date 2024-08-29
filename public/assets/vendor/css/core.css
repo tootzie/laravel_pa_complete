@@ -19900,3 +19900,27 @@ html:not(.layout-footer-fixed) .content-wrapper {
 .footer.bg-lighter hr {
   border-color: rgba(84, 79, 90, 0.0765686274);
 }
+
+th {
+    position: relative;
+    cursor: pointer; /* Indicate that headers are clickable */
+}
+
+th::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000; /* Adjust color if needed */
+}
+
+/* Ascending sorting */
+th.asc::after {
+    content: '▲';
+}
+
+/* Descending sorting */
+th.desc::after {
+    content: '▼';
+}

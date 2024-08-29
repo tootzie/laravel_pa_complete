@@ -10,10 +10,13 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function userAkses()
+    public function userAkses(Request $request)
     {
+
+        $query = User::with('userRole');
+
         //Get user data
-        $users = User::with('userRole')->get();
+        $users = User::with('userRole')->paginate(10);
 
 
         return view('user.user-akses.index', compact('users'));
@@ -90,11 +93,13 @@ class UserController extends Controller
         return redirect()->route('user-akses')->with('success', 'User deleted successfully!');
     }
 
-    public function userRoles()
+    public function userRoles(Request $request)
     {
+        $search = $request->input('search');
 
-        //Get user data
-        $roles = UserRoles::all();
+        $roles = UserRoles::when($search, function ($query, $search) {
+            return $query->where('name', 'like', '%' . $search . '%');
+        })->paginate(10);
 
         return view('user.user-roles.index', compact('roles'));
     }

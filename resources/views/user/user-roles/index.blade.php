@@ -11,7 +11,7 @@
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/index-penilaian.js')}}"></script>
+<script src="{{asset('assets/js/table-function.js')}}"></script>
 @endsection
 
 @section('content')
@@ -21,7 +21,7 @@
 <!-- SEARCH BAR -->
 <div class="input-group input-group-merge">
     <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-magnify"></i></span>
-    <input type="text" class="form-control" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon-search31" />
+    <input type="text" class="form-control" placeholder="Search..." value="{{ request()->input('search') }}" aria-label="Search..." aria-describedby="basic-addon-search31" />
 </div>
 
 <br>
@@ -86,6 +86,12 @@
                     @endforelse
                 </tbody>
             </table>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center">
+                <!-- {!! $roles->links() !!} -->
+                {!! $roles->appends(['search' => request()->input('search')])->links() !!}
+            </div>
         </div>
     </div>
 </div>

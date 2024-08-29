@@ -11,7 +11,7 @@
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/index-penilaian.js')}}"></script>
+<script src="{{asset('assets/js/table-function.js')}}"></script>
 @endsection
 
 @section('content')
@@ -101,6 +101,12 @@
                     @endforelse
                 </tbody>
             </table>
+
+            <br>
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center">
+                {!! $users->links() !!}
+            </div>
         </div>
     </div>
 </div>
@@ -109,3 +115,4 @@
 
 <br>
 @endsection
+
