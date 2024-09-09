@@ -16,8 +16,8 @@ class MasterSubAspek extends Model
         return $this->belongsTo(MasterAspek::class, 'id_master_aspek');
     }
 
-    public function MasterPertanyaan() //done
+    public function MasterQuestionPA() //done
     {
-        return $this->hasMany(MasterPertanyaan::class, 'id_master_subaspek');
+        return $this->hasMany(MasterQuestionPA::class, 'id_master_subaspek');
     }
 }

@@ -30,9 +30,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const sortedRows = rows.sort((a, b) => {
                 const aText = a.children[index].textContent.trim();
                 const bText = b.children[index].textContent.trim();
+
+                // Check if content is numeric
+                const aValue = isNaN(aText) ? aText : parseFloat(aText);
+                const bValue = isNaN(bText) ? bText : parseFloat(bText);
+
                 return isAscending
-                    ? bText.localeCompare(aText) // Descending sort
-                    : aText.localeCompare(bText); // Ascending sort
+                ? (aValue > bValue ? -1 : 1)  // Descending sort
+                : (aValue < bValue ? -1 : 1); // Ascending sort
             });
 
             // Update table with sorted rows

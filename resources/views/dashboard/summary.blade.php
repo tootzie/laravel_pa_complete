@@ -68,42 +68,42 @@
                 <tbody class="table-border-bottom-0">
                     <tr>
                     <th scope="row">2023</th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>10</td>
                     </tr>
                     <tr>
                     <th scope="row">2024</th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
+                    <td>100</td>
+                    <td>100</td>
+                    <td>100</td>
+                    <td>100</td>
+                    <td>100</td>
+                    <td>100</td>
+                    <td>100</td>
+                    <td>100</td>
+                    <td>100</td>
+                    <td>100</td>
                     </tr>
                     <tr>
                     <th scope="row">Jumlah</th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
                     </tr>
                 </tbody>
                 </table>

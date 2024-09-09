@@ -20,9 +20,9 @@ class PAController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store($request)
     {
-        $data = $request->data;
+        $data = $request['data'];
         $result = $data['score'];
         $dataLength = count($result);
         $arrSubaspect = [];
@@ -121,11 +121,11 @@ class PAController extends Controller
      */
     public function show(string $id)
     {
-        $data['nama_department'] = MasterDepartment::where('id', '=', $id)->pluck('nama_department')->first();
-        $data['kode_department'] = MasterDepartment::where('id', '=', $id)->pluck('kode_department')->first();
-        $data['list'] = PA::where('id_master_department', '=', $id)->with('MasterPertanyaan', 'MasterPertanyaan.MasterSubAspek', 'MasterPertanyaan.MasterSubAspek.MasterAspek')->get();
+        // $data['nama_department'] = MasterDepartment::where('id', '=', $id)->pluck('nama_department')->first();
+        // $data['kode_department'] = MasterDepartment::where('id', '=', $id)->pluck('kode_department')->first();
+        // $data['list'] = PA::where('id_master_department', '=', $id)->with('MasterPertanyaan', 'MasterPertanyaan.MasterSubAspek', 'MasterPertanyaan.MasterSubAspek.MasterAspek')->get();
 
-        return response()->json(['data' => $data], 200);
+        // return response()->json(['data' => $data], 200);
     }
 
     /**

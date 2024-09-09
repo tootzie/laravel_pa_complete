@@ -30,6 +30,19 @@
           </div>
 
           <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="email">E-KTP</label>
+            <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+                <input type="text" id="ektp" name="ektp" class="form-control" placeholder="356878110000002" aria-label="john.doe" aria-describedby="basic-default-email2" value="{{ $user->ektp }}" />
+                <!-- <span class="input-group-text" id="basic-default-email2">@example.com</span> -->
+              </div>
+              @error('ektp')
+                <small class="text-danger">{{ $message }}</small>
+              @enderror
+            </div>
+          </div>
+
+          <div class="row mb-3">
             <label class="col-sm-2 col-form-label" for="role_name">Role</label>
             <div class="col-sm-10">
               <div class="input-group input-group-merge">

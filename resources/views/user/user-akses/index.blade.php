@@ -23,7 +23,7 @@
     <div class="input-group input-group-merge">
         <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-magnify"></i></span>
         <input type="text" class="form-control" name="search" value="{{ request()->input('search') }}" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon-search31" />
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-sm btn-primary">Search</button>
     </div>
 </form>
 
@@ -43,6 +43,7 @@
                         <th class="text-truncate">ID</th>
                         <th class="text-truncate">User</th>
                         <th class="text-truncate">Email</th>
+                        <th class="text-truncate">E-KTP</th>
                         <th class="text-truncate">Role</th>
                         <th class="text-truncate">Action</th>
                     </tr>
@@ -63,6 +64,7 @@
                             </div>
                         </td>
                         <td class="text-truncate"> {{$user->email}}</td>
+                        <td class="text-truncate"> {{$user->ektp}}</td>
                         <td><span class="badge rounded-pill"></span>{{$user->userRole->name ?? 'null'}}</td>
                         <td>
                             <div class="action-buttons">

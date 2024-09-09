@@ -44,6 +44,7 @@ class UserController extends Controller
         // Validate the incoming request data
         $request->validate([
             'email' => 'required|string|email|max:255|unique:users',
+            'ektp' => 'required|min:16|max:16',
             'role_name' => [
                 'required',
                 function ($attribute, $value, $fail) {
@@ -56,6 +57,7 @@ class UserController extends Controller
 
         User::create([
             'email' => $request->input('email'),
+            'ektp' => $request->input('ektp'),
             'id_user_roles' => $request->input('role_name'),
             'password' => encrypt('123456dummy'),
             'created_at' => Carbon::now(),
@@ -77,6 +79,7 @@ class UserController extends Controller
 
         $request->validate([
             // 'email' => 'required|string|email|max:255|unique:users',
+            'ektp' => 'required|min:16|max:16',
             'role_name' => [
                 'required',
                 function ($attribute, $value, $fail) {
@@ -90,6 +93,7 @@ class UserController extends Controller
 
         $user->update([
             'email' => $request->email,
+            'ektp' => $request->ektp,
             'id_user_roles' => $request->role_name,
             'updated_at' => Carbon::now()
         ]);
@@ -110,7 +114,7 @@ class UserController extends Controller
 
         $roles = UserRoles::when($search, function ($query, $search) {
             // Get all columns from the 'users' table
-            $columns = Schema::getColumnListing('users');
+            $columns = Schema::getColumnListing('user_roles');
 
             $query->where(function($query) use ($search, $columns) {
                 foreach ($columns as $column) {

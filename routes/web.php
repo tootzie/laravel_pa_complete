@@ -4,6 +4,7 @@ use App\Http\Controllers\CompanyReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\PenilaianAllController;
 use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
     Route::controller(PenilaianController::class)->group(function () {
         Route::get('/penilaian', 'index')->name('penilaian');
-        Route::get('/penilaian/detail', 'penilaian_detail')->name('penilaian-detail');
+        Route::post('/penilaian/detail', 'penilaian_detail')->name('penilaian-detail');
+        Route::post('/penilaian/detail/store', 'penilaian_detail_store')->name('penilaian-detail-store');
         Route::get('/penilaian/detail-awal', 'penilaian_detail_awal')->name('penilaian-detail-awal');
     });
 
@@ -37,6 +39,11 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         Route::get('/company/detail', 'company_detail')->name('company-detail');
         Route::get('/company/department', 'company_department')->name('company-department');
         Route::get('/company/employee', 'company_employee')->name('company-employee');
+    });
+
+    Route::controller(PenilaianAllController::class)->group(function (){
+        Route::get('/penilaian-all', 'index')->name('penilaian-all');
+        Route::get('/penilaian-all/detail', 'penilaian_all_detail')->name('penilaian-all-detail');
     });
 
     Route::controller(UserController::class)->group(function (){

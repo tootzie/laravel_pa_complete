@@ -25,6 +25,12 @@
         "url": "/company"
     },
     {
+        "name": "Penilaian All",
+        "icon": "menu-icon tf-icons mdi mdi-counter",
+        "slug": "penilaian-all",
+        "url": "/penilaian-all"
+    },
+    {
         "name": "User",
         "icon": "menu-icon tf-icons mdi mdi-account-outline",
         "slug": "user",

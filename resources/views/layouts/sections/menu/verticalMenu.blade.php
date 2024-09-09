@@ -24,7 +24,7 @@
     @endphp
 
     {{-- Role-based menu item display --}}
-    @if (($menu->slug === 'dashboard' || $menu->slug === 'penilaian') && $userRole == '2')
+    @if (($menu->slug === 'dashboard' || $menu->slug === 'penilaian') && ($userRole == '2' || $userRole == '3'))
         @php
           $canAccess = true;
         @endphp

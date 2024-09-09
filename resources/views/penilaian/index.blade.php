@@ -11,17 +11,26 @@
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/index-penilaian.js')}}"></script>
+<script src="{{asset('assets/js/table-function.js')}}"></script>
 @endsection
 
 @section('content')
 
+<!-- ALERT -->
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <!-- ROW 1: Year and Period Filter -->
 <div class="row gy-4">
     <!-- Year Selection -->
-    <div class="col-md-12 col-lg-2">
+    <div class="col-auto">
         <div>
-            <label for="tahunDropdown" class="form-label">Tahun</label>
+            <div>
+                <label for="tahunDropdown" class="form-label">Tahun</label>
+            </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">2024</button>
                 <ul class="dropdown-menu" id="tahunDropdown">
@@ -34,9 +43,11 @@
     </div>
 
     <!-- Period Selection -->
-    <div class="col-md-12 col-lg-2">
+    <div class="col-auto">
         <div>
-            <label for="periodeDropdown" class="form-label">Periode</label>
+            <div>
+                <label for="periodeDropdown" class="form-label">Periode</label>
+            </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">1: Jan-Jul</button>
                 <ul class="dropdown-menu" id="periodeDropdown">
@@ -47,9 +58,11 @@
     </div>
 
     <!-- Division Selection -->
-    <div class="col-md-12 col-lg-2">
+    <div class="col-auto">
         <div>
-            <label for="divisiDropdown" class="form-label">Divisi</label>
+            <div>
+                <label for="divisiDropdown" class="form-label">Kategori PA</label>
+            </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Administrasi</button>
                 <ul class="dropdown-menu" id="divisiDropdown">
@@ -59,262 +72,123 @@
         </div>
     </div>
 
-</div>
-
-<br>
-<br>
-<h5 class="pb-1 mb-4">Administrasi (ADM)</h5>
-
-<div class="col-md-12 col-lg-2">
-    <div>
-        <label for="statusDropdown" class="form-label">Filter Status</label>
-        <div class="btn-group">
-            <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">Semua</button>
-            <ul class="dropdown-menu" id="statusDropdown">
+    <div class="col-auto">
+        <div>
+            <div>
+                <label for="statusDropdown" class="form-label">Filter Status</label>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">Semua</button>
+                <ul class="dropdown-menu" id="statusDropdown">
                 <li><a class="dropdown-item" href="javascript:void(0);" data-status="semua">Semua</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="Belum Dinilai">Belum Dinilai</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="Penilaian Awal">Penilaian Awal</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="Revisi Head of Dept">Revisi Head of Dept</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="Revisi GM (Final)">Revisi GM (Final)</a></li>
-            </ul>
+                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="Belum Dinilai">Belum Dinilai</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="Penilaian Awal">Penilaian Awal</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="Revisi Head of Dept">Revisi Head of Dept</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="Revisi GM">Revisi GM</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="Nilai Akhir">Nilai Akhir</a></li>
+                </ul>
+            </div>
         </div>
     </div>
+
 </div>
+
 <br>
+<br>
+<h5 class="pb-1 mb-4">Daftar Karyawan</h5>
+
+
+
+<!-- SEARCH BAR -->
+<form method="GET" action="{{ url('/penilaian') }}">
+    <div class="input-group input-group-merge">
+        <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-magnify"></i></span>
+        <input type="text" class="form-control" name="search" value="{{ request()->input('search') }}" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon-search31" />
+        <button type="submit" class="btn btn-sm btn-primary">Search</button>
+    </div>
+</form>
+
+<br>
+
+
+
 
 <div class="col-12">
     <div class="card">
         <div class="table-responsive">
+            @php
+                $userRole = auth()->user()->id_user_role;
+            @endphp
             <table class="table">
                 <thead class="table-light">
                     <tr>
                         <th class="text-truncate">User</th>
-                        <th class="text-truncate">Nilai</th>
+                        <th class="text-truncate">Kategori PA</th>
+                        <th class="text-truncate">Nilai Awal</th>
+                        <th class="text-truncate">Revisi Head of Dept</th>
+                        @if ($userRole == '3')
+                            <th class="text-truncate">Revisi GM</th>
+                            <th class="text-truncate">Nilai Akhir</th>
+                        @endif
+                        <th class="text-truncate">Action</th>
                         <th class="text-truncate">Terakhir Update</th>
                         <th class="text-truncate">User Update</th>
                         <th class="text-truncate">Status</th>
-                        <th class="text-truncate">Action</th>
+
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-3">
-                                    <img src="{{asset('assets/img/avatars/1.png')}}" alt="Avatar" class="rounded-circle">
+                    @forelse ($header_pa as $pa)
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-sm me-3">
+                                        <img src="{{asset('assets/img/avatars/1.png')}}" alt="Avatar" class="rounded-circle">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 text-truncate">{{$pa->nama_employee}}</h6>
+                                        <!-- <small class="text-truncate">WIN*1465</small> -->
+                                    </div>
                                 </div>
-                                <div>
-                                    <h6 class="mb-0 text-truncate">Jordan Stevenson</h6>
-                                    <small class="text-truncate">WIN*1465</small>
+                            </td>
+                            <td class="text-truncate"> {{$pa->kategori_pa ?? '-'}}</td>
+                            <td class="text-truncate"> {{$pa->nilai_awal ?? '-'}}</td>
+                            <td class="text-truncate"> {{$pa->revisi_hod ?? '-'}}</td>
+                            @if ($userRole == '3')
+                                <td class="text-truncate"> {{$pa->revisi_gm ?? '-'}}</td>
+                                <td class="text-truncate"> {{$pa->nilai_akhir ?? '-'}}</td>
+                            @endif
+                            <td>
+                                <div class="action-buttons">
+                                <form action="{{ url('/penilaian/detail') }}" method="POST">
+                                    @csrf <!-- Include CSRF token for security if using Laravel -->
+                                    <input type="hidden" name="pa_employee" value="{{$pa}}">
+
+                                    <button type="submit" class="btn btn-icon btn-warning">
+                                        <span class="tf-icons mdi mdi-square-edit-outline"></span>
+                                    </button>
+                                </form>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="text-truncate"> A+</td>
-                        <td class="text-truncate">10 Juli 2024, 10:00</td>
-                        <td class="text-truncate">Jessica Clarensia</td>
-                        <td><span class="badge bg-label-warning rounded-pill">Revisi Head of Dept</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a type="button" class="btn btn-icon btn-success" href="#">
-                                    <span class="tf-icons mdi mdi-eye-outline"></span>
-                                </a>
-                                <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}">
-                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-3">
-                                    <img src="{{asset('assets/img/avatars/3.png')}}" alt="Avatar" class="rounded-circle">
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 text-truncate">Benedetto Rossiter</h6>
-                                    <small class="text-truncate">WIN*0981</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-truncate">-</td>
-                        <td class="text-truncate">-</td>
-                        <td class="text-truncate">-</td>
-                        <td><span class="badge bg-label-secondary rounded-pill">Belum Dinilai</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a type="button" class="btn btn-icon btn-success" href="#">
-                                    <span class="tf-icons mdi mdi-eye-outline"></span>
-                                </a>
-                                <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail') }}">
-                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-3">
-                                    <img src="{{asset('assets/img/avatars/2.png')}}" alt="Avatar" class="rounded-circle">
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 text-truncate">Bentlee Emblin</h6>
-                                    <small class="text-truncate">WIN*1291</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-truncate">C+</td>
-                        <td class="text-truncate">10 Juli 2024, 10:00</td>
-                        <td class="text-truncate">Catherina Setiawati</td>
-                        <td><span class="badge bg-label-success rounded-pill">Revisi GM (Final)</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a type="button" class="btn btn-icon btn-success" href="#">
-                                    <span class="tf-icons mdi mdi-eye-outline"></span>
-                                </a>
-                                <a type="button" class="btn btn-icon btn-warning disabled-anchor" href="{{ url('/penilaian/detail-awal') }}">
-                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-3">
-                                    <img src="{{asset('assets/img/avatars/5.png')}}" alt="Avatar" class="rounded-circle">
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 text-truncate">Bertha Biner</h6>
-                                    <small class="text-truncate">WIN*0698</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-truncate">B</td>
-                        <td class="text-truncate">10 Juli 2024, 10:00</td>
-                        <td class="text-truncate">Jessica Clarensia</td>
-                        <td><span class="badge bg-label-info rounded-pill">Penilaian Awal</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a type="button" class="btn btn-icon btn-success" href="#">
-                                    <span class="tf-icons mdi mdi-eye-outline"></span>
-                                </a>
-                                <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}">
-                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-3">
-                                    <img src="{{asset('assets/img/avatars/4.png')}}" alt="Avatar" class="rounded-circle">
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 text-truncate">Beverlie Krabbe</h6>
-                                    <small class="text-truncate">WIN*1821</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-truncate">A-</td>
-                        <td class="text-truncate">10 Juli 2024, 10:00</td>
-                        <td class="text-truncate">Effendi Harsono</td>
-                        <td><span class="badge bg-label-success rounded-pill">Revisi GM (Final)</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a type="button" class="btn btn-icon btn-success" href="#">
-                                    <span class="tf-icons mdi mdi-eye-outline"></span>
-                                </a>
-                                <a type="button" class="btn btn-icon btn-warning disabled-anchor" href="{{ url('/penilaian/detail-awal') }}">
-                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-3">
-                                    <img src="{{asset('assets/img/avatars/7.png')}}" alt="Avatar" class="rounded-circle">
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 text-truncate">Bradan Rosebotham</h6>
-                                    <small class="text-truncate">WIN*8746</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-truncate">-</td>
-                        <td class="text-truncate">-</td>
-                        <td class="text-truncate">-</td>
-                        <td><span class="badge bg-label-secondary rounded-pill">Belum Dinilai</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a type="button" class="btn btn-icon btn-success" href="#">
-                                    <span class="tf-icons mdi mdi-eye-outline"></span>
-                                </a>
-                                <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail') }}">
-                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-3">
-                                    <img src="{{asset('assets/img/avatars/6.png')}}" alt="Avatar" class="rounded-circle">
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 text-truncate">Bree Kilday</h6>
-                                    <small class="text-truncate">WIN*8927</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-truncate">B-</td>
-                        <td class="text-truncate">10 Juli 2024, 10:00</td>
-                        <td class="text-truncate">Effendi Harsono</td>
-                        <td><span class="badge bg-label-success rounded-pill">Revisi GM (Final)</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a type="button" class="btn btn-icon btn-success" href="#">
-                                    <span class="tf-icons mdi mdi-eye-outline"></span>
-                                </a>
-                                <a type="button" class="btn btn-icon btn-warning disabled-anchor" href="{{ url('/penilaian/detail-awal') }}">
-                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="border-transparent">
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-3">
-                                    <img src="{{asset('assets/img/avatars/1.png')}}" alt="Avatar" class="rounded-circle">
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 text-truncate">Breena Gallemore</h6>
-                                    <small class="text-truncate">WIN*1287</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-truncate">A+</td>
-                        <td class="text-truncate">10 Juli 2024, 10:00</td>
-                        <td class="text-truncate">Jessica Clarensia</td>
-                        <td><span class="badge bg-label-warning rounded-pill">Revisi Head of Dept</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a type="button" class="btn btn-icon btn-success" href="#">
-                                    <span class="tf-icons mdi mdi-eye-outline"></span>
-                                </a>
-                                <a type="button" class="btn btn-icon btn-warning" href="{{ url('/penilaian/detail-awal') }}" >
-                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                            <td class="text-truncate">{{$pa->updated_at}}</td>
+                            <td class="text-truncate">{{$pa->updated_by}}</td>
+                            <td><span class="badge bg-label-warning rounded-pill">{{$pa->StatusPenilaian->name ?? '-'}}</span></td>
+
+                        </tr>
+                    @empty
+                        <div class="alert alert-danger">
+                            Data Tidak Tersedia
+                        </div>
+                    @endforelse
+
                 </tbody>
             </table>
+
+            <br>
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center">
+                {!! $header_pa->links() !!}
+            </div>
         </div>
     </div>
 </div>

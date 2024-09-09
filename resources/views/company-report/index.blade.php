@@ -28,77 +28,24 @@
 
     <!-- COMPANY LIST -->
     <div class="row">
-        <div class="col-md-6 col-xl-4">
-            <a href="{{ url('/company/detail') }}" class="card-link">
-                <div class="card bg-dark border-0 text-white mb-3">
-                    <img class="overlay-img" src="{{asset('assets/img/companies/company1.jpg')}}" alt="Card image"/>
-                    <div class="overlay-img-dark"></div>
-                    <div class="card-company">
-                        <h5 class="card-title">PT Karunia Alam Segar</h5>
-                        <p class="card-text">KAS</p>
+        @forelse ($companies as $company)
+            <div class="col-md-6 col-xl-4">
+                <a href="{{ url('/company/detail') }}" class="card-link">
+                    <div class="card bg-dark border-0 text-white mb-3">
+                        <img class="overlay-img" src="{{asset('assets/img/companies/company1.jpg')}}" alt="Card image"/>
+                        <div class="overlay-img-dark"></div>
+                        <div class="card-company">
+                            <h5 class="card-title">{{$company->companycode}}</h5>
+                            <!-- <p class="card-text">KAS</p> -->
+                        </div>
                     </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-6 col-xl-4">
-            <a href="{{ url('/company/detail') }}" class="card-link">
-                <div class="card bg-dark border-0 text-white mb-3">
-                    <img class="overlay-img" src="{{asset('assets/img/companies/company2.jpg')}}" alt="Card image"/>
-                    <div class="overlay-img-dark"></div>
-                    <div class="card-company">
-                        <h5 class="card-title">PT Wings Surya</h5>
-                        <p class="card-text">EMMA</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-6 col-xl-4">
-            <a href="{{ url('/company/detail') }}" class="card-link">
-                <div class="card bg-dark border-0 text-white mb-3">
-                    <img class="overlay-img" src="{{asset('assets/img/companies/company3.jpg')}}" alt="Card image"/>
-                    <div class="overlay-img-dark"></div>
-                    <div class="card-company">
-                        <h5 class="card-title">PT Adyabuana Persada</h5>
-                        <p class="card-text">ABP</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-6 col-xl-4">
-            <a href="{{ url('/company/detail') }}" class="card-link">
-                <div class="card bg-dark border-0 text-white mb-3">
-                    <img class="overlay-img" src="{{asset('assets/img/companies/company1.jpg')}}" alt="Card image"/>
-                    <div class="overlay-img-dark"></div>
-                    <div class="card-company">
-                        <h5 class="card-title">PT Karunia Alam Segar</h5>
-                        <p class="card-text">KAS</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-6 col-xl-4">
-            <a href="{{ url('/company/detail') }}" class="card-link">
-                <div class="card bg-dark border-0 text-white mb-3">
-                    <img class="overlay-img" src="{{asset('assets/img/companies/company2.jpg')}}" alt="Card image"/>
-                    <div class="overlay-img-dark"></div>
-                    <div class="card-company">
-                        <h5 class="card-title">PT Wings Surya</h5>
-                        <p class="card-text">EMMA</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-6 col-xl-4">
-            <a href="{{ url('/company/detail') }}" class="card-link">
-                <div class="card bg-dark border-0 text-white mb-3">
-                    <img class="overlay-img" src="{{asset('assets/img/companies/company3.jpg')}}" alt="Card image"/>
-                    <div class="overlay-img-dark"></div>
-                    <div class="card-company">
-                        <h5 class="card-title">PT Adyabuana Persada</h5>
-                        <p class="card-text">ABP</p>
-                    </div>
-                </div>
-            </a>
-        </div>
+                </a>
+            </div>
+        @empty
+            <div   div class="alert alert-danger">
+                Data Tidak Tersedia
+            </div>
+        @endforelse
+
     </div>
 @endsection

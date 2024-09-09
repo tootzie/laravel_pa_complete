@@ -287,34 +287,4 @@
     </div>
 </div>
 
-<br>
-<br>
-<h5 class="pb-1 mb-4">Revisi Head of Department</h5>
-
-<div class="col-md-12 col-lg-2">
-        <div class="btn-group">
-            <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">A+</button>
-            <ul class="dropdown-menu" id="statusDropdown">
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="A+">A+</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="A">A</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="A-">A-</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="B+">B+</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="B">B</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="B-">B-</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="C+">C+</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="C">C</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="C-">C-</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="D+">D+</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="D">D</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="D-">D-</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-status="E">E</a></li>
-            </ul>
-        </div>
-</div>
-
-<div class="mt-5 d-flex justify-content-center">
-    <button type="button" class="btn btn-primary">Simpan</button>
-</div>
-
-
 @endsection

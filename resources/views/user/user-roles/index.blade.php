@@ -23,7 +23,7 @@
     <div class="input-group input-group-merge">
         <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-magnify"></i></span>
         <input type="text" class="form-control" name="search" value="{{ request()->input('search') }}" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon-search31" />
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-sm btn-primary">Search</button>
     </div>
 </form>
 

@@ -18,9 +18,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::resource('/pa', PAController::class);
-// Route::resource('/locationarea', LocationAreaController::class);
-// Route::get('/locationarea', [LocationAreaController::class, 'index'])->name('locationarea');
-// Route::post('/inputlocationarea', [LocationAreaController::class, 'store'])->name('inputlocationarea');
-// Route::patch('/editlocationarea', [LocationAreaController::class, 'update'])->name('editlocationarea');
-// Route::post('/deletelocationarea', [LocationAreaController::class, 'destroy'])->name('deletelocationarea');
