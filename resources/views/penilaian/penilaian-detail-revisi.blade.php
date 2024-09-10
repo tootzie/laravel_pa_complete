@@ -11,7 +11,7 @@
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/index-penilaian.js')}}"></script>
+<script src="{{asset('assets/js/detail-revisi.js')}}"></script>
 @endsection
 
 @section('content')
@@ -69,12 +69,10 @@
 
 <br>
 <br>
-<form id="penilaianForm" method="POST" action="{{ route('penilaian-detail-store') }}">
-    @csrf
-    <h5 class="pb-1 mb-4">Aspek Kepribadian</h5>
+<h5 class="pb-1 mb-4">Aspek Kepribadian</h5>
 
-    <div class="row gy-4">
-    <div class="accordion mt-3" id="accordion1">
+<div class="row gy-4">
+<div class="accordion mt-3" id="accordion1">
         @forelse ($questions['Kepribadian'] as $key => $question_kepribadian)
         <div class="accordion-item active">
             @php
@@ -92,21 +90,13 @@
                 <div class="accordion-body">
                     @forelse ($question_kepribadian['questions'] as $question)
                     <div class="mb-4">
-                        <p>{{$question['question']}}</p>
-                        <div class="form-check-group">
-                            @for ($i = 1; $i <= 5; $i++)
-                                <div class="form-check form-check-inline">
-                                    <input
-                                        class="form-check-input"
-                                        type="radio"
-                                        name="question[{{ $question['id'] }}]"
-                                        id="{{ $question['id'] }}"
-                                        value="{{ $i }}"
-                                    />
-                                    <label class="form-check-label" for="{{ $question['id'] }}">{{ $i }}</label>
-                                </div>
-                            @endfor
-                        </div>
+                        <table>
+                            <tr>
+                                <td>{{$question['question']}}</td>
+                                <td>:</td>
+                                <td><b>{{$question['score']}}</b></td>
+                            </tr>
+                        </table>
                     </div>
                     @empty
                         <div class="alert alert-danger">
@@ -126,12 +116,12 @@
         </div>
     </div>
 
-    <br>
-    <br>
-    <h5 class="pb-1 mb-4">Aspek Pekerjaan</h5>
+<br>
+<br>
+<h5 class="pb-1 mb-4">Aspek Pekerjaan</h5>
 
-    <div class="row gy-4">
-    <div class="accordion mt-3" id="accordion2">
+<div class="row gy-4">
+<div class="accordion mt-3" id="accordion2">
         @forelse ($questions['Pekerjaan'] as $key => $question_pekerjaan)
         <div class="accordion-item active">
             @php
@@ -149,21 +139,13 @@
                 <div class="accordion-body">
                     @forelse ($question_pekerjaan['questions'] as $question)
                     <div class="mb-4">
-                        <p>{{$question['question']}}</p>
-                        <div class="form-check-group">
-                            @for ($i = 1; $i <= 5; $i++)
-                                <div class="form-check form-check-inline">
-                                    <input
-                                        class="form-check-input"
-                                        type="radio"
-                                        name="question[{{ $question['id'] }}]"
-                                        id="{{ $question['id'] }}"
-                                        value="{{ $i }}"
-                                    />
-                                    <label class="form-check-label" for="{{ $question['id'] }}">{{ $i }}</label>
-                                </div>
-                            @endfor
-                        </div>
+                        <table>
+                            <tr>
+                                <td>{{$question['question']}}</td>
+                                <td>:</td>
+                                <td><b>{{$question['score']}}</b></td>
+                            </tr>
+                        </table>
                     </div>
                     @empty
                         <div class="alert alert-danger">
@@ -183,13 +165,45 @@
         </div>
     </div>
 
+<br>
+<br>
+
+@if ($pa_employee->id_status_penilaian != 500)
+<form id="revisiForm" method="POST" action="{{ route('penilaian-detail-revisi-store') }}">
+    @csrf
+    <h5 class="pb-1 mb-4">{{$stringRevisi}}</h5>
+
+    <div class="col-md-12 col-lg-2">
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">A+</button>
+                <ul class="dropdown-menu" id="statusDropdown">
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="A+">A+</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="A">A</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="A-">A-</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="B+">B+</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="B">B</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="B-">B-</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="C+">C+</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="C">C</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="C-">C-</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="D+">D+</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="D">D</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="D-">D-</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="E">E</a></li>
+                </ul>
+            </div>
+    </div>
     <input type="hidden" name="pa_employee" value="{{json_encode($pa_employee)}}">
-    <input type="hidden" name="questions" value="{{json_encode($questions)}}">
+    <input type="hidden" name="stringRevisi" value="{{$stringRevisi}}">
+    <input type="hidden" name="status" id="selectedStatus" value="A+">
 
     <div class="mt-5 d-flex justify-content-center">
         <button type="submit" class="btn btn-primary">Simpan</button>
     </div>
 </form>
+
+@endif
+
 
 
 @endsection

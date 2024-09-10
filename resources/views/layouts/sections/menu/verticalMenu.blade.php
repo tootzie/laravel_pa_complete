@@ -20,7 +20,7 @@
 
     @php
       // Get the current user's role
-      $userRole = auth()->user()->id_user_roles;
+      $userRole = auth()->user()->userRole->id;
     @endphp
 
     {{-- Role-based menu item display --}}

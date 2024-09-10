@@ -117,7 +117,7 @@
     <div class="card">
         <div class="table-responsive">
             @php
-                $userRole = auth()->user()->id_user_role;
+                $userRole = auth()->user()->userRole->id;
             @endphp
             <table class="table">
                 <thead class="table-light">
@@ -128,12 +128,12 @@
                         <th class="text-truncate">Revisi Head of Dept</th>
                         @if ($userRole == '3')
                             <th class="text-truncate">Revisi GM</th>
-                            <th class="text-truncate">Nilai Akhir</th>
+                            <!-- <th class="text-truncate">Nilai Akhir</th> -->
                         @endif
                         <th class="text-truncate">Action</th>
-                        <th class="text-truncate">Terakhir Update</th>
+                        <!-- <th class="text-truncate">Terakhir Update</th>
                         <th class="text-truncate">User Update</th>
-                        <th class="text-truncate">Status</th>
+                        <th class="text-truncate">Status</th> -->
 
                     </tr>
                 </thead>
@@ -156,23 +156,25 @@
                             <td class="text-truncate"> {{$pa->revisi_hod ?? '-'}}</td>
                             @if ($userRole == '3')
                                 <td class="text-truncate"> {{$pa->revisi_gm ?? '-'}}</td>
-                                <td class="text-truncate"> {{$pa->nilai_akhir ?? '-'}}</td>
+                                <!-- <td class="text-truncate"> {{$pa->nilai_akhir ?? '-'}}</td> -->
                             @endif
                             <td>
                                 <div class="action-buttons">
-                                <form action="{{ url('/penilaian/detail') }}" method="POST">
+                                <form action="{{ $pa->id_status_penilaian === 100 ? url('/penilaian/detail') : url('/penilaian/detail-revisi') }}" method="POST">
                                     @csrf <!-- Include CSRF token for security if using Laravel -->
                                     <input type="hidden" name="pa_employee" value="{{$pa}}">
 
-                                    <button type="submit" class="btn btn-icon btn-warning">
+                                    <button type="submit" class="btn btn-icon btn-warning" @if ((($pa->id_status_penilaian != 100 && $pa->id_status_penilaian != 200) && $userRole == 2) || ($pa->id_status_penilaian != 300 && $userRole == 3))
+                                    disabled
+                                    @endif>
                                         <span class="tf-icons mdi mdi-square-edit-outline"></span>
                                     </button>
                                 </form>
                                 </div>
                             </td>
-                            <td class="text-truncate">{{$pa->updated_at}}</td>
+                            <!-- <td class="text-truncate">{{$pa->updated_at}}</td>
                             <td class="text-truncate">{{$pa->updated_by}}</td>
-                            <td><span class="badge bg-label-warning rounded-pill">{{$pa->StatusPenilaian->name ?? '-'}}</span></td>
+                            <td><span class="badge bg-label-warning rounded-pill">{{$pa->StatusPenilaian->name ?? '-'}}</span></td> -->
 
                         </tr>
                     @empty

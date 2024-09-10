@@ -58,9 +58,11 @@
         <div class="card h-100">
           <div class="card-header pb-0">
             <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Administrasi</button>
-                <ul class="dropdown-menu" id="tahunDropdown">
-                <li><a class="dropdown-item" href="javascript:void(0);">Produksi</a></li>
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">{{ $kategori_pa[0] }}</button>
+                <ul class="dropdown-menu" id="kategoriList">
+                    @foreach($kategori_pa as $kategori)
+                    <li><a class="dropdown-item" href="javascript:void(0);" data-kategori="{{ $kategori }}">{{ $kategori }}</a></li>
+                    @endforeach
                 </ul>
             </div>
           </div>
@@ -95,48 +97,48 @@
                     <th>C+</th>
                     <th>C</th>
                     <th>C-</th>
+                    <th>D+</th>
+                    <th>D</th>
+                    <th>D-</th>
+                    <th>E</th>
                     <th>Total</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
+                    @foreach ($data as $item)
+                        <tr>
+                            <th scope="row">
+                                {{ $item['kategori_pa']}}
+                            </th>
+                            @php
+                                $total = 0;
+                            @endphp
+                            @foreach ($item['jumlah'] as $jumlah)
+                                <td>{{ $jumlah['nilai_awal_count'] }}</td>
+                                @php
+                                    $total += $jumlah['nilai_awal_count'];
+                                @endphp
+                            @endforeach
+                            <td>{{ $total }}</td>
+                        </tr>
+                    @endforeach
+
+                    <!-- Row for 'Jumlah' -->
                     <tr>
-                    <th scope="row">Administrasi</th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">Produksi</th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">Jumlah</th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
+                        <th scope="row">Jumlah</th>
+                        @php
+                            $totals = array_fill(0, 9, 0); // Initialize an array to hold column totals
+                        @endphp
+                        @foreach (['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'] as $index => $score)
+                            @php
+                                $columnTotal = $data->sum(function ($item) use ($score) {
+                                    return $item['jumlah']->firstWhere('nilai', $score)['nilai_awal_count'] ?? 0;
+                                });
+                                $totals[$index] = $columnTotal;
+                            @endphp
+                            <td>{{ $columnTotal }}</td>
+                        @endforeach
+                        <td>{{ array_sum($totals) }}</td>
                     </tr>
                 </tbody>
                 </table>
@@ -165,48 +167,48 @@
                     <th>C+</th>
                     <th>C</th>
                     <th>C-</th>
+                    <th>D+</th>
+                    <th>D</th>
+                    <th>D-</th>
+                    <th>E</th>
                     <th>Total</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
+                    @foreach ($data as $item)
+                        <tr>
+                            <th scope="row">
+                                {{ $item['kategori_pa']}}
+                            </th>
+                            @php
+                                $total = 0;
+                            @endphp
+                            @foreach ($item['jumlah'] as $jumlah)
+                                <td>{{ $jumlah['revisi_hod_count'] }}</td>
+                                @php
+                                    $total += $jumlah['revisi_hod_count'];
+                                @endphp
+                            @endforeach
+                            <td>{{ $total }}</td>
+                        </tr>
+                    @endforeach
+
+                    <!-- Row for 'Jumlah' -->
                     <tr>
-                    <th scope="row">Administrasi</th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">Produksi</th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">Jumlah</th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
+                        <th scope="row">Jumlah</th>
+                        @php
+                            $totals = array_fill(0, 9, 0); // Initialize an array to hold column totals
+                        @endphp
+                        @foreach (['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'] as $index => $score)
+                            @php
+                                $columnTotal = $data->sum(function ($item) use ($score) {
+                                    return $item['jumlah']->firstWhere('nilai', $score)['revisi_hod_count'] ?? 0;
+                                });
+                                $totals[$index] = $columnTotal;
+                            @endphp
+                            <td>{{ $columnTotal }}</td>
+                        @endforeach
+                        <td>{{ array_sum($totals) }}</td>
                     </tr>
                 </tbody>
                 </table>
@@ -214,4 +216,8 @@
         </div>
     </div>
 </div>
+
+
 @endsection
+
+

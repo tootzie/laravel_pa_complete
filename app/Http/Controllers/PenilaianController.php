@@ -10,7 +10,6 @@ use App\Models\MasterSubAspek;
 use App\Models\MasterTahunPeriode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 
@@ -18,41 +17,19 @@ class PenilaianController extends Controller
 {
     public function index(Request $request)
     {
+        $HelperController = new HelperController();
+
         // Get the search input
         $search = $request->input('search');
 
         //Get all subordinates based on logged in user ektp
-        $ektp_penilai =  auth()->user()->ektp;
-        // $subordinatesAPI = Http::timeout(50)
-        //     ->get('http://172.26.11.16:8000/api/get_subordinates/'.$ektp_penilai);
-        $subordinatesAPI = Http::timeout(50)
-            ->get('http://192.168.0.128:8000/api/get_subordinates/'.$ektp_penilai);
-        $subordinates = collect(json_decode($subordinatesAPI->body())->data);
-
-        //Save all subordinates data
-        $data_subordinates = [];
-        foreach ($subordinates as $subordinate) {
-            $data_subordinates[$subordinate->ektp] = [
-                    'ektp' => $subordinate->ektp,
-                    'name' => $subordinate->name,
-                    'companyCode' => $subordinate->CompanyCode,
-                    'office' => $subordinate->Office,
-                    'department' => $subordinate->Department,
-                    'paCode' => $subordinate->PACode,
-                    'ektp_atasan' => $subordinate->ektp_atasan,
-                    'nama_atasan' => $subordinate->nama_atasan,
-
-            ];
-        }
+        $data_subordinates = $HelperController->get_subordinates();
         $ektp_subordinates = array_column($data_subordinates, 'ektp');
 
         //Get active master_tahun_periode
-        $today = Carbon::today();
-        $active_periode = MasterTahunPeriode::whereDate('start_date', '<=', $today)
-        ->whereDate('end_date', '>=', $today)
-        ->first(['id','tahun', 'periode']);
+        $active_periode = $HelperController->get_active_periode();
 
-        //Select all employees in $ektp_subordinates from  where id_master_tahun_periode is $active_periode
+        //Select all employees in $ektp_subordinates from where id_master_tahun_periode is $active_periode
         $header_pa = HeaderPA::where('id_master_tahun_periode', $active_periode->id)->whereIn('ektp_employee', $ektp_subordinates)->get();
 
         //If result is empty, add all employees name without any score to header_pa
@@ -69,7 +46,7 @@ class PenilaianController extends Controller
                             'nama_employee' => $data_subordinates[$ektp_subordinate]['name'],
                             'perusahaan' => $data_subordinates[$ektp_subordinate]['companyCode'],
                             'departemen' => $data_subordinates[$ektp_subordinate]['department'],
-                            'kategori_pa' => $data_subordinates[$ektp_subordinate]['kategori_pa'],
+                            'kategori_pa' => $data_subordinates[$ektp_subordinate]['paCode'],
                             'created_at' => Carbon::now(),
                             'updated_at' => Carbon::now(),
                             'updated_by' => 'Sistem'
@@ -109,42 +86,16 @@ class PenilaianController extends Controller
         $pa_employee = json_decode($request->pa_employee);
 
         //Get aspek kepribadian question
-        $subaspeks = MasterSubAspek::where('id_master_aspek', 1)->get()->pluck('nama_subaspek','id');
-        $pertanyaan_kepribadian_query = MasterQuestionPA::whereIn('id_master_subaspek', $subaspeks->keys())->get();
-        $pertanyaan_kepribadian = $pertanyaan_kepribadian_query->groupBy('id_master_subaspek')->map(function ($questions, $subaspekId) use ($subaspeks) {
-            return [
-                'subaspek' => $subaspeks[$subaspekId],  // Get the subaspek name
-                'questions' => $questions->map(function ($question) {
-                    return [
-                        'id' => $question->id_question,
-                        'question' => $question->question,
-                    ];
-                })->toArray()
-            ];
-        })->values()->toArray();
+        $pertanyaan_kepribadian = $this->getKepribadianQuestion();
 
         //Get aspek pekerjaan question
-        $kategori_pa = $pa_employee->kategori_pa;
-        $subaspeks = MasterSubAspek::where('id_master_aspek', 2)->get()->pluck('nama_subaspek','id');
-        $pertanyaan_pekerjaan_query = MasterQuestionPA::whereIn('id_master_subaspek', $subaspeks->keys())->where('id_question', 'like', $kategori_pa . '.%')->get();
-        $pertanyaan_pekerjaan = $pertanyaan_pekerjaan_query->groupBy('id_master_subaspek')->map(function ($questions, $subaspekId) use ($subaspeks) {
-            return [
-                'subaspek' => $subaspeks[$subaspekId],  // Get the subaspek name
-                'questions' => $questions->map(function ($question) {
-                    return [
-                        'id' => $question->id_question,
-                        'question' => $question->question,
-                        'value' => null
-                    ];
-                })->toArray()  // Map questions
-            ];
-        })->values()->toArray();
+        $pertanyaan_pekerjaan = $this->getPekerjaanQuestion($pa_employee);
 
         $questions = [
             "Kepribadian" => $pertanyaan_kepribadian,
             "Pekerjaan" => $pertanyaan_pekerjaan
         ];
-        // dd($questions);
+
         return view('penilaian.penilaian-detail', compact(['pa_employee', 'questions']));
     }
 
@@ -247,8 +198,136 @@ class PenilaianController extends Controller
         return null; // Fallback in case the questionId is not found
     }
 
-    public function penilaian_detail_awal()
+    public function penilaian_detail_revisi(Request $request)
     {
-        return view('penilaian.penilaian-detail-awal');
+        $pa_employee = json_decode($request->pa_employee);
+
+        // Fetch scores for the user
+        $scores = DetailPA::where('id_header_pa', $pa_employee->id)->get()->pluck('score', 'id_master_question_pa');
+
+        //Get aspek kepribadian question
+        $pertanyaan_kepribadian = $this->getKepribadianQuestion();
+
+        //Get aspek pekerjaan question
+        $pertanyaan_pekerjaan = $this->getPekerjaanQuestion($pa_employee);
+
+        // Update kepribadian questions with scores
+        $pertanyaan_kepribadian = array_map(function ($subaspek) use ($scores) {
+            return [
+                'subaspek' => $subaspek['subaspek'],
+                'questions' => array_map(function ($question) use ($scores) {
+                    return [
+                        'id' => $question['id'],
+                        'question' => $question['question'],
+                        'score' => $scores->get($question['id'])  // Add score if it exists
+                    ];
+                }, $subaspek['questions'])
+            ];
+        }, $pertanyaan_kepribadian);
+
+        // Update pekerjaan questions with scores
+        $pertanyaan_pekerjaan = array_map(function ($subaspek) use ($scores) {
+            return [
+                'subaspek' => $subaspek['subaspek'],
+                'questions' => array_map(function ($question) use ($scores) {
+                    return [
+                        'id' => $question['id'],
+                        'question' => $question['question'],
+                        'score' => $scores->get($question['id'])  // Add score if it exists
+                    ];
+                }, $subaspek['questions'])
+            ];
+        }, $pertanyaan_pekerjaan);
+
+        // Combine results
+        $questions = [
+            "Kepribadian" => $pertanyaan_kepribadian,
+            "Pekerjaan" => $pertanyaan_pekerjaan
+        ];
+
+        //String Revisi
+        $userRole = auth()->user()->userRole->id;
+        $statusPenilaian = $pa_employee->id_status_penilaian;
+        $stringRevisi = '';
+
+        if($userRole == 2) {
+            $stringRevisi = 'Revisi Head of Department';
+        } else if($userRole == 3) {
+            $stringRevisi = 'Revisi GM';
+        }
+
+        return view('penilaian.penilaian-detail-revisi', compact(['pa_employee', 'questions', 'stringRevisi']));
+    }
+
+    public function penilaian_detail_revisi_store(Request $request) {
+        $pa_employee = json_decode($request->pa_employee);
+
+        // Validate the request
+        $validated = $request->validate([
+            'status' => 'required|string',
+        ]);
+
+        // Retrieve the selected value
+        $nilai_revisi = $validated['status'];
+
+        //Determine status penilaian
+        $status_penilaian = 0;
+        if($request->stringRevisi == 'Revisi Head of Department') {
+            $status_penilaian = 300;
+        } else if ($request->stringRevisi == 'Revisi GM') {
+            $status_penilaian = 400;
+        }
+
+        //Update header_pa
+        $header_pa = HeaderPA::where('id', $pa_employee->id)->first();
+        $header_pa->update([
+            'revisi_hod' => $nilai_revisi,
+            'id_status_penilaian' => $status_penilaian,
+            'updated_at' => Carbon::now(),
+            'updated_by' => auth()->user()->name
+        ]);
+
+        session()->flash('success', "Penilaian berhasil ditambahkan. Nilai revisi untuk $pa_employee->nama_employee : $nilai_revisi");
+
+        return redirect()->route('penilaian');
+
+    }
+
+    private function getKepribadianQuestion() {
+        $subaspeks = MasterSubAspek::where('id_master_aspek', 1)->get()->pluck('nama_subaspek','id');
+        $pertanyaan_kepribadian_query = MasterQuestionPA::whereIn('id_master_subaspek', $subaspeks->keys())->get();
+        $pertanyaan_kepribadian = $pertanyaan_kepribadian_query->groupBy('id_master_subaspek')->map(function ($questions, $subaspekId) use ($subaspeks) {
+            return [
+                'subaspek' => $subaspeks[$subaspekId],  // Get the subaspek name
+                'questions' => $questions->map(function ($question) {
+                    return [
+                        'id' => $question->id_question,
+                        'question' => $question->question,
+                    ];
+                })->toArray()
+            ];
+        })->values()->toArray();
+
+        return $pertanyaan_kepribadian;
+    }
+
+    private function getPekerjaanQuestion($pa_employee) {
+        $kategori_pa = $pa_employee->kategori_pa;
+        $subaspeks = MasterSubAspek::where('id_master_aspek', 2)->get()->pluck('nama_subaspek','id');
+        $pertanyaan_pekerjaan_query = MasterQuestionPA::whereIn('id_master_subaspek', $subaspeks->keys())->where('id_question', 'like', $kategori_pa . '.%')->get();
+        $pertanyaan_pekerjaan = $pertanyaan_pekerjaan_query->groupBy('id_master_subaspek')->map(function ($questions, $subaspekId) use ($subaspeks) {
+            return [
+                'subaspek' => $subaspeks[$subaspekId],  // Get the subaspek name
+                'questions' => $questions->map(function ($question) {
+                    return [
+                        'id' => $question->id_question,
+                        'question' => $question->question,
+                        'value' => null
+                    ];
+                })->toArray()  // Map questions
+            ];
+        })->values()->toArray();
+
+        return $pertanyaan_pekerjaan;
     }
 }
