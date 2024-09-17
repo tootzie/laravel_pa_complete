@@ -3,22 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\HeaderPA;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        //Get data for chart and table
-        $data = $this->get_chart_data();
-
-        //Category PA (for dropdown)
-        $kategori_pa = collect($data)->pluck('kategori_pa')->unique();
-
-        return view('dashboard.index', compact(['data', 'kategori_pa']));
-    }
-
-    public function get_chart_data($category = null) {
+        //Check if the user logged in has data in header PA, if not add new
         $HelperController = new HelperController();
 
         //Get all subordinates based on logged in user ektp
@@ -28,14 +20,69 @@ class DashboardController extends Controller
         //Get active master_tahun_periode
         $active_periode = $HelperController->get_active_periode();
 
+        //Select all employees in $ektp_subordinates from where id_master_tahun_periode is $active_periode
+        $header_pa = HeaderPA::where('id_master_tahun_periode', $active_periode->id)->whereIn('ektp_employee', $ektp_subordinates)->get();
+
+        //If result is empty, add all employees name without any score to header_pa
+        if ($header_pa->isEmpty()) {
+            $id_master_tahun_periode = $active_periode->id;
+            //Store each employee to header_pa without score
+            foreach ($ektp_subordinates as $ektp_subordinate) {
+                if ($ektp_subordinate != null) {
+                    try {
+                        HeaderPA::create([
+                            'id_master_tahun_periode' => $id_master_tahun_periode,
+                            'id_status_penilaian' => 100,
+                            'ektp_employee' => $ektp_subordinate,
+                            'nama_employee' => $data_subordinates[$ektp_subordinate]['name'],
+                            'perusahaan' => $data_subordinates[$ektp_subordinate]['companyCode'],
+                            'departemen' => $data_subordinates[$ektp_subordinate]['department'],
+                            'kategori_pa' => $data_subordinates[$ektp_subordinate]['paCode'],
+                            'created_at' => Carbon::now(),
+                            'updated_at' => Carbon::now(),
+                            'updated_by' => 'Sistem'
+                        ]);
+                    } catch (\Exception $e) {
+                        // Output the exception message for debugging
+                        dd($e->getMessage());
+                    }
+                }
+            }
+        }
+
+        //Get data for chart and table
+        $data = $this->get_chart_data();
+
+        //Category PA (for dropdown)
+        $kategori_pa = collect($data)->pluck('kategori_pa')->unique();
+
+        return view('dashboard.index', compact(['data', 'kategori_pa']));
+    }
+
+    public function get_chart_data($category = null)
+    {
+        $HelperController = new HelperController();
+
+        //Get all subordinates based on logged in user ektp
+        $data_subordinates = $HelperController->get_subordinates();
+        // dd($data_subordinates);
+        $ektp_subordinates = array_column($data_subordinates, 'ektp');
+
+        //Get active master_tahun_periode
+        $active_periode = $HelperController->get_active_periode();
+        // dd($active_periode);
+        // dd($category);
+
         //Select all employees in $ektp_subordinates from  where id_master_tahun_periode is $active_periode
-        if($category != null) {
+        if ($category != null) {
             $header_pa = HeaderPA::where('id_master_tahun_periode', $active_periode->id)
-            ->whereIn('ektp_employee', $ektp_subordinates)
-            ->where('kategori_pa', $category) // Filter by category
-            ->get();
+                ->whereIn('ektp_employee', $ektp_subordinates)
+                ->where('kategori_pa', $category) // Filter by category
+                ->get();
         } else {
+            // dd($active_periode->id);
             $header_pa = HeaderPA::where('id_master_tahun_periode', $active_periode->id)->whereIn('ektp_employee', $ektp_subordinates)->get();
+            // dd($header_pa);
         }
 
         // Define the score levels

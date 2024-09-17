@@ -13,7 +13,7 @@ class HelperController extends Controller
         //Get all subordinates based on logged in user ektp
         $ektp_penilai =  auth()->user()->ektp;
         $subordinatesAPI = Http::timeout(50)
-            ->get('http://172.26.11.3:8000/api/get_subordinates/'.$ektp_penilai);
+            ->get('http://172.26.11.12:8000/api/get_subordinates/'.$ektp_penilai);
 
         $subordinates = collect(json_decode($subordinatesAPI->body())->data);
 
