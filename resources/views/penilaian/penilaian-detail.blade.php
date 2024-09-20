@@ -11,6 +11,9 @@
 @endsection
 
 @section('page-script')
+<script>
+    var autosaveUrl = '{{ route("penilaian-detail-autosave") }}';
+</script>
 <script src="{{asset('assets/js/index-penilaian.js')}}"></script>
 @endsection
 
@@ -69,6 +72,7 @@
 
 <br>
 <br>
+<div id="autosaveMessage" ></div>
 <form id="penilaianForm" method="POST" action="{{ route('penilaian-detail-store') }}">
     @csrf
     <h5 class="pb-1 mb-4">Aspek Kepribadian</h5>
@@ -102,6 +106,7 @@
                                         name="question[{{ $question['id'] }}]"
                                         id="{{ $question['id'] }}"
                                         value="{{ $i }}"
+                                        {{ isset($detailPA[$question['id']]) && $detailPA[$question['id']]->score == $i ? 'checked' : '' }}
                                     />
                                     <label class="form-check-label" for="{{ $question['id'] }}">{{ $i }}</label>
                                 </div>

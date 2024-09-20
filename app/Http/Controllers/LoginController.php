@@ -65,7 +65,8 @@ class LoginController extends Controller
                 return redirect()->route('dashboard');
             }
         } catch (Exception $e) {
-            dd($e);
+            return redirect()->route('login');
+            // dd($e);
         }
     }
 

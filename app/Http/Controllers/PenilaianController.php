@@ -69,7 +69,7 @@ class PenilaianController extends Controller
                 // Get all columns from the 'header_pa' table
                 $columns = Schema::getColumnListing('header_pa');
 
-                $query->where(function($query) use ($search, $columns) {
+                $query->where(function ($query) use ($search, $columns) {
                     foreach ($columns as $column) {
                         $query->orWhere($column, 'like', '%' . $search . '%');
                     }
@@ -96,10 +96,14 @@ class PenilaianController extends Controller
             "Pekerjaan" => $pertanyaan_pekerjaan
         ];
 
-        return view('penilaian.penilaian-detail', compact(['pa_employee', 'questions']));
+        $id_header_pa = $pa_employee->id;
+        $detailPA = DetailPA::where('id_header_pa', $id_header_pa)->get()->keyBy('id_master_question_pa');
+
+        return view('penilaian.penilaian-detail', compact(['pa_employee', 'questions', 'detailPA']));
     }
 
-    public function penilaian_detail_store(Request $request) {
+    public function penilaian_detail_store(Request $request)
+    {
         $pa_employee = json_decode($request->pa_employee);
         $kode_question_category = $pa_employee->kategori_pa;
 
@@ -149,17 +153,24 @@ class PenilaianController extends Controller
                 ];
             }
 
-            // Store scores to detail_pa
-            DetailPA::create([
-                'id_header_pa' => $id_header_pa,
-                'id_master_question_pa' => $questionId,
-                'ektp_penilai' => $ektp_penilai,
-                'nama_penilai' => $nama_penilai,
-                'score' => $value,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ]);
-
+            // Store scores to detail_pa if detail with id_header_pa is not available yet
+            $detailPA = DetailPA::where("id_header_pa", $id_header_pa)->where("id_master_question_pa", $questionId)->first();
+            if ($detailPA->isEmpty()) {
+                DetailPA::create([
+                    'id_header_pa' => $id_header_pa,
+                    'id_master_question_pa' => $questionId,
+                    'ektp_penilai' => $ektp_penilai,
+                    'nama_penilai' => $nama_penilai,
+                    'score' => $value,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+            } else {
+                $detailPA->update([
+                    'score' => $value,
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
         }
 
         //Calculate nilai_awal from $data
@@ -180,7 +191,86 @@ class PenilaianController extends Controller
         session()->flash('success', "Penilaian berhasil ditambahkan. Nilai awal untuk $pa_employee->nama_employee : $nilai_awal");
 
         return redirect()->route('penilaian');
+    }
 
+    public function penilaian_detail_autosave(Request $request)
+    {
+        $pa_employee = json_decode($request->pa_employee);
+        $kode_question_category = $pa_employee->kategori_pa;
+        // \Log::info(json_encode($kode_question_category));
+
+        // Initialize the data array
+        $data = [
+            'data' => [
+                'id_employee' => $pa_employee->ektp_employee,
+                'kode_question_category' => $kode_question_category,
+                'score' => []
+            ]
+        ];
+
+
+        // Use the existing $questions variable that has been passed to the Blade view
+        $questions = json_decode($request->questions, true);
+
+
+        //Variables to store to detail_pa
+        $id_header_pa = $pa_employee->id;
+        $ektp_penilai = auth()->user()->ektp;
+        $nama_penilai = auth()->user()->name;
+
+        if (is_array($request->input('question'))) {
+            \Log::error('Questions found');
+            foreach ($request->input('question') as $questionId => $value) {
+                // Determine the subaspect based on the questionId from the $questions variable
+                $subaspek = $this->getSubaspekFromExistingQuestions($questions, $questionId);
+
+                // Prepare the question data
+                $questionData = [
+                    'question_id' => $questionId,
+                    'value' => $value
+                ];
+
+                // Check if the subaspect already exists in the score array
+                $found = false;
+                foreach ($data['data']['score'] as &$subaspect) {
+                    if ($subaspect['subaspect'] === $subaspek) {
+                        $subaspect['items'][] = $questionData;
+                        $found = true;
+                        break;
+                    }
+                }
+
+                // If the subaspect does not exist yet, add a new entry
+                if (!$found) {
+                    $data['data']['score'][] = [
+                        'subaspect' => $subaspek,
+                        'items' => [$questionData]
+                    ];
+                }
+
+                // Store scores to detail_pa if detail with id_header_pa is not available yet
+                $detailPA = DetailPA::where("id_header_pa", $id_header_pa)->where("id_master_question_pa", $questionId)->first();
+                if ($detailPA == null) {
+                    DetailPA::create([
+                        'id_header_pa' => $id_header_pa,
+                        'id_master_question_pa' => $questionId,
+                        'ektp_penilai' => $ektp_penilai,
+                        'nama_penilai' => $nama_penilai,
+                        'score' => $value,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                } else {
+                    $detailPA->update([
+                        'score' => $value,
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
+            }
+        } else {
+            // Handle the case where questions are not present
+            \Log::error('No questions found in the request.');
+        }
     }
 
     private function getSubaspekFromExistingQuestions($questions, $questionId)
@@ -250,16 +340,17 @@ class PenilaianController extends Controller
         $statusPenilaian = $pa_employee->id_status_penilaian;
         $stringRevisi = '';
 
-        if($userRole == 2) {
+        if ($userRole == 2) {
             $stringRevisi = 'Revisi Head of Department';
-        } else if($userRole == 3) {
+        } else if ($userRole == 3) {
             $stringRevisi = 'Revisi GM';
         }
 
         return view('penilaian.penilaian-detail-revisi', compact(['pa_employee', 'questions', 'stringRevisi']));
     }
 
-    public function penilaian_detail_revisi_store(Request $request) {
+    public function penilaian_detail_revisi_store(Request $request)
+    {
         $pa_employee = json_decode($request->pa_employee);
 
         // Validate the request
@@ -272,7 +363,7 @@ class PenilaianController extends Controller
 
         //Determine status penilaian
         $status_penilaian = 0;
-        if($request->stringRevisi == 'Revisi Head of Department') {
+        if ($request->stringRevisi == 'Revisi Head of Department') {
             $status_penilaian = 300;
         } else if ($request->stringRevisi == 'Revisi GM') {
             $status_penilaian = 400;
@@ -290,11 +381,11 @@ class PenilaianController extends Controller
         session()->flash('success', "Penilaian berhasil ditambahkan. Nilai revisi untuk $pa_employee->nama_employee : $nilai_revisi");
 
         return redirect()->route('penilaian');
-
     }
 
-    private function getKepribadianQuestion() {
-        $subaspeks = MasterSubAspek::where('id_master_aspek', 1)->get()->pluck('nama_subaspek','id');
+    private function getKepribadianQuestion()
+    {
+        $subaspeks = MasterSubAspek::where('id_master_aspek', 1)->get()->pluck('nama_subaspek', 'id');
         $pertanyaan_kepribadian_query = MasterQuestionPA::whereIn('id_master_subaspek', $subaspeks->keys())->get();
         $pertanyaan_kepribadian = $pertanyaan_kepribadian_query->groupBy('id_master_subaspek')->map(function ($questions, $subaspekId) use ($subaspeks) {
             return [
@@ -311,9 +402,10 @@ class PenilaianController extends Controller
         return $pertanyaan_kepribadian;
     }
 
-    private function getPekerjaanQuestion($pa_employee) {
+    private function getPekerjaanQuestion($pa_employee)
+    {
         $kategori_pa = $pa_employee->kategori_pa;
-        $subaspeks = MasterSubAspek::where('id_master_aspek', 2)->get()->pluck('nama_subaspek','id');
+        $subaspeks = MasterSubAspek::where('id_master_aspek', 2)->get()->pluck('nama_subaspek', 'id');
         $pertanyaan_pekerjaan_query = MasterQuestionPA::whereIn('id_master_subaspek', $subaspeks->keys())->where('id_question', 'like', $kategori_pa . '.%')->get();
         $pertanyaan_pekerjaan = $pertanyaan_pekerjaan_query->groupBy('id_master_subaspek')->map(function ($questions, $subaspekId) use ($subaspeks) {
             return [
