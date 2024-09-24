@@ -7328,6 +7328,12 @@ textarea.form-control-lg {
   white-space: nowrap;
 }
 
+@media (max-width: 768px) {
+    .text-truncate {
+      max-width: 150px; /* Smaller max-width for mobile screens */
+    }
+  }
+
 .vr {
   display: inline-block;
   -ms-flex-item-align: stretch;
@@ -19924,3 +19930,13 @@ th.asc::after {
 th.desc::after {
     content: '▼';
 }
+
+/* Sticky Field in Table */
+.sticky-column {
+    position: sticky;
+    left: 0;
+    background-color: white; /* Match your table's background */
+    z-index: 1; /* Make sure it's above other content */
+    padding-right: 20px; /* Adjust this value as needed */
+}
+

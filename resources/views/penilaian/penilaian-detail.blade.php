@@ -22,7 +22,7 @@
 <h5 class="pb-1 mb-4">Detail Penilaian</h5>
 
 @php
-    $userRole = auth()->user()->userRole->id;
+$userRole = auth()->user()->userRole->id;
 @endphp
 
 <!-- DETAIL INFORMATION -->
@@ -55,80 +55,92 @@
                 <td>{{$pa_employee->nilai_awal ?? '-'}}</td>
             </tr>
             <tr>
-                <td>Revisi Head of Dept  </td>
+                <td>Revisi Head of Dept </td>
                 <td>:</td>
                 <td>{{$pa_employee->revisi_hod ?? '-'}}</td>
             </tr>
             @if ($userRole == 3)
-                <tr>
-                    <td>Revisi GM</td>
-                    <td>:</td>
-                    <td>{{$pa_employee->revisi_gm ?? '-'}}</td>
-                </tr>
+            <tr>
+                <td>Revisi GM</td>
+                <td>:</td>
+                <td>{{$pa_employee->revisi_gm ?? '-'}}</td>
+            </tr>
             @endif
         </table>
     </div>
 </div>
 
 <br>
+<!-- ALERT -->
+@if (session('danger'))
+<div class="alert alert-danger">
+    {{ session('danger') }}
+</div>
+@endif
 <br>
-<div id="autosaveMessage" ></div>
+<div id="autosaveMessage"></div>
 <form id="penilaianForm" method="POST" action="{{ route('penilaian-detail-store') }}">
     @csrf
     <h5 class="pb-1 mb-4">Aspek Kepribadian</h5>
 
     <div class="row gy-4">
-    <div class="accordion mt-3" id="accordion1">
-        @forelse ($questions['Kepribadian'] as $key => $question_kepribadian)
-        <div class="accordion-item active">
-            @php
+        <div class="accordion mt-3" id="accordion1">
+            @forelse ($questions['Kepribadian'] as $key => $question_kepribadian)
+            <div class="accordion-item active">
+                @php
                 // Replace spaces or special characters to create a valid and unique ID
                 $subaspek_id = Str::slug($question_kepribadian['subaspek']);
                 $is_first = $key === 0;
-            @endphp
-            <h2 class="accordion-header" id="head1-{{$subaspek_id}}">
-            <button type="button" class="accordion-button {{ !$is_first ? 'collapsed' : '' }}" data-bs-toggle="collapse" data-bs-target="#ac1-{{$subaspek_id}}" aria-expanded="{{ $is_first ? 'true' : 'false' }}" aria-controls="ac1-{{$subaspek_id}}">
-                {{$question_kepribadian['subaspek']}}
-            </button>
-            </h2>
+                @endphp
+                <h2 class="accordion-header" id="head1-{{$subaspek_id}}">
+                    <button type="button" class="accordion-button {{ !$is_first ? 'collapsed' : '' }}" data-bs-toggle="collapse" data-bs-target="#ac1-{{$subaspek_id}}" aria-expanded="{{ $is_first ? 'true' : 'false' }}" aria-controls="ac1-{{$subaspek_id}}">
+                        {{$question_kepribadian['subaspek']}}
+                    </button>
+                </h2>
 
-            <div id="ac1-{{$subaspek_id}}" class="accordion-collapse collapse {{ $is_first ? 'show' : '' }}" data-bs-parent="#accordion1">
-                <div class="accordion-body">
-                    @forelse ($question_kepribadian['questions'] as $question)
-                    <div class="mb-4">
-                        <p>{{$question['question']}}</p>
-                        <div class="form-check-group">
-                            @for ($i = 1; $i <= 5; $i++)
-                                <div class="form-check form-check-inline">
+                <div id="ac1-{{$subaspek_id}}" class="accordion-collapse collapse {{ $is_first ? 'show' : '' }}" data-bs-parent="#accordion1">
+                    <div class="accordion-body">
+                        @forelse ($question_kepribadian['questions'] as $question)
+                        <div class="mb-4">
+                            <p>{{$question['question']}}</p>
+                            <div class="form-check-group">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <div class="form-check form-check-inline">
                                     <input
                                         class="form-check-input"
                                         type="radio"
                                         name="question[{{ $question['id'] }}]"
                                         id="{{ $question['id'] }}"
                                         value="{{ $i }}"
-                                        {{ isset($detailPA[$question['id']]) && $detailPA[$question['id']]->score == $i ? 'checked' : '' }}
-                                    />
+                                        {{ isset($detailPA[$question['id']]) && $detailPA[$question['id']]->score == $i ? 'checked' : '' }} />
                                     <label class="form-check-label" for="{{ $question['id'] }}">{{ $i }}</label>
-                                </div>
+                            </div>
                             @endfor
                         </div>
                     </div>
                     @empty
-                        <div class="alert alert-danger">
-                                Data Tidak Tersedia
-                        </div>
+                    <div class="alert alert-danger">
+                        Data Tidak Tersedia
+                    </div>
                     @endforelse
 
+
                 </div>
+                {{-- Display error message for unanswered question --}}
+                @if ($errors->has('question.' . $question['id']))
+                <div class="text-danger">
+                    {{ $errors->first('question.' . $question['id']) }}
+                </div>
+                @endif
             </div>
         </div>
         @empty
-            <div class="alert alert-danger">
-                Data Tidak Tersedia
-            </div>
+        <div class="alert alert-danger">
+            Data Tidak Tersedia
+        </div>
         @endforelse
 
-        </div>
+    </div>
     </div>
 
     <br>
@@ -136,56 +148,65 @@
     <h5 class="pb-1 mb-4">Aspek Pekerjaan</h5>
 
     <div class="row gy-4">
-    <div class="accordion mt-3" id="accordion2">
-        @forelse ($questions['Pekerjaan'] as $key => $question_pekerjaan)
-        <div class="accordion-item active">
-            @php
+        <div class="accordion mt-3" id="accordion2">
+            @forelse ($questions['Pekerjaan'] as $key => $question_pekerjaan)
+            <div class="accordion-item active">
+                @php
                 // Replace spaces or special characters to create a valid and unique ID
                 $subaspek_id = Str::slug($question_pekerjaan['subaspek']);
                 $is_first = $key === 0;
-            @endphp
-            <h2 class="accordion-header" id="head2-{{$subaspek_id}}">
-            <button type="button" class="accordion-button {{ !$is_first ? 'collapsed' : '' }}" data-bs-toggle="collapse" data-bs-target="#ac2-{{$subaspek_id}}" aria-expanded="{{ $is_first ? 'true' : 'false' }}" aria-controls="ac2-{{$subaspek_id}}">
-                {{$question_pekerjaan['subaspek']}}
-            </button>
-            </h2>
+                @endphp
+                <h2 class="accordion-header" id="head2-{{$subaspek_id}}">
+                    <button type="button" class="accordion-button {{ !$is_first ? 'collapsed' : '' }}" data-bs-toggle="collapse" data-bs-target="#ac2-{{$subaspek_id}}" aria-expanded="{{ $is_first ? 'true' : 'false' }}" aria-controls="ac2-{{$subaspek_id}}">
+                        {{$question_pekerjaan['subaspek']}}
+                    </button>
+                </h2>
 
-            <div id="ac2-{{$subaspek_id}}" class="accordion-collapse collapse {{ $is_first ? 'show' : '' }}" data-bs-parent="#accordion2">
-                <div class="accordion-body">
-                    @forelse ($question_pekerjaan['questions'] as $question)
-                    <div class="mb-4">
-                        <p>{{$question['question']}}</p>
-                        <div class="form-check-group">
-                            @for ($i = 1; $i <= 5; $i++)
-                                <div class="form-check form-check-inline">
+                <div id="ac2-{{$subaspek_id}}" class="accordion-collapse collapse {{ $is_first ? 'show' : '' }}" data-bs-parent="#accordion2">
+                    <div class="accordion-body">
+                        @forelse ($question_pekerjaan['questions'] as $question)
+                        <div class="mb-4">
+                            <p>{{$question['question']}}</p>
+                            <div class="form-check-group">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <div class="form-check form-check-inline">
                                     <input
                                         class="form-check-input"
                                         type="radio"
                                         name="question[{{ $question['id'] }}]"
                                         id="{{ $question['id'] }}"
                                         value="{{ $i }}"
-                                    />
+                                        {{ isset($detailPA[$question['id']]) && $detailPA[$question['id']]->score == $i ? 'checked' : '' }} />
                                     <label class="form-check-label" for="{{ $question['id'] }}">{{ $i }}</label>
-                                </div>
+                            </div>
                             @endfor
+
+
                         </div>
+
+                        {{-- Display error message for unanswered question --}}
+                        @if ($errors->has('question.' . $question['id']))
+                        <div class="text-danger">
+                            {{ $errors->first('question.' . $question['id']) }}
+                        </div>
+                        @endif
                     </div>
                     @empty
-                        <div class="alert alert-danger">
-                                Data Tidak Tersedia
-                        </div>
+                    <div class="alert alert-danger">
+                        Data Tidak Tersedia
+                    </div>
                     @endforelse
 
                 </div>
             </div>
         </div>
         @empty
-            <div class="alert alert-danger">
-                Data Tidak Tersedia
-            </div>
+        <div class="alert alert-danger">
+            Data Tidak Tersedia
+        </div>
         @endforelse
 
-        </div>
+    </div>
     </div>
 
     <input type="hidden" name="pa_employee" value="{{json_encode($pa_employee)}}">

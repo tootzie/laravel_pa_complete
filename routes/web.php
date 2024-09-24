@@ -30,10 +30,10 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
     Route::controller(PenilaianController::class)->group(function () {
         Route::get('/penilaian', 'index')->name('penilaian');
-        Route::post('/penilaian/detail', 'penilaian_detail')->name('penilaian-detail');
+        Route::get('/penilaian/detail/{id}', 'penilaian_detail')->name('penilaian-detail');
         Route::post('/penilaian/detail/store', 'penilaian_detail_store')->name('penilaian-detail-store');
         Route::post('/penilaian/detail/autosave', 'penilaian_detail_autosave')->name('penilaian-detail-autosave');
-        Route::post('/penilaian/detail-revisi', 'penilaian_detail_revisi')->name('penilaian-detail-revisi');
+        Route::get('/penilaian/detail-revisi/{id}', 'penilaian_detail_revisi')->name('penilaian-detail-revisi');
         Route::post('/penilaian/detail-revisi/store', 'penilaian_detail_revisi_store')->name('penilaian-detail-revisi-store');
     });
 

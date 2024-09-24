@@ -18,6 +18,10 @@
             let formData = $('#penilaianForm').serialize(); // Get all form data
             let csrfToken = $('#penilaianForm input[name="_token"]').val();
 
+            // console.log(formData);
+            let formArray = $('#penilaianForm').serializeArray();
+            console.log(formArray);
+
             $.ajax({
                 url: autosaveUrl, // Replace with your autosave route
                 method: 'POST',
