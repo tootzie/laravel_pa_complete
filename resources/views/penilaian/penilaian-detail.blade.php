@@ -117,21 +117,19 @@ $userRole = auth()->user()->userRole->id;
                             </div>
                             @endfor
                         </div>
+                        {{-- Display error message for unanswered question --}}
+                        @if ($errors->has('question.' . $question['id']))
+                        <div class="text-danger">
+                            {{ $errors->first('question.' . $question['id']) }}
+                        </div>
+                        @endif
                     </div>
                     @empty
                     <div class="alert alert-danger">
                         Data Tidak Tersedia
                     </div>
                     @endforelse
-
-
                 </div>
-                {{-- Display error message for unanswered question --}}
-                @if ($errors->has('question.' . $question['id']))
-                <div class="text-danger">
-                    {{ $errors->first('question.' . $question['id']) }}
-                </div>
-                @endif
             </div>
         </div>
         @empty
@@ -180,8 +178,6 @@ $userRole = auth()->user()->userRole->id;
                                     <label class="form-check-label" for="{{ $question['id'] }}">{{ $i }}</label>
                             </div>
                             @endfor
-
-
                         </div>
 
                         {{-- Display error message for unanswered question --}}
