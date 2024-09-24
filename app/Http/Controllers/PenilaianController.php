@@ -108,6 +108,74 @@ class PenilaianController extends Controller
         // Use the existing $questions variable that has been passed to the Blade view
         $questions = json_decode($request->questions, true);
 
+        $pa_employee = json_decode($request->pa_employee);
+        $kode_question_category = $pa_employee->kategori_pa;
+
+        // Initialize the data array
+        $data = [
+            'data' => [
+                'id_employee' => $pa_employee->ektp_employee,
+                'kode_question_category' => $kode_question_category,
+                'score' => []
+            ]
+        ];
+
+
+
+        //Variables to store to detail_pa
+        $id_header_pa = $pa_employee->id;
+        $ektp_penilai = auth()->user()->ektp;
+        $nama_penilai = auth()->user()->name;
+
+        // Iterate over the submitted form data (all selected values)
+        foreach ($request->input('question') as $questionId => $value) {
+            // Determine the subaspect based on the questionId from the $questions variable
+            $subaspek = $this->getSubaspekFromExistingQuestions($questions, $questionId);
+
+            // Prepare the question data
+            $questionData = [
+                'question_id' => $questionId,
+                'value' => $value
+            ];
+
+            // Check if the subaspect already exists in the score array
+            $found = false;
+            foreach ($data['data']['score'] as $subaspect) {
+                if ($subaspect['subaspect'] === $subaspek) {
+                    $subaspect['items'][] = $questionData;
+                    $found = true;
+                    break;
+                }
+            }
+
+            // If the subaspect does not exist yet, add a new entry
+            if (!$found) {
+                $data['data']['score'][] = [
+                    'subaspect' => $subaspek,
+                    'items' => [$questionData]
+                ];
+            }
+
+            // Store scores to detail_pa if detail with id_header_pa is not available yet
+            $detailPA = DetailPA::where("id_header_pa", $id_header_pa)->where("id_master_question_pa", $questionId)->first();
+            if ($detailPA == null) {
+                DetailPA::create([
+                    'id_header_pa' => $id_header_pa,
+                    'id_master_question_pa' => $questionId,
+                    'ektp_penilai' => $ektp_penilai,
+                    'nama_penilai' => $nama_penilai,
+                    'score' => $value,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+            } else {
+                $detailPA->update([
+                    'score' => $value,
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
+        }
+
         // Initialize an array to store validation errors
         $validationErrors = [];
 
@@ -134,92 +202,24 @@ class PenilaianController extends Controller
             return redirect()->back()->withErrors($validationErrors)->withInput();
         }
 
-        // $pa_employee = json_decode($request->pa_employee);
-        // $kode_question_category = $pa_employee->kategori_pa;
+        //Calculate nilai_awal from $data
+        $PAController = new PAController();
+        $response = $PAController->store($data);
+        $responseData = $response->getData(true);
+        $nilai_awal = $responseData['data']['total_score'];
 
-        // // Initialize the data array
-        // $data = [
-        //     'data' => [
-        //         'id_employee' => $pa_employee->ektp_employee,
-        //         'kode_question_category' => $kode_question_category,
-        //         'score' => []
-        //     ]
-        // ];
+        //Store nilai_awal to header_pa
+        $header_pa = HeaderPA::where('id', $pa_employee->id)->first();
+        $header_pa->update([
+            'nilai_awal' => $nilai_awal,
+            'id_status_penilaian' => 200,
+            'updated_at' => Carbon::now(),
+            'updated_by' => auth()->user()->name
+        ]);
 
+        session()->flash('success', "Penilaian berhasil ditambahkan. Nilai awal untuk $pa_employee->nama_employee : $nilai_awal");
 
-
-        // //Variables to store to detail_pa
-        // $id_header_pa = $pa_employee->id;
-        // $ektp_penilai = auth()->user()->ektp;
-        // $nama_penilai = auth()->user()->name;
-
-        // // Iterate over the submitted form data (all selected values)
-        // foreach ($request->input('question') as $questionId => $value) {
-        //     // Determine the subaspect based on the questionId from the $questions variable
-        //     $subaspek = $this->getSubaspekFromExistingQuestions($questions, $questionId);
-
-        //     // Prepare the question data
-        //     $questionData = [
-        //         'question_id' => $questionId,
-        //         'value' => $value
-        //     ];
-
-        //     // Check if the subaspect already exists in the score array
-        //     $found = false;
-        //     foreach ($data['data']['score'] as &$subaspect) {
-        //         if ($subaspect['subaspect'] === $subaspek) {
-        //             $subaspect['items'][] = $questionData;
-        //             $found = true;
-        //             break;
-        //         }
-        //     }
-
-        //     // If the subaspect does not exist yet, add a new entry
-        //     if (!$found) {
-        //         $data['data']['score'][] = [
-        //             'subaspect' => $subaspek,
-        //             'items' => [$questionData]
-        //         ];
-        //     }
-
-        //     // Store scores to detail_pa if detail with id_header_pa is not available yet
-        //     $detailPA = DetailPA::where("id_header_pa", $id_header_pa)->where("id_master_question_pa", $questionId)->first();
-        //     if ($detailPA == null) {
-        //         DetailPA::create([
-        //             'id_header_pa' => $id_header_pa,
-        //             'id_master_question_pa' => $questionId,
-        //             'ektp_penilai' => $ektp_penilai,
-        //             'nama_penilai' => $nama_penilai,
-        //             'score' => $value,
-        //             'created_at' => Carbon::now(),
-        //             'updated_at' => Carbon::now()
-        //         ]);
-        //     } else {
-        //         $detailPA->update([
-        //             'score' => $value,
-        //             'updated_at' => Carbon::now(),
-        //         ]);
-        //     }
-        // }
-
-        // //Calculate nilai_awal from $data
-        // $PAController = new PAController();
-        // $response = $PAController->store($data);
-        // $responseData = $response->getData(true);
-        // $nilai_awal = $responseData['data']['total_score'];
-
-        // //Store nilai_awal to header_pa
-        // $header_pa = HeaderPA::where('id', $pa_employee->id)->first();
-        // $header_pa->update([
-        //     'nilai_awal' => $nilai_awal,
-        //     'id_status_penilaian' => 200,
-        //     'updated_at' => Carbon::now(),
-        //     'updated_by' => auth()->user()->name
-        // ]);
-
-        // session()->flash('success', "Penilaian berhasil ditambahkan. Nilai awal untuk $pa_employee->nama_employee : $nilai_awal");
-
-        // return redirect()->route('penilaian');
+        return redirect()->route('penilaian');
     }
 
     public function penilaian_detail_autosave(Request $request)
