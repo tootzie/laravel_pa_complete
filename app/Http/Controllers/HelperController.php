@@ -13,7 +13,7 @@ class HelperController extends Controller
         //Get all subordinates based on logged in user ektp
         $ektp_penilai =  auth()->user()->ektp;
         $subordinatesAPI = Http::timeout(50)
-            ->get('http://172.26.11.17:8000/api/get_subordinates/'.$ektp_penilai);
+            ->get('http://172.26.11.8:8000/api/get_subordinates/'.$ektp_penilai);
 
         $subordinates = collect(json_decode($subordinatesAPI->body())->data);
 
@@ -37,10 +37,19 @@ class HelperController extends Controller
     }
 
     public function get_active_periode() {
-        $today = Carbon::today();
-        $active_periode = MasterTahunPeriode::whereDate('start_date', '<=', $today)
-        ->whereDate('end_date', '>=', $today)
-        ->first(['id','tahun', 'periode']);
+        // $today = Carbon::today();
+        // $active_periode = MasterTahunPeriode::whereDate('start_date', '<=', $today)
+        // ->whereDate('end_date', '>=', $today)
+        // ->first(['id','tahun', 'periode']);
+
+        $active_periode = MasterTahunPeriode::where('is_active', 1)
+        ->first();
+
+        if($active_periode == null) {
+            $active_periode = MasterTahunPeriode::orderBy('start_date', 'desc')
+            ->orderBy('end_date', 'desc')
+            ->first();
+        }
 
         return $active_periode;
     }

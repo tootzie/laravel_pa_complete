@@ -45,7 +45,11 @@ class LoginController extends Controller
                 Auth::guard('web')->login($finduser);
                 $request->session()->regenerate();
 
-                return redirect()->route('dashboard');
+                if($existingUser->id_user_roles != 1) {
+                    return redirect()->route('dashboard');
+                } else {
+                    return redirect()->route('summary');
+                }
             } else {
                 // $newUser = User::create([
                 //     'name' => $user->name,
@@ -62,7 +66,12 @@ class LoginController extends Controller
 
                 Auth::guard('web')->login($existingUser);
                 $request->session()->regenerate();
-                return redirect()->route('dashboard');
+
+                if($existingUser->id_user_roles != 1) {
+                    return redirect()->route('dashboard');
+                } else {
+                    return redirect()->route('summary');
+                }
             }
         } catch (Exception $e) {
             return redirect()->route('login');

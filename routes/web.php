@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PenilaianAllController;
 use App\Http\Controllers\PenilaianController;
+use App\Http\Controllers\PeriodePenilaianController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -65,6 +66,16 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         Route::get('/user-roles/edit/{id}', 'userRolesEdit')->name('user-roles-edit');
         Route::patch('/user-roles/update/{id}', 'userRolesUpdate')->name('user-roles-update');
         Route::post('/user-roles/delete/{id}', 'userRolesDelete')->name('user-roles-delete');
+    });
+
+    Route::controller(PeriodePenilaianController::class)->group(function (){
+        Route::get('/periode-penilaian', 'index')->name('periode-penilaian');
+        Route::get('/periode-penilaian/create', 'create')->name('periode-penilaian-create');
+        Route::post('/periode-penilaian/store', 'store')->name('periode-penilaian-store');
+        Route::get('/periode-penilaian/edit/{id}', 'edit')->name('periode-penilaian-edit');
+        Route::patch('/periode-penilaian/update/{id}', 'update')->name('periode-penilaian-update');
+        Route::post('/periode-penilaian/delete/{id}', 'delete')->name('periode-penilaian-delete');
+        Route::post('/periode-penilaian/toggle/{id}', 'toggle')->name('periode-penilaian-toggle');
     });
 });
 

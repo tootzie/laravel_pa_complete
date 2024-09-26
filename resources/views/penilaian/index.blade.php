@@ -162,7 +162,7 @@
                             <div class="action-buttons">
                                 <button type="button" class="btn btn-icon btn-warning"
                                     onclick="window.location.href='{{ $pa->id_status_penilaian === 100 ? route('penilaian-detail', ['id' => $pa->id]) : route('penilaian-detail-revisi', ['id' => $pa->id]) }}'"
-                                    @if ((($pa->id_status_penilaian != 100 && $pa->id_status_penilaian != 200) && $userRole == 2) || ($pa->id_status_penilaian != 300 && $userRole == 3))
+                                    @if (($pa->id_status_penilaian != 300 && $userRole == 3 && $is_in_periode == false) || $is_in_periode == false)
                                     disabled
                                     @endif>
                                     <span class="tf-icons mdi mdi-square-edit-outline"></span>

@@ -30,38 +30,11 @@ class PenilaianController extends Controller
         //Get active master_tahun_periode
         $active_periode = $HelperController->get_active_periode();
 
-        //Select all employees in $ektp_subordinates from where id_master_tahun_periode is $active_periode
-        // $header_pa = HeaderPA::where('id_master_tahun_periode', $active_periode->id)->whereIn('ektp_employee', $ektp_subordinates)->get();
-
-        //If result is empty, add all employees name without any score to header_pa
-        // if($header_pa->isEmpty()) {
-        //     $id_master_tahun_periode = $active_periode->id;
-        //     //Store each employee to header_pa without score
-        //     foreach ($ektp_subordinates as $ektp_subordinate) {
-        //         if($ektp_subordinate != null) {
-        //             try {
-        //                 HeaderPA::create([
-        //                     'id_master_tahun_periode' => $id_master_tahun_periode,
-        //                     'id_status_penilaian' => 100,
-        //                     'ektp_employee' => $ektp_subordinate,
-        //                     'nama_employee' => $data_subordinates[$ektp_subordinate]['name'],
-        //                     'perusahaan' => $data_subordinates[$ektp_subordinate]['companyCode'],
-        //                     'departemen' => $data_subordinates[$ektp_subordinate]['department'],
-        //                     'kategori_pa' => $data_subordinates[$ektp_subordinate]['paCode'],
-        //                     'created_at' => Carbon::now(),
-        //                     'updated_at' => Carbon::now(),
-        //                     'updated_by' => 'Sistem'
-        //                 ]);
-
-
-        //             } catch (\Exception $e) {
-        //                 // Output the exception message for debugging
-        //                 dd($e->getMessage());
-        //             }
-        //         }
-        //     }
-
-        // }
+        $is_in_periode = false;
+        // Check if today's date is between start_date and end_date
+        if (Carbon::today()->between($active_periode->start_date, $active_periode->end_date)) {
+            $is_in_periode = true;
+        }
 
         //Renew $header_pa variable
         $header_pa = HeaderPA::where('id_master_tahun_periode', $active_periode->id)
@@ -79,7 +52,7 @@ class PenilaianController extends Controller
                 return $query;
             })->paginate(10);
 
-        return view('penilaian.index', compact('header_pa'));
+        return view('penilaian.index', compact('header_pa', 'is_in_periode'));
     }
 
     public function penilaian_detail($id)
@@ -120,8 +93,6 @@ class PenilaianController extends Controller
             ]
         ];
 
-
-
         //Variables to store to detail_pa
         $id_header_pa = $pa_employee->id;
         $ektp_penilai = auth()->user()->ektp;
@@ -131,6 +102,7 @@ class PenilaianController extends Controller
         foreach ($request->input('question') as $questionId => $value) {
             // Determine the subaspect based on the questionId from the $questions variable
             $subaspek = $this->getSubaspekFromExistingQuestions($questions, $questionId);
+            \Log::error('subaspek question'.$questionId.' = '.$subaspek);
 
             // Prepare the question data
             $questionData = [
@@ -140,9 +112,10 @@ class PenilaianController extends Controller
 
             // Check if the subaspect already exists in the score array
             $found = false;
-            foreach ($data['data']['score'] as $subaspect) {
-                if ($subaspect['subaspect'] === $subaspek) {
-                    $subaspect['items'][] = $questionData;
+            foreach ($data['data']['score'] as &$allScores) {
+                if ($allScores['subaspect'] == $subaspek) {
+                    \Log::error('found true');
+                    $allScores['items'][] = $questionData;
                     $found = true;
                     break;
                 }
@@ -150,6 +123,7 @@ class PenilaianController extends Controller
 
             // If the subaspect does not exist yet, add a new entry
             if (!$found) {
+                \Log::error('found false');
                 $data['data']['score'][] = [
                     'subaspect' => $subaspek,
                     'items' => [$questionData]
@@ -260,7 +234,7 @@ class PenilaianController extends Controller
 
             // Check if the subaspect already exists in the score array
             $found = false;
-            foreach ($data['data']['score'] as &$subaspect) {
+            foreach ($data['data']['score'] as $subaspect) {
                 if ($subaspect['subaspect'] === $subaspek) {
                     $subaspect['items'][] = $questionData;
                     $found = true;

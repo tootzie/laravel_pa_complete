@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HeaderPA;
+use App\Models\MasterTahunPeriode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,6 @@ class DashboardController extends Controller
         //Get active master_tahun_periode
         $active_periode = $HelperController->get_active_periode();
 
-        //Select all employees in $ektp_subordinates from where id_master_tahun_periode is $active_periode
         $header_pa = HeaderPA::where('id_master_tahun_periode', $active_periode->id)->whereIn('ektp_employee', $ektp_subordinates)->get();
 
         //If result is empty, add all employees name without any score to header_pa

@@ -46,6 +46,12 @@
             "slug": "user-roles"
           }
         ]
-      }
+    },
+    {
+        "name": "Periode Penilaian",
+        "icon": "menu-icon tf-icons mdi mdi-calendar-clock-outline",
+        "slug": "periode-penilaian",
+        "url": "/periode-penilaian"
+    }
   ]
 }
