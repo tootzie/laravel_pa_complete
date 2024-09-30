@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PenilaianAllController;
+use App\Http\Controllers\PenilaianByUserController;
 use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\PeriodePenilaianController;
 use App\Http\Controllers\UserController;
@@ -46,8 +47,22 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     });
 
     Route::controller(PenilaianAllController::class)->group(function (){
-        Route::get('/penilaian-all', 'index')->name('penilaian-all');
-        Route::get('/penilaian-all/detail', 'penilaian_all_detail')->name('penilaian-all-detail');
+        Route::get('/penilaian-menu-all', 'index')->name('penilaian-menu-all');
+        Route::get('/penilaian-menu-all/detail', 'penilaian_all_detail')->name('penilaian-menu-all-detail');
+    });
+
+    Route::controller(PeriodePenilaianController::class)->group(function (){
+        Route::get('/penilaian-menu-periode', 'index')->name('penilaian-menu-periode');
+        Route::get('/penilaian-menu-periode/create', 'create')->name('penilaian-menu-periode-create');
+        Route::post('/penilaian-menu-periode/store', 'store')->name('penilaian-menu-periode-store');
+        Route::get('/penilaian-menu-periode/edit/{id}', 'edit')->name('penilaian-menu-periode-edit');
+        Route::patch('/penilaian-menu-periode/update/{id}', 'update')->name('penilaian-menu-periode-update');
+        Route::post('/penilaian-menu-periode/delete/{id}', 'delete')->name('penilaian-menu-periode-delete');
+        Route::post('/penilaian-menu-periode/toggle/{id}', 'toggle')->name('penilaian-menu-periode-toggle');
+    });
+
+    Route::controller(PenilaianByUserController::class)->group(function (){
+        Route::get('/penilaian-menu-by-user', 'index')->name('penilaian-menu-by-user');
     });
 
     Route::controller(UserController::class)->group(function (){
@@ -68,15 +83,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         Route::post('/user-roles/delete/{id}', 'userRolesDelete')->name('user-roles-delete');
     });
 
-    Route::controller(PeriodePenilaianController::class)->group(function (){
-        Route::get('/periode-penilaian', 'index')->name('periode-penilaian');
-        Route::get('/periode-penilaian/create', 'create')->name('periode-penilaian-create');
-        Route::post('/periode-penilaian/store', 'store')->name('periode-penilaian-store');
-        Route::get('/periode-penilaian/edit/{id}', 'edit')->name('periode-penilaian-edit');
-        Route::patch('/periode-penilaian/update/{id}', 'update')->name('periode-penilaian-update');
-        Route::post('/periode-penilaian/delete/{id}', 'delete')->name('periode-penilaian-delete');
-        Route::post('/periode-penilaian/toggle/{id}', 'toggle')->name('periode-penilaian-toggle');
-    });
+
 });
 
 //AUTH

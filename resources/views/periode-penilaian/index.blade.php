@@ -32,7 +32,7 @@
 <br>
 
 <!-- SEARCH BAR -->
-<form method="GET" action="{{ url('/periode-penilaian') }}">
+<form method="GET" action="{{ url('/penilaian-menu-periode') }}">
     <div class="input-group input-group-merge">
         <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-magnify"></i></span>
         <input type="text" class="form-control" name="search" value="{{ request()->input('search') }}" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon-search31" />
@@ -44,7 +44,7 @@
 <br>
 
 <div class="d-flex justify-content-left">
-    <button type="button" class="btn btn-sm btn-primary" onclick="window.location.href='/periode-penilaian/create'">+ Tambah Periode</button>
+    <button type="button" class="btn btn-sm btn-primary" onclick="window.location.href='/penilaian-menu-periode/create'">+ Tambah Periode</button>
 </div>
 <br>
 <div class="col-12">
@@ -81,7 +81,7 @@
                                         Toggle periode?
                                     </div>
                                     <div class="modal-footer">
-                                        <form action="{{ route('periode-penilaian-toggle', $period->id) }}" method="POST">
+                                        <form action="{{ route('penilaian-menu-periode-toggle', $period->id) }}" method="POST">
                                             @csrf
                                             <button type="submit" class="btn btn-primary">Ya</button>
                                         </form>
@@ -94,7 +94,7 @@
                         <!-- <td><span class="badge rounded-pill"></span>{{$user->userRole->name ?? 'null'}}</td> -->
                         <td>
                             <div class="action-buttons">
-                                <a type="button" class="btn btn-icon btn-warning" href="{{ route('periode-penilaian-edit', $period->id) }}">
+                                <a type="button" class="btn btn-icon btn-warning" href="{{ route('penilaian-menu-periode-edit', $period->id) }}">
                                     <span class="tf-icons mdi mdi-square-edit-outline"></span>
                                 </a>
                                 <a type="button" class="btn btn-icon btn-danger" href="#" data-bs-toggle="modal" data-bs-target="#modalToggle{{$period->id}}">
@@ -112,7 +112,7 @@
                                                 Hapus periode {{$period->periode}} tahun {{$period->tahun}}?
                                             </div>
                                             <div class="modal-footer">
-                                                <form action="{{ route('periode-penilaian-delete', $period->id) }}" method="POST">
+                                                <form action="{{ route('penilaian-menu-periode-delete', $period->id) }}" method="POST">
                                                     @csrf
                                                     <button type="submit" class="btn btn-primary">Hapus</button>
                                                 </form>

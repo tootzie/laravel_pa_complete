@@ -76,7 +76,7 @@ class PeriodePenilaianController extends Controller
             'updated_at' => Carbon::now()
         ]);
 
-        return redirect()->route('periode-penilaian')->with('success', 'User added successfully!');
+        return redirect()->route('penilaian-menu-periode')->with('success', 'User added successfully!');
     }
 
     public function edit($id) {
@@ -105,14 +105,14 @@ class PeriodePenilaianController extends Controller
             'updated_at' => Carbon::now()
         ]);
 
-        return redirect()->route('periode-penilaian')->with('success', 'User edited successfully!');
+        return redirect()->route('penilaian-menu-periode')->with('success', 'User edited successfully!');
     }
 
     public function delete($id) {
         $periode = MasterTahunPeriode::where('id', $id)->first();
         $periode->delete();
 
-        return redirect()->route('periode-penilaian')->with('success', 'User deleted successfully!');
+        return redirect()->route('penilaian-menu-periode')->with('success', 'User deleted successfully!');
     }
 
     public function toggle($id) {
@@ -146,6 +146,6 @@ class PeriodePenilaianController extends Controller
 
         }
 
-        return redirect()->route('periode-penilaian')->with('success', 'User deleted successfully!');
+        return redirect()->route('penilaian-menu-periode')->with('success', 'User deleted successfully!');
     }
 }

@@ -141,7 +141,7 @@
                             <td><span class="badge bg-label-warning rounded-pill">Revisi Head of Dept</span></td>
                             <td>
                                 <div class="action-buttons">
-                                    <a type="button" class="btn btn-icon btn-success" href="{{ url('/penilaian-all/detail') }}">
+                                    <a type="button" class="btn btn-icon btn-success" href="{{ url('/penilaian-menu-all/detail') }}">
                                         <span class="tf-icons mdi mdi-eye-outline"></span>
                                     </a>
                                     <a type="button" class="btn btn-icon btn-warning" href="#" data-bs-toggle="modal" data-bs-target="#modalCenter">
@@ -172,7 +172,7 @@
                             <td><span class="badge bg-label-warning rounded-pill">Revisi Head of Dept</span></td>
                             <td>
                                 <div class="action-buttons">
-                                    <a type="button" class="btn btn-icon btn-success" href="{{ url('/penilaian-all/detail') }}">
+                                    <a type="button" class="btn btn-icon btn-success" href="{{ url('/penilaian-menu-all/detail') }}">
                                         <span class="tf-icons mdi mdi-eye-outline"></span>
                                     </a>
                                     <a type="button" class="btn btn-icon btn-warning" href="#">

@@ -13,7 +13,7 @@
                 <h5 class="mb-0">Edit Periode Penilaian</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('periode-penilaian-update', $period->id) }}" method="POST">
+                <form action="{{ route('penilaian-menu-periode-update', $period->id) }}" method="POST">
                     @csrf
                     @method('patch')
                     <div class="row mb-3">

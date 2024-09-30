@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Http;
 
 class HelperController extends Controller
 {
-    public function get_subordinates() {
+    public function get_subordinates($ektp) {
         //Get all subordinates based on logged in user ektp
-        $ektp_penilai =  auth()->user()->ektp;
+        $ektp_penilai =  $ektp;
         $subordinatesAPI = Http::timeout(50)
             ->get('http://172.26.11.9:8000/api/get_subordinates/'.$ektp_penilai);
 

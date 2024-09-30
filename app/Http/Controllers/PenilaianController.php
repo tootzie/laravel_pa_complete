@@ -25,8 +25,15 @@ class PenilaianController extends Controller
         $search = $request->input('search');
 
         //Get all subordinates based on logged in user ektp
-        $data_subordinates = Cache::remember('data_subordinates_' . auth()->user()->ektp, 60 * 60, function () use ($HelperController) {
-            return $HelperController->get_subordinates();
+        $ektpUser = '';
+        if($request->input('ektp') != null) {
+            $ektpUser = $request->input('ektp');
+        } else {
+            $ektpUser = auth()->user()->ektp;
+        }
+
+        $data_subordinates = Cache::remember('data_subordinates_' . $ektpUser, 60 * 60, function () use ($HelperController, $ektpUser) {
+            return $HelperController->get_subordinates($ektpUser);
         });
 
         $ektp_subordinates = array_column($data_subordinates, 'ektp');

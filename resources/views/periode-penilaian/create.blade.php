@@ -13,7 +13,7 @@
                 <h5 class="mb-0">Tambah Periode Penilaian</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('periode-penilaian-store') }}" method="POST">
+                <form action="{{ route('penilaian-menu-periode-store') }}" method="POST">
                     @csrf
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="tahun">Tahun</label>

@@ -24,11 +24,28 @@
         "slug": "company",
         "url": "/company"
     },
+
     {
-        "name": "Penilaian All",
+        "name": "Penilaian",
         "icon": "menu-icon tf-icons mdi mdi-counter",
-        "slug": "penilaian-all",
-        "url": "/penilaian-all"
+        "slug": "penilaian-menu",
+        "submenu": [
+          {
+            "url": "/penilaian-menu-all",
+            "name": "Semua Penilaian",
+            "slug": "penilaian-menu-all"
+          },
+          {
+            "url": "/penilaian-menu-periode",
+            "name": "Periode Penilaian",
+            "slug": "penilaian-menu-periode"
+          },
+          {
+            "url": "/penilaian-menu-by-user",
+            "name": "Penilaian By User",
+            "slug": "penilaian-menu-by-user"
+          }
+        ]
     },
     {
         "name": "User",
@@ -46,12 +63,6 @@
             "slug": "user-roles"
           }
         ]
-    },
-    {
-        "name": "Periode Penilaian",
-        "icon": "menu-icon tf-icons mdi mdi-calendar-clock-outline",
-        "slug": "periode-penilaian",
-        "url": "/periode-penilaian"
     }
   ]
 }
