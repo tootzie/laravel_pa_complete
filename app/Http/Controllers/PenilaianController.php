@@ -10,6 +10,7 @@ use App\Models\MasterSubAspek;
 use App\Models\MasterTahunPeriode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
@@ -24,7 +25,10 @@ class PenilaianController extends Controller
         $search = $request->input('search');
 
         //Get all subordinates based on logged in user ektp
-        $data_subordinates = $HelperController->get_subordinates();
+        $data_subordinates = Cache::remember('data_subordinates_' . auth()->user()->ektp, 60 * 60, function () use ($HelperController) {
+            return $HelperController->get_subordinates();
+        });
+
         $ektp_subordinates = array_column($data_subordinates, 'ektp');
 
         //Get active master_tahun_periode

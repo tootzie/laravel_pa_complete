@@ -29,7 +29,7 @@
     <div class="col-auto">
         <div>
             <div>
-                <label for="tahunDropdown" class="form-label">Tahun</label>
+                <label for="tahunDropdown" class="form-label">Tahun - Periode</label>
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">2024</button>
@@ -37,21 +37,6 @@
                     <li><a class="dropdown-item" href="javascript:void(0);">2023</a></li>
                     <li><a class="dropdown-item" href="javascript:void(0);">2022</a></li>
                     <li><a class="dropdown-item" href="javascript:void(0);">2021</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Period Selection -->
-    <div class="col-auto">
-        <div>
-            <div>
-                <label for="periodeDropdown" class="form-label">Periode</label>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">1: Jan-Jul</button>
-                <ul class="dropdown-menu" id="periodeDropdown">
-                    <li><a class="dropdown-item" href="javascript:void(0);">2: Aug-Des</a></li>
                 </ul>
             </div>
         </div>
@@ -67,25 +52,6 @@
                 <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Administrasi</button>
                 <ul class="dropdown-menu" id="divisiDropdown">
                     <li><a class="dropdown-item" href="javascript:void(0);">Produksi</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-auto">
-        <div>
-            <div>
-                <label for="statusDropdown" class="form-label">Filter Status</label>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">Semua</button>
-                <ul class="dropdown-menu" id="statusDropdown">
-                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="semua">Semua</a></li>
-                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="Belum Dinilai">Belum Dinilai</a></li>
-                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="Penilaian Awal">Penilaian Awal</a></li>
-                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="Revisi Head of Dept">Revisi Head of Dept</a></li>
-                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="Revisi GM">Revisi GM</a></li>
-                    <li><a class="dropdown-item" href="javascript:void(0);" data-status="Nilai Akhir">Nilai Akhir</a></li>
                 </ul>
             </div>
         </div>

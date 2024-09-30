@@ -10,7 +10,7 @@ class CompanyReportController extends Controller
     public function index()
     {
         $companiesAPI = Http::timeout(50)
-            ->get('http://172.26.11.8:8000/api/get_all_company');
+            ->get('http://172.26.11.9:8000/api/get_all_company');
         $companies = collect(json_decode($companiesAPI->body())->data);
 
         return view('company-report.index', compact('companies'));
