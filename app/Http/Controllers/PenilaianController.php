@@ -365,22 +365,27 @@ class PenilaianController extends Controller
         // Retrieve the selected value
         $nilai_revisi = $validated['status'];
 
+        $header_pa = HeaderPA::where('id', $pa_employee->id)->first();
+
         //Determine status penilaian
         $status_penilaian = 0;
         if ($request->stringRevisi == 'Revisi Head of Department') {
             $status_penilaian = 300;
+            $header_pa->update([
+                'revisi_hod' => $nilai_revisi,
+                'id_status_penilaian' => $status_penilaian,
+                'updated_at' => Carbon::now(),
+                'updated_by' => auth()->user()->name
+            ]);
         } else if ($request->stringRevisi == 'Revisi GM') {
             $status_penilaian = 400;
+            $header_pa->update([
+                'revisi_gm' => $nilai_revisi,
+                'id_status_penilaian' => $status_penilaian,
+                'updated_at' => Carbon::now(),
+                'updated_by' => auth()->user()->name
+            ]);
         }
-
-        //Update header_pa
-        $header_pa = HeaderPA::where('id', $pa_employee->id)->first();
-        $header_pa->update([
-            'revisi_hod' => $nilai_revisi,
-            'id_status_penilaian' => $status_penilaian,
-            'updated_at' => Carbon::now(),
-            'updated_by' => auth()->user()->name
-        ]);
 
         session()->flash('success', "Penilaian berhasil ditambahkan. Nilai revisi untuk $pa_employee->nama_employee : $nilai_revisi");
 
