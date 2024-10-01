@@ -63,6 +63,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
     Route::controller(PenilaianByUserController::class)->group(function (){
         Route::get('/penilaian-menu-by-user', 'index')->name('penilaian-menu-by-user');
+        Route::get('/penilaian-menu-by-user/detail', 'detail')->name('penilaian-menu-by-user-detail');
     });
 
     Route::controller(UserController::class)->group(function (){

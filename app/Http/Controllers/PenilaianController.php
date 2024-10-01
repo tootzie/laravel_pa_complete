@@ -11,9 +11,7 @@ use App\Models\MasterTahunPeriode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Validator;
 
 class PenilaianController extends Controller
 {
@@ -25,12 +23,7 @@ class PenilaianController extends Controller
         $search = $request->input('search');
 
         //Get all subordinates based on logged in user ektp
-        $ektpUser = '';
-        if($request->input('ektp') != null) {
-            $ektpUser = $request->input('ektp');
-        } else {
-            $ektpUser = auth()->user()->ektp;
-        }
+        $ektpUser = auth()->user()->ektp;
 
         $data_subordinates = Cache::remember('data_subordinates_' . $ektpUser, 60 * 60, function () use ($HelperController, $ektpUser) {
             return $HelperController->get_subordinates($ektpUser);
