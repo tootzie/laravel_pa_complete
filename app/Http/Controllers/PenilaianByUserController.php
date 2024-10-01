@@ -29,16 +29,15 @@ class PenilaianByUserController extends Controller
 
         //Get all subordinates based on logged in user ektp
         $ektpUser = $request->input('ektp');
-        \Log::info('Ektp: ' . $ektpUser);
-
-        $data_subordinates = Cache::remember('data_subordinates_' . $ektpUser, 60 * 60, function () use ($HelperController, $ektpUser) {
-            return $HelperController->get_subordinates($ektpUser);
-        });
-
-        $ektp_subordinates = array_column($data_subordinates, 'ektp');
 
         //Get active master_tahun_periode
         $active_periode = $HelperController->get_active_periode();
+
+        $data_subordinates = Cache::remember('data_subordinates_' . $ektpUser, 60 * 60, function () use ($HelperController, $ektpUser, $active_periode) {
+            return $HelperController->get_subordinates($ektpUser, $active_periode->limit_date);
+        });
+
+        $ektp_subordinates = array_column($data_subordinates, 'ektp');
 
         $is_in_periode = false;
 

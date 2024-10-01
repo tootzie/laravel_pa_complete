@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MasterTahunPeriode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Svg\Tag\Rect;
@@ -63,7 +64,8 @@ class PeriodePenilaianController extends Controller
             'tahun' => 'required',
             'periode' => 'required',
             'start_date' => 'required',
-            'end_date' => 'required'
+            'end_date' => 'required',
+            'limit_date' => 'required'
         ]);
 
         MasterTahunPeriode::create([
@@ -71,6 +73,7 @@ class PeriodePenilaianController extends Controller
             'periode' => $request->input('periode'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
+            'limit_date' => $request->input('limit_date'),
             'is_active' => 0,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
@@ -92,7 +95,8 @@ class PeriodePenilaianController extends Controller
             'tahun' => 'required',
             'periode' => 'required',
             'start_date' => 'required',
-            'end_date' => 'required'
+            'end_date' => 'required',
+            'limit_date' => 'required'
         ]);
 
         $period->update([
@@ -100,10 +104,12 @@ class PeriodePenilaianController extends Controller
             'periode' => $request->input('periode'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
-            'is_active' => $request->input('is_active'),
+            'limit_date' => $request->input('limit_date'),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
+
+        Cache::flush();
 
         return redirect()->route('penilaian-menu-periode')->with('success', 'User edited successfully!');
     }
@@ -111,6 +117,8 @@ class PeriodePenilaianController extends Controller
     public function delete($id) {
         $periode = MasterTahunPeriode::where('id', $id)->first();
         $periode->delete();
+
+        Cache::flush();
 
         return redirect()->route('penilaian-menu-periode')->with('success', 'User deleted successfully!');
     }
@@ -145,6 +153,8 @@ class PeriodePenilaianController extends Controller
 
 
         }
+
+        Cache::flush();
 
         return redirect()->route('penilaian-menu-periode')->with('success', 'User deleted successfully!');
     }

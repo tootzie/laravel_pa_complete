@@ -17,14 +17,14 @@ class DashboardController extends Controller
 
         $ektpUser = auth()->user()->ektp;
 
-        //Get all subordinates based on logged in user ektp
-        $data_subordinates = Cache::remember('data_subordinates_' . $ektpUser, 60 * 60, function () use ($HelperController, $ektpUser) {
-            return $HelperController->get_subordinates($ektpUser);
-        });
-        $ektp_subordinates = array_column($data_subordinates, 'ektp');
-
         //Get active master_tahun_periode
         $active_periode = $HelperController->get_active_periode();
+
+        //Get all subordinates based on logged in user ektp
+        $data_subordinates = Cache::remember('data_subordinates_' . $ektpUser, 60 * 60, function () use ($HelperController, $ektpUser, $active_periode) {
+            return $HelperController->get_subordinates($ektpUser, $active_periode->limit_date);
+        });
+        $ektp_subordinates = array_column($data_subordinates, 'ektp');
 
         $header_pa = HeaderPA::where('id_master_tahun_periode', $active_periode->id)->whereIn('ektp_employee', $ektp_subordinates)->get();
 
@@ -102,17 +102,16 @@ class DashboardController extends Controller
 
         $ektpUser = auth()->user()->ektp;
 
+               //Get active master_tahun_periode
+               $active_periode = $HelperController->get_active_periode();
+
         //Get all subordinates based on logged in user ektp
-        $data_subordinates = Cache::remember('data_subordinates_' . $ektpUser, 60 * 60, function () use ($HelperController, $ektpUser) {
-            return $HelperController->get_subordinates($ektpUser);
+        $data_subordinates = Cache::remember('data_subordinates_' . $ektpUser, 60 * 60, function () use ($HelperController, $ektpUser, $active_periode) {
+            return $HelperController->get_subordinates($ektpUser, $active_periode->limit_date);
         });
-        // dd($data_subordinates);
         $ektp_subordinates = array_column($data_subordinates, 'ektp');
 
-        //Get active master_tahun_periode
-        $active_periode = $HelperController->get_active_periode();
-        // dd($active_periode);
-        // dd($category);
+
 
         //Select all employees in $ektp_subordinates from  where id_master_tahun_periode is $active_periode
         if ($category != null) {

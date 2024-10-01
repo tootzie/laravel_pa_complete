@@ -17,12 +17,12 @@ class HelperController extends Controller
         $this->apiUrl = env('API_URL');
     }
 
-    public function get_subordinates($ektp)
+    public function get_subordinates($ektp, $limit_date)
     {
         //Get all subordinates based on logged in user ektp
         $ektp_penilai =  $ektp;
 
-        $api_url = $this->apiUrl . '/get_subordinates/' . $ektp_penilai;
+        $api_url = $this->apiUrl . '/get_subordinates/' . $ektp_penilai . '/' . $limit_date;
         $subordinatesAPI = Http::timeout(50)
             ->get($api_url);
 

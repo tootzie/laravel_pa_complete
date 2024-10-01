@@ -57,6 +57,7 @@
                         <th class="text-truncate">Periode</th>
                         <th class="text-truncate">Tgl Start</th>
                         <th class="text-truncate">Tgl End</th>
+                        <th class="text-truncate">Tgl Limit</th>
                         <th class="text-truncate">Aktif</th>
                         <th class="text-truncate">Action</th>
                     </tr>
@@ -68,6 +69,7 @@
                         <td class="text-truncate"> {{$period->periode}}</td>
                         <td class="text-truncate"> {{\Carbon\Carbon::parse($period->start_date)->translatedFormat('j F Y')}}</td>
                         <td class="text-truncate"> {{\Carbon\Carbon::parse($period->end_date)->translatedFormat('j F Y')}}</td>
+                        <td class="text-truncate"> {{\Carbon\Carbon::parse($period->limit_date)->translatedFormat('j F Y')}}</td>
                         <td><span type="button" class="badge {{$period->is_active == 0 ? 'bg-label-danger' : 'bg-label-success'}} rounded-pill" data-bs-toggle="modal" data-bs-target="#confirmationModal{{$period->id}}">{{$period->is_active == 0 ? 'Tidak' : 'Ya'}}</span></td>
                         <!-- Modal 1-->
                         <div class="modal fade" id="confirmationModal{{$period->id}}" aria-labelledby="confirmationModalLabel{{$period->id}}" tabindex="-1" style="display: none;" aria-hidden="true">
