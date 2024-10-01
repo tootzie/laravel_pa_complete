@@ -93,11 +93,7 @@
                         <th class="text-truncate">Kategori PA</th>
                         <th class="text-truncate">Nilai Awal</th>
                         <th class="text-truncate">Revisi Head of Dept</th>
-                        @if ($userRole == '3')
                         <th class="text-truncate">Revisi GM</th>
-                        <!-- <th class="text-truncate">Nilai Akhir</th> -->
-                        @endif
-                        <th class="text-truncate">Action</th>
                         <!-- <th class="text-truncate">Terakhir Update</th>
                         <th class="text-truncate">User Update</th>
                         <th class="text-truncate">Status</th> -->
@@ -121,21 +117,7 @@
                         <td class="text-truncate"> {{$pa->kategori_pa ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->nilai_awal ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->revisi_hod ?? '-'}}</td>
-                        @if ($userRole == '3')
                         <td class="text-truncate"> {{$pa->revisi_gm ?? '-'}}</td>
-                        <!-- <td class="text-truncate"> {{$pa->nilai_akhir ?? '-'}}</td> -->
-                        @endif
-                        <td>
-                            <div class="action-buttons">
-                                <button type="button" class="btn btn-icon btn-warning"
-                                    onclick="window.location.href='{{ $pa->id_status_penilaian === 100 ? route('penilaian-detail', ['id' => $pa->id]) : route('penilaian-detail-revisi', ['id' => $pa->id]) }}'"
-                                    @if (($pa->id_status_penilaian != 300 && $userRole == 3 && $is_in_periode) || $is_in_periode == false)
-                                    disabled
-                                    @endif>
-                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                                </button>
-                            </div>
-                        </td>
                         <!-- <td class="text-truncate">{{$pa->updated_at}}</td>
                             <td class="text-truncate">{{$pa->updated_by}}</td>
                             <td><span class="badge bg-label-warning rounded-pill">{{$pa->StatusPenilaian->name ?? '-'}}</span></td> -->
