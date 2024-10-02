@@ -42,22 +42,24 @@
 <!-- SEARCH BAR -->
 <form method="GET" action="{{ url('/penilaian-menu-by-user/detail') }}">
     <!-- @csrf -->
-    <div class="input-group input-group-merge mb-2">
+    <div class="input-group input-group-merge">
         <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-account"></i></span>
         <select id="user_choice" name="user_choice" class="form-select select2">
             <option value="00">Pilih User</option>
             @foreach ($users as $user)
-            <option value="{{$user->ektp}}">{{$user->name}}</option>
+            <option value="{{$user->ektp_atasan}}">{{$user->nama_atasan}}</option>
             @endforeach
         </select>
-        @error('role_name')
+
+    </div>
+    @error('user_choice')
         <small class="text-danger">{{ $message }}</small>
-        @enderror
-    </div>
-    <div class="input-group input-group-merge mb-4">
+    @enderror
+    <div class="input-group input-group-merge mt-2 mb-4">
         <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-card-account-details"></i></span>
-        <input type="text" class="form-control" name="ektp" id="ektp" placeholder="E-KTP" aria-label="ektp" readonly/>
+        <input type="text" class="form-control" name="ektp" id="ektp" placeholder="E-KTP" aria-label="ektp" readonly />
     </div>
+    <input type="hidden" name="isIndex" id="isIndex" value="true">
     <div class="text-center">
         <button type="submit" class="btn btn-md btn-primary">Submit</button>
     </div>

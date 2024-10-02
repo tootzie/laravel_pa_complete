@@ -25,19 +25,28 @@ class PenilaianController extends Controller
         //Get all subordinates based on logged in user ektp
         $ektpUser = auth()->user()->ektp;
 
-                //Get active master_tahun_periode
-                $active_periode = $HelperController->get_active_periode();
+        //Get active master_tahun_periode
+        $active_periode = $HelperController->get_active_periode();
+        // Check if today's date is between start_date and end_date
+        $is_in_periode = false;
+        if (Carbon::today()->between($active_periode->start_date, $active_periode->end_date)) {
+            $is_in_periode = true;
+        }
 
+        //Masukkan semua KTP bawahan
         $data_subordinates = Cache::remember('data_subordinates_' . $ektpUser, 60 * 60, function () use ($HelperController, $ektpUser, $active_periode) {
             return $HelperController->get_subordinates($ektpUser, $active_periode->limit_date);
         });
-
         $ektp_subordinates = array_column($data_subordinates, 'ektp');
 
-        $is_in_periode = false;
-        // Check if today's date is between start_date and end_date
-        if (Carbon::today()->between($active_periode->start_date, $active_periode->end_date)) {
-            $is_in_periode = true;
+        //Filter KTP bawahan langsung (utk GM)
+        $authEktp = auth()->user()->ektp;
+        $filteredSubordinates = array_filter($data_subordinates, function ($subordinate) use ($authEktp) {
+            return $subordinate['ektp_atasan'] == $authEktp;
+        });
+        if($filteredSubordinates != null) {
+            // Extract all ektp values from the filtered subordinates
+            $ktp_bawahan_langsung = array_column($filteredSubordinates, 'ektp');
         }
 
         //Renew $header_pa variable
@@ -54,9 +63,9 @@ class PenilaianController extends Controller
                 });
 
                 return $query;
-            })->paginate(10);
+            })->orderBy('nama_employee', 'asc')->paginate(10);
 
-        return view('penilaian.index', compact('header_pa', 'is_in_periode'));
+        return view('penilaian.index', compact('header_pa', 'is_in_periode', 'ktp_bawahan_langsung'));
     }
 
     public function penilaian_detail($id)
@@ -106,7 +115,7 @@ class PenilaianController extends Controller
         foreach ($request->input('question') as $questionId => $value) {
             // Determine the subaspect based on the questionId from the $questions variable
             $subaspek = $this->getSubaspekFromExistingQuestions($questions, $questionId);
-            \Log::error('subaspek question'.$questionId.' = '.$subaspek);
+            \Log::error('subaspek question' . $questionId . ' = ' . $subaspek);
 
             // Prepare the question data
             $questionData = [
@@ -341,29 +350,39 @@ class PenilaianController extends Controller
 
         //String Revisi
         $userRole = auth()->user()->userRole->id;
-        $statusPenilaian = $pa_employee->id_status_penilaian;
+        $statusPenilaian = $pa_employee->StatusPenilaian->kode_status;
         $stringRevisi = '';
+        $defaultScore = '';
 
         if ($userRole == 2) {
             $stringRevisi = 'Revisi Head of Department';
+            $defaultScore = $pa_employee->revisi_hod ?? '00';
         } else if ($userRole == 3) {
             $stringRevisi = 'Revisi GM';
+            $defaultScore = $pa_employee->revisi_gm ?? '00';
         }
 
-        return view('penilaian.penilaian-detail-revisi', compact(['pa_employee', 'questions', 'stringRevisi']));
+        //Variable for scores
+        $scores = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'];
+
+        return view('penilaian.penilaian-detail-revisi', compact(['pa_employee', 'questions', 'stringRevisi', 'scores', 'defaultScore']));
     }
 
     public function penilaian_detail_revisi_store(Request $request)
     {
         $pa_employee = json_decode($request->pa_employee);
 
-        // Validate the request
-        $validated = $request->validate([
-            'status' => 'required|string',
-        ]);
+        $request->validate([
+            'revisi_input' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value == '00') {
+                        $fail('Please select a score.');
+                    }
+                },
+            ],
 
-        // Retrieve the selected value
-        $nilai_revisi = $validated['status'];
+        ]);
 
         $header_pa = HeaderPA::where('id', $pa_employee->id)->first();
 
@@ -372,7 +391,7 @@ class PenilaianController extends Controller
         if ($request->stringRevisi == 'Revisi Head of Department') {
             $status_penilaian = 300;
             $header_pa->update([
-                'revisi_hod' => $nilai_revisi,
+                'revisi_hod' => $request->revisi_input,
                 'id_status_penilaian' => $status_penilaian,
                 'updated_at' => Carbon::now(),
                 'updated_by' => auth()->user()->name
@@ -380,16 +399,157 @@ class PenilaianController extends Controller
         } else if ($request->stringRevisi == 'Revisi GM') {
             $status_penilaian = 400;
             $header_pa->update([
-                'revisi_gm' => $nilai_revisi,
+                'revisi_gm' => $request->revisi_input,
                 'id_status_penilaian' => $status_penilaian,
                 'updated_at' => Carbon::now(),
                 'updated_by' => auth()->user()->name
             ]);
         }
 
-        session()->flash('success', "Penilaian berhasil ditambahkan. Nilai revisi untuk $pa_employee->nama_employee : $nilai_revisi");
+        session()->flash('success', "Penilaian berhasil ditambahkan untuk $pa_employee->nama_employee");
+
+        $userRole = auth()->user()->userRole->id;
 
         return redirect()->route('penilaian');
+    }
+
+    public function penilaian_detail_revisi_all($id, Request $request)
+    {
+        $pa_employee = HeaderPA::where("id", $id)->first();
+
+        // Fetch scores for the user
+        $scores = DetailPA::where('id_header_pa', $pa_employee->id)->get()->pluck('score', 'id_master_question_pa');
+
+        //Get aspek kepribadian question
+        $pertanyaan_kepribadian = $this->getKepribadianQuestion();
+
+        //Get aspek pekerjaan question
+        $pertanyaan_pekerjaan = $this->getPekerjaanQuestion($pa_employee);
+
+        // Update kepribadian questions with scores
+        $pertanyaan_kepribadian = array_map(function ($subaspek) use ($scores) {
+            return [
+                'subaspek' => $subaspek['subaspek'],
+                'questions' => array_map(function ($question) use ($scores) {
+                    return [
+                        'id' => $question['id'],
+                        'question' => $question['question'],
+                        'score' => $scores->get($question['id'])  // Add score if it exists
+                    ];
+                }, $subaspek['questions'])
+            ];
+        }, $pertanyaan_kepribadian);
+
+        // Update pekerjaan questions with scores
+        $pertanyaan_pekerjaan = array_map(function ($subaspek) use ($scores) {
+            return [
+                'subaspek' => $subaspek['subaspek'],
+                'questions' => array_map(function ($question) use ($scores) {
+                    return [
+                        'id' => $question['id'],
+                        'question' => $question['question'],
+                        'score' => $scores->get($question['id'])  // Add score if it exists
+                    ];
+                }, $subaspek['questions'])
+            ];
+        }, $pertanyaan_pekerjaan);
+
+        // Combine results
+        $questions = [
+            "Kepribadian" => $pertanyaan_kepribadian,
+            "Pekerjaan" => $pertanyaan_pekerjaan
+        ];
+
+        //String Revisi
+        $userRole = auth()->user()->userRole->id;
+        $statusPenilaian = $pa_employee->StatusPenilaian->kode_status;
+        $stringRevisi = '';
+        $defaultScore = '';
+
+        $defaultScoreHod = $pa_employee->revisi_hod ?? '00';
+        $defaultScoreGM = $pa_employee->revisi_gm ?? '00';
+        $defaultScoreAkhir = $pa_employee->nilai_akhir ?? '00';
+
+        //Variable for scores
+        $scores = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'];
+
+        //Pass ektp parameter
+        $ektp = $request->input('ektp');
+
+        return view('penilaian.penilaian-detail-revisi-all', compact(['pa_employee', 'questions', 'stringRevisi', 'scores', 'defaultScoreHod', 'defaultScoreGM', 'defaultScoreAkhir', 'ektp']));
+    }
+
+    public function penilaian_detail_revisi_store_all(Request $request)
+    {
+        $pa_employee = json_decode($request->pa_employee);
+
+        $request->validate([
+            'revisi_input_hod' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value == '00') {
+                        $fail('Please select a score.');
+                    }
+                },
+            ],
+            'revisi_input_gm' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value == '00') {
+                        $fail('Please select a score.');
+                    }
+                },
+            ],
+        ]);
+
+        $userRole = auth()->user()->userRole->id;
+
+        if($userRole == 1){
+            $request->validate([
+                'revisi_input_nilai_akhir' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        if ($value == '00') {
+                            $fail('Please select a score.');
+                        }
+                    },
+                ],
+            ]);
+        }
+
+        $header_pa = HeaderPA::where('id', $pa_employee->id)->first();
+
+        //Determine status penilaian
+        if($userRole == 1) {
+            $status_penilaian = 500;
+            $header_pa->update([
+                'revisi_hod' => $request->revisi_input_hod,
+                'revisi_gm' => $request->revisi_input_gm,
+                'nilai_akhir' => $request->revisi_input_nilai_akhir,
+                'id_status_penilaian' => $status_penilaian,
+                'updated_at' => Carbon::now(),
+                'updated_by' => auth()->user()->name
+            ]);
+        } else {
+            $status_penilaian = 400;
+            $header_pa->update([
+                'revisi_hod' => $request->revisi_input_hod,
+                'revisi_gm' => $request->revisi_input_gm,
+                'id_status_penilaian' => $status_penilaian,
+                'updated_at' => Carbon::now(),
+                'updated_by' => auth()->user()->name
+            ]);
+        }
+
+        session()->flash('success', "Penilaian berhasil ditambahkan untuk $pa_employee->nama_employee");
+
+        if($userRole == 1) {
+            //Pass ektp parameter
+            $ektp = $request->input('ektp');
+            return redirect()->route('penilaian-menu-by-user-detail', compact(['ektp']));
+        } else {
+            return redirect()->route('penilaian');
+        }
     }
 
     private function getKepribadianQuestion()

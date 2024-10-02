@@ -83,7 +83,7 @@
     <div class="card">
         <div class="table-responsive">
             @php
-            $userRole = auth()->user()->userRole->id;
+                $userRole = auth()->user()->userRole->id;
             @endphp
             <table class="table">
                 <thead class="table-light">
@@ -126,10 +126,38 @@
                         @endif
                         <td>
                             <div class="action-buttons">
+                                @php
+                                    $disabledButton = false;
+                                    if($userRole == 1 || $userRole == 2) {
+                                        $disabledButton = !$is_in_periode;
+                                    } else if ($userRole == 3) {
+                                        // If bawahan langsung
+                                        if(in_array($pa->ektp_employee, $ktp_bawahan_langsung)) {
+                                            $disabledButton = !$is_in_periode;
+                                        } else {
+                                            $disabledButton = !$is_in_periode || ($pa->id_status_penilaian == 100 || $pa->id_status_penilaian == 200);
+                                        }
+                                    }
+
+                                    //Determine Route
+                                    $route = '';
+                                    if($pa->id_status_penilaian == 100) {
+                                        $route = route('penilaian-detail', ['id' => $pa->id]);
+                                    } else {
+                                        $route = route('penilaian-detail-revisi', ['id' => $pa->id]);
+                                        if($userRole == 1) {
+                                            $route = route('penilaian-detail-revisi-all', ['id' => $pa->id]);
+                                        }
+
+                                        if($userRole == 3 && in_array($pa->ektp_employee, $ktp_bawahan_langsung)) {
+                                            $route = route('penilaian-detail-revisi-all', ['id' => $pa->id]);
+                                        }
+                                    }
+                                @endphp
                                 <button type="button" class="btn btn-icon btn-warning"
-                                    onclick="window.location.href='{{ $pa->id_status_penilaian === 100 ? route('penilaian-detail', ['id' => $pa->id]) : route('penilaian-detail-revisi', ['id' => $pa->id]) }}'"
-                                    @if (($pa->id_status_penilaian != 300 && $userRole == 3 && $is_in_periode) || $is_in_periode == false)
-                                    disabled
+                                    onclick="window.location.href='{{ $route }}'"
+                                    @if ($disabledButton)
+                                        disabled
                                     @endif>
                                     <span class="tf-icons mdi mdi-square-edit-outline"></span>
                                 </button>
@@ -138,7 +166,6 @@
                         <!-- <td class="text-truncate">{{$pa->updated_at}}</td>
                             <td class="text-truncate">{{$pa->updated_by}}</td>
                             <td><span class="badge bg-label-warning rounded-pill">{{$pa->StatusPenilaian->name ?? '-'}}</span></td> -->
-
                     </tr>
                     @empty
                     <div class="alert alert-danger">

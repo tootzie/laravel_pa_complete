@@ -56,11 +56,18 @@ $userRole = auth()->user()->userRole->id;
                 <td>:</td>
                 <td>{{$pa_employee->revisi_hod ?? '-'}}</td>
             </tr>
-            @if ($userRole == 3)
+            @if ($userRole == 3 || $userRole == 1)
             <tr>
                 <td>Revisi GM</td>
                 <td>:</td>
                 <td>{{$pa_employee->revisi_gm ?? '-'}}</td>
+            </tr>
+            @endif
+            @if ($userRole == 1)
+            <tr>
+                <td>Nilai Akhir</td>
+                <td>:</td>
+                <td>{{$pa_employee->nilai_akhir ?? '-'}}</td>
             </tr>
             @endif
         </table>
@@ -168,36 +175,75 @@ $userRole = auth()->user()->userRole->id;
 <br>
 <br>
 
-@if ($pa_employee->id_status_penilaian != 500)
-<form id="revisiForm" method="POST" action="{{ route('penilaian-detail-revisi-store') }}">
+<form id="revisiForm" method="POST" action="{{ route('penilaian-detail-revisi-store-all') }}">
     @csrf
-    <h5 class="pb-1 mb-4">{{$stringRevisi}}</h5>
+    <h5 class="pb-1 mb-4">Revisi</h5>
 
     <div class="row mb-3">
-        <div class="col-12">
+        <label class="col-sm-2 col-form-label" for="revisi_input_hod">Head of Dept</label>
+        <div class="col-sm-10">
             <div class="input-group input-group-merge">
-                <select id="revisi_input" name="revisi_input" class="form-select">
-                    <option value="00" {{ $defaultScore == '00' ? 'selected' : '' }}>Pilih Nilai</option>
+                <select id="revisi_input_hod" name="revisi_input_hod" class="form-select">
+                    <option value="00" {{ $defaultScoreHod == '00' ? 'selected' : '' }}>Pilih Nilai</option>
 
                     @foreach ($scores as $score)
-                    <option value="{{$score}}" {{ $defaultScore == $score ? 'selected' : '' }}>{{$score}}</option>
+                    <option value="{{$score}}" {{ $defaultScoreHod == $score ? 'selected' : '' }}>{{$score}}</option>
                     @endforeach
                 </select>
             </div>
         </div>
-        @error('revisi_input')
+        @error('revisi_input_hod')
         <small class="text-danger">{{ $message }}</small>
         @enderror
     </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label" for="revisi_input_gm">GM</label>
+        <div class="col-sm-10">
+            <div class="input-group input-group-merge">
+                <select id="revisi_input_gm" name="revisi_input_gm" class="form-select">
+                    <option value="00" {{ $defaultScoreGM == '00' ? 'selected' : '' }}>Pilih Nilai</option>
+
+                    @foreach ($scores as $score)
+                    <option value="{{$score}}" {{ $defaultScoreGM == $score ? 'selected' : '' }}>{{$score}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        @error('revisi_input_gm')
+        <small class="text-danger">{{ $message }}</small>
+        @enderror
+    </div>
+
+    @if ($userRole == 1)
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="revisi_input_nilai_akhir">Nilai Akhir</label>
+            <div class="col-sm-10">
+                <div class="input-group input-group-merge">
+                    <select id="revisi_input_nilai_akhir" name="revisi_input_nilai_akhir" class="form-select">
+                        <option value="00" {{ $defaultScoreAkhir == '00' ? 'selected' : '' }}>Pilih Nilai</option>
+
+                        @foreach ($scores as $score)
+                        <option value="{{$score}}" {{ $defaultScoreAkhir == $score ? 'selected' : '' }}>{{$score}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            @error('revisi_input_nilai_akhir')
+            <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+    @endif
+
+
     <input type="hidden" name="pa_employee" value="{{json_encode($pa_employee)}}">
     <input type="hidden" name="stringRevisi" value="{{$stringRevisi}}">
+    <input type="hidden" name="ektp" value="{{$ektp}}">
 
     <div class="mt-5 d-flex justify-content-center">
         <button type="submit" class="btn btn-primary">Simpan</button>
     </div>
 </form>
-
-@endif
 
 
 

@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'PA Laporan Perusahaan')
+@section('title', 'PA Semua Nilai')
 
 @section('vendor-style')
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/apex-charts/apex-charts.css')}}">

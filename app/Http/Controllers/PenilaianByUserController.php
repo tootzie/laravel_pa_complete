@@ -22,6 +22,20 @@ class PenilaianByUserController extends Controller
 
     public function detail(Request $request)
     {
+        if($request->isIndex != null) {
+            Cache::flush();
+            $request->validate([
+                'user_choice' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        if ($value == '00') {
+                            $fail('Please select a user.');
+                        }
+                    },
+                ],
+            ]);
+        }
+
         $HelperController = new HelperController();
 
         // Get the search input
@@ -121,7 +135,7 @@ class PenilaianByUserController extends Controller
                 });
 
                 return $query;
-            })->paginate(10);
+            })->orderBy('nama_employee', 'asc')->paginate(10);
 
         return view('penilaian-by-user.detail', compact('header_pa', 'is_in_periode', 'ektpUser'));
     }
