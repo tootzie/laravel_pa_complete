@@ -137,6 +137,14 @@ class PenilaianByUserController extends Controller
                 return $query;
             })->orderBy('nama_employee', 'asc')->paginate(10);
 
-        return view('penilaian-by-user.detail', compact('header_pa', 'is_in_periode', 'ektpUser'));
+            //Get nama atasan & jumlah anak buah,
+            $jumlahAnakBuah = count($ektp_subordinates);
+
+            $HelperController = new HelperController();
+            $allAtasan = $HelperController->get_users();
+            $selectedAtasan = $allAtasan->firstWhere('ektp_atasan', $ektpUser);
+            $namaAtasan = $selectedAtasan ? $selectedAtasan->nama_atasan : '-';
+
+        return view('penilaian-by-user.detail', compact('header_pa', 'is_in_periode', 'ektpUser', 'jumlahAnakBuah', 'namaAtasan'));
     }
 }

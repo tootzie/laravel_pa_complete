@@ -23,6 +23,8 @@
 </div>
 @endif
 
+
+
 <!-- ROW 1: Year and Period Filter -->
 <div class="row gy-4">
     <!-- Year Selection -->
@@ -61,7 +63,24 @@
 
 <br>
 <br>
-<h5 class="pb-1 mb-4">Daftar Karyawan</h5>
+<h5 class="pb-1 mb-2">Daftar Karyawan</h5>
+
+<div class="row gy-4 mb-4">
+    <div class="col-6">
+        <table>
+            <tr>
+                <td>Nama Atasan </td>
+                <td> : </td>
+                <td>{{ $namaAtasan }}</td>
+            </tr>
+            <tr>
+                <td>Jumlah Anak Buah </td>
+                <td> : </td>
+                <td>{{ $jumlahAnakBuah }} orang</td>
+            </tr>
+        </table>
+    </div>
+</div>
 
 
 

@@ -9,6 +9,7 @@ use App\Models\MasterQuestionPA;
 use App\Models\MasterSubAspek;
 use App\Models\MasterTahunPeriode;
 use Carbon\Carbon;
+use Illuminate\Console\View\Components\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
@@ -65,7 +66,17 @@ class PenilaianController extends Controller
                 return $query;
             })->orderBy('nama_employee', 'asc')->paginate(10);
 
-        return view('penilaian.index', compact('header_pa', 'is_in_periode', 'ktp_bawahan_langsung'));
+        //Get data for Tahun - Periode filter
+        $tahunPeriodeFilter = MasterTahunPeriode::all();
+
+        //Get data for kategori PA filter
+        $kategoriPAFilter = HeaderPA::where('id_master_tahun_periode', $active_periode->id)
+        ->whereIn('ektp_employee', $ektp_subordinates)
+        ->where('kategori_pa', '!=', '')
+        ->distinct()
+        ->pluck('kategori_pa');
+
+        return view('penilaian.index', compact('header_pa', 'is_in_periode', 'ktp_bawahan_langsung', 'tahunPeriodeFilter', 'kategoriPAFilter'));
     }
 
     public function penilaian_detail($id)
