@@ -7,10 +7,19 @@ use Illuminate\Support\Facades\Http;
 
 class CompanyReportController extends Controller
 {
+    protected $apiUrl;
+
+    public function __construct()
+    {
+        // Set the API URL once in the constructor
+        $this->apiUrl = env('API_URL');
+    }
+
     public function index()
     {
+        $api_url = $this->apiUrl . '/get_all_company/';
         $companiesAPI = Http::timeout(50)
-            ->get('http://172.26.11.9:8000/api/get_all_company');
+            ->get($api_url);
         $companies = collect(json_decode($companiesAPI->body())->data);
 
         return view('company-report.index', compact('companies'));
