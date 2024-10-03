@@ -44,6 +44,7 @@
                         <th class="text-truncate">User</th>
                         <th class="text-truncate">Email</th>
                         <th class="text-truncate">E-KTP</th>
+                        <th class="text-truncate">Nama E-KTP</th>
                         <th class="text-truncate">Role</th>
                         <th class="text-truncate">Action</th>
                     </tr>
@@ -65,7 +66,9 @@
                         </td>
                         <td class="text-truncate"> {{$user->email}}</td>
                         <td class="text-truncate"> {{$user->ektp}}</td>
+                        <td class="text-truncate"> {{$user->nama_atasan}}</td>
                         <td><span class="badge rounded-pill"></span>{{$user->userRole->name ?? 'null'}}</td>
+
                         <td>
                             <div class="action-buttons">
                                 <a type="button" class="btn btn-icon btn-warning" href="{{ route('user-akses-edit', $user->id) }}">

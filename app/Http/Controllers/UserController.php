@@ -7,6 +7,7 @@ use App\Models\UserRoles;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
@@ -29,14 +30,17 @@ class UserController extends Controller
             return $query;
         })->paginate(10);
 
-
         return view('user.user-akses.index', compact('users'));
     }
 
     public function userAksesCreate()
     {
         $roles = UserRoles::all();
-        return view('user.user-akses.create', compact('roles'));
+        $HelperController = new HelperController();
+        $users = Cache::remember('data_users', 60 * 60, function () use ($HelperController) {
+            return $HelperController->get_users();
+        });
+        return view('user.user-akses.create', compact('roles', 'users'));
     }
 
     public function userAksesStore(Request $request)
@@ -45,6 +49,14 @@ class UserController extends Controller
         $request->validate([
             'email' => 'required|string|email|max:255|unique:users',
             'ektp' => 'required|min:16|max:16',
+            'user_choice' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value == '00') {
+                        $fail('Please select a user.');
+                    }
+                },
+            ],
             'role_name' => [
                 'required',
                 function ($attribute, $value, $fail) {
@@ -58,6 +70,7 @@ class UserController extends Controller
         User::create([
             'email' => $request->input('email'),
             'ektp' => $request->input('ektp'),
+            'nama_atasan' => $request->input('nama_atasan'),
             'id_user_roles' => $request->input('role_name'),
             'password' => encrypt('123456dummy'),
             'created_at' => Carbon::now(),
@@ -70,8 +83,14 @@ class UserController extends Controller
     public function userAksesEdit($id) {
         $user = User::where('id', $id)->with('userRole')->first();
         $roles = UserRoles::all();
+        $selectedEktp = $user->ektp;
         $selectedRoleId = $user->userRole->id;
-        return view('user.user-akses.edit', compact(['user', 'roles', 'selectedRoleId']));
+        $HelperController = new HelperController();
+        $users = Cache::remember('data_users', 60 * 60, function () use ($HelperController) {
+            return $HelperController->get_users();
+        });
+
+        return view('user.user-akses.edit', compact(['user', 'roles', 'selectedRoleId', 'selectedEktp', 'users']));
     }
 
     public function userAksesUpdate(Request $request, $id) {
@@ -80,6 +99,14 @@ class UserController extends Controller
         $request->validate([
             // 'email' => 'required|string|email|max:255|unique:users',
             'ektp' => 'required|min:16|max:16',
+            'user_choice' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value == '00') {
+                        $fail('Please select a user.');
+                    }
+                },
+            ],
             'role_name' => [
                 'required',
                 function ($attribute, $value, $fail) {
@@ -94,6 +121,7 @@ class UserController extends Controller
         $user->update([
             'email' => $request->email,
             'ektp' => $request->ektp,
+            'nama_atasan' => $request->input('nama_atasan'),
             'id_user_roles' => $request->role_name,
             'updated_at' => Carbon::now()
         ]);

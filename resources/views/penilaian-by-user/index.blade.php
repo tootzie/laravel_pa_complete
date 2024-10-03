@@ -20,7 +20,7 @@
     $(document).ready(function() {
         // Initialize Select2 for searchable dropdown
         $('.select2').select2({
-            placeholder: "Pilih Usert",
+            placeholder: "Pilih User",
             theme: 'bootstrap-5'
         });
 

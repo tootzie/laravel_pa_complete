@@ -21,6 +21,7 @@ class User extends Authenticatable
         'id_user_roles',
         'name',
         'ektp',
+        'nama_atasan',
         'email',
         'password',
         'google_id',
