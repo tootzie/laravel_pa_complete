@@ -76,7 +76,19 @@ class PenilaianController extends Controller
         ->distinct()
         ->pluck('kategori_pa');
 
-        return view('penilaian.index', compact('header_pa', 'is_in_periode', 'ktp_bawahan_langsung', 'tahunPeriodeFilter', 'kategoriPAFilter'));
+        //Get nama atasan, jumlah anak buah, dan nama periode
+        $jumlahAnakBuah = count($ektp_subordinates);
+
+        $HelperController = new HelperController();
+        $allAtasan = $HelperController->get_users();
+        $selectedAtasan = $allAtasan->firstWhere('ektp_atasan', $ektpUser);
+        $namaAtasan = $selectedAtasan ? $selectedAtasan->nama_atasan : '-';
+
+        $startDate = Carbon::parse($active_periode->start_date)->translatedFormat('j F Y');
+        $endDate = Carbon::parse($active_periode->end_date)->translatedFormat('j F Y');
+        $stringPeriode = $startDate . ' s/d ' . $endDate;
+
+        return view('penilaian.index', compact('header_pa', 'is_in_periode', 'ktp_bawahan_langsung', 'tahunPeriodeFilter', 'kategoriPAFilter', 'jumlahAnakBuah', 'namaAtasan', 'stringPeriode'));
     }
 
     public function penilaian_detail($id)

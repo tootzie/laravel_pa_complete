@@ -74,7 +74,7 @@
                 <td>{{ $namaAtasan }}</td>
             </tr>
             <tr>
-                <td>Jumlah Anak Buah </td>
+                <td>Total Karyawan </td>
                 <td> : </td>
                 <td>{{ $jumlahAnakBuah }} orang</td>
             </tr>

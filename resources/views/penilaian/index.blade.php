@@ -24,6 +24,7 @@
 @endif
 
 <!-- ROW 1: Year and Period Filter -->
+@if (false)
 <div class="row gy-4">
     <!-- Year Selection -->
     <div class="col-auto">
@@ -61,7 +62,31 @@
 
 <br>
 <br>
+@endif
+
 <h5 class="pb-1 mb-4">Daftar Karyawan</h5>
+
+<div class="row gy-4 mb-4">
+    <div class="col-6">
+        <table>
+            <tr>
+                <td>Nama Atasan </td>
+                <td> : </td>
+                <td>{{ $namaAtasan }}</td>
+            </tr>
+            <tr>
+                <td>Total Karyawan </td>
+                <td> : </td>
+                <td>{{ $jumlahAnakBuah }} orang</td>
+            </tr>
+            <tr>
+                <td>Periode Penilaian </td>
+                <td> : </td>
+                <td>{{ $stringPeriode }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
 
 
 
