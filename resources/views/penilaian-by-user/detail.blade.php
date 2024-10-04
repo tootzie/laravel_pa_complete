@@ -78,6 +78,11 @@
                 <td> : </td>
                 <td>{{ $jumlahAnakBuah }} orang</td>
             </tr>
+            <tr>
+                <td>Periode Penilaian </td>
+                <td> : </td>
+                <td>{{ $stringPeriode }}</td>
+            </tr>
         </table>
     </div>
 </div>

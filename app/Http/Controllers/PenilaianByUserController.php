@@ -137,7 +137,7 @@ class PenilaianByUserController extends Controller
                 return $query;
             })->orderBy('nama_employee', 'asc')->paginate(10);
 
-            //Get nama atasan & jumlah anak buah,
+            //Get nama atasan, jumlah anak buah, dan nama periode
             $jumlahAnakBuah = count($ektp_subordinates);
 
             $HelperController = new HelperController();
@@ -145,6 +145,10 @@ class PenilaianByUserController extends Controller
             $selectedAtasan = $allAtasan->firstWhere('ektp_atasan', $ektpUser);
             $namaAtasan = $selectedAtasan ? $selectedAtasan->nama_atasan : '-';
 
-        return view('penilaian-by-user.detail', compact('header_pa', 'is_in_periode', 'ektpUser', 'jumlahAnakBuah', 'namaAtasan'));
+            $startDate = Carbon::parse($active_periode->start_date)->translatedFormat('j F Y');
+            $endDate = Carbon::parse($active_periode->end_date)->translatedFormat('j F Y');
+            $stringPeriode = $startDate . ' s/d ' . $endDate;
+
+        return view('penilaian-by-user.detail', compact('header_pa', 'is_in_periode', 'ektpUser', 'jumlahAnakBuah', 'namaAtasan', 'stringPeriode'));
     }
 }
