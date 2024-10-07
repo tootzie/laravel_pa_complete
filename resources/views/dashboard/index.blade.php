@@ -17,6 +17,7 @@
 @section('content')
 
 <!-- ROW 1: Year and Period Filter -->
+@if(false)
 <div class="row gy-4">
     <!-- Year Selection -->
     <div class="col-md-12 col-lg-2">
@@ -38,6 +39,8 @@
 
 <br>
 <br>
+@endif
+
 <h5 class="pb-1 mb-4">Grafik Perbandingan</h5>
 
 <!-- ROW 2: Graph -->
