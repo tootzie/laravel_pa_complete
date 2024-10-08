@@ -144,10 +144,14 @@
                         <td class="text-truncate"> {{$pa->revisi_hod ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->revisi_gm ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->nilai_akhir ?? '-'}}</td>
+                        @php
+                            // Encrypt the ID
+                            $encryptedId = Crypt::encrypt($pa->id);
+                        @endphp
                         <td>
                             <div class="action-buttons">
                                 <button type="button" class="btn btn-icon btn-warning"
-                                    onclick="window.location.href='{{ $pa->id_status_penilaian === 100 ? route('penilaian-detail', ['id' => $pa->id]) : route('penilaian-detail-revisi-all', ['id' => $pa->id, 'ektp' => $ektpUser]) }}'"
+                                    onclick="window.location.href='{{ $pa->id_status_penilaian === 100 ? route('penilaian-detail', ['id' => $encryptedId]) : route('penilaian-detail-revisi-all', ['id' => $encryptedId, 'ektp' => $ektpUser]) }}'"
                                     @if (!$is_in_periode)
                                         disabled
                                     @endif>

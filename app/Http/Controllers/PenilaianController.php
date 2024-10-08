@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Console\View\Components\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Schema;
 
 class PenilaianController extends Controller
@@ -93,6 +94,13 @@ class PenilaianController extends Controller
 
     public function penilaian_detail($id)
     {
+        // Decrypt the ID
+        try {
+            $id = Crypt::decrypt($id);
+        } catch (\Exception $e) {
+            // Handle decryption errors, such as when the ID is tampered with
+            abort(403, 'Unauthorized access');
+        }
 
         $pa_employee = HeaderPA::where("id", $id)->first();
 
@@ -381,6 +389,14 @@ class PenilaianController extends Controller
 
     public function penilaian_detail_revisi($id)
     {
+        // Decrypt the ID
+        try {
+            $id = Crypt::decrypt($id);
+        } catch (\Exception $e) {
+            // Handle decryption errors, such as when the ID is tampered with
+            abort(403, 'Unauthorized access');
+        }
+
         $pa_employee = HeaderPA::where("id", $id)->first();
 
         // Fetch scores for the user
@@ -526,6 +542,14 @@ class PenilaianController extends Controller
 
     public function penilaian_detail_revisi_all($id, Request $request)
     {
+        // Decrypt the ID
+        try {
+            $id = Crypt::decrypt($id);
+        } catch (\Exception $e) {
+            // Handle decryption errors, such as when the ID is tampered with
+            abort(403, 'Unauthorized access');
+        }
+
         $pa_employee = HeaderPA::where("id", $id)->first();
 
         // Fetch scores for the user

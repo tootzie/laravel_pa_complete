@@ -164,18 +164,21 @@
                                         }
                                     }
 
+                                    // Encrypt the ID
+                                    $encryptedId = Crypt::encrypt($pa->id);
+
                                     //Determine Route
                                     $route = '';
                                     if($pa->id_status_penilaian == 100) {
-                                        $route = route('penilaian-detail', ['id' => $pa->id]);
+                                        $route = route('penilaian-detail', ['id' => $encryptedId]);
                                     } else {
-                                        $route = route('penilaian-detail-revisi', ['id' => $pa->id]);
+                                        $route = route('penilaian-detail-revisi', ['id' => $encryptedId]);
                                         if($userRole == 1) {
-                                            $route = route('penilaian-detail-revisi-all', ['id' => $pa->id]);
+                                            $route = route('penilaian-detail-revisi-all', ['id' => $encryptedId]);
                                         }
 
                                         if($userRole == 3 && in_array($pa->ektp_employee, $ktp_bawahan_langsung)) {
-                                            $route = route('penilaian-detail-revisi-all', ['id' => $pa->id]);
+                                            $route = route('penilaian-detail-revisi-all', ['id' => $encryptedId]);
                                         }
                                     }
                                 @endphp
