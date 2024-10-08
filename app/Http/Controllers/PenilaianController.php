@@ -93,6 +93,7 @@ class PenilaianController extends Controller
 
     public function penilaian_detail($id)
     {
+
         $pa_employee = HeaderPA::where("id", $id)->first();
 
         //Get aspek kepribadian question
@@ -101,15 +102,18 @@ class PenilaianController extends Controller
         //Get aspek pekerjaan question
         $pertanyaan_pekerjaan = $this->getPekerjaanQuestion($pa_employee);
 
+        //Get kesimpulan dan saran
+        $pertanyaan_kesimpulan = $this->getKesimpulanQuestion();
+
         $questions = [
             "Kepribadian" => $pertanyaan_kepribadian,
-            "Pekerjaan" => $pertanyaan_pekerjaan
+            "Pekerjaan" => $pertanyaan_pekerjaan,
         ];
 
         $id_header_pa = $pa_employee->id;
         $detailPA = DetailPA::where('id_header_pa', $id_header_pa)->get()->keyBy('id_master_question_pa');
 
-        return view('penilaian.penilaian-detail', compact(['pa_employee', 'questions', 'detailPA']));
+        return view('penilaian.penilaian-detail', compact(['pa_employee', 'questions', 'detailPA', 'pertanyaan_kesimpulan']));
     }
 
     public function penilaian_detail_store(Request $request)
@@ -186,6 +190,30 @@ class PenilaianController extends Controller
             }
         }
 
+        //Store kesimpulan & saran
+        foreach ($request->input('kesimpulan') as $kesimpulanId => $value) {
+            if($value != null) {
+                $detailPA = DetailPA::where("id_header_pa", $id_header_pa)->where("id_master_question_pa", $kesimpulanId)->first();
+                if ($detailPA == null) {
+                    DetailPA::create([
+                        'id_header_pa' => $id_header_pa,
+                        'id_master_question_pa' => $kesimpulanId,
+                        'ektp_penilai' => $ektp_penilai,
+                        'nama_penilai' => $nama_penilai,
+                        'score' => 0,
+                        'text_value' => $value,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                } else {
+                    $detailPA->update([
+                        'text_value' => $value,
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
+            }
+        }
+
         // Initialize an array to store validation errors
         $validationErrors = [];
 
@@ -226,6 +254,9 @@ class PenilaianController extends Controller
             'updated_at' => Carbon::now(),
             'updated_by' => auth()->user()->name
         ]);
+
+
+
 
         session()->flash('success', "Penilaian berhasil ditambahkan. Nilai awal untuk $pa_employee->nama_employee : $nilai_awal");
 
@@ -307,6 +338,30 @@ class PenilaianController extends Controller
                 ]);
             }
         }
+
+        //Store kesimpulan & saran
+        foreach ($request->input('kesimpulan') as $kesimpulanId => $value) {
+            if($value != null) {
+                $detailPA = DetailPA::where("id_header_pa", $id_header_pa)->where("id_master_question_pa", $kesimpulanId)->first();
+                if ($detailPA == null) {
+                    DetailPA::create([
+                        'id_header_pa' => $id_header_pa,
+                        'id_master_question_pa' => $kesimpulanId,
+                        'ektp_penilai' => $ektp_penilai,
+                        'nama_penilai' => $nama_penilai,
+                        'score' => 0,
+                        'text_value' => $value,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                } else {
+                    $detailPA->update([
+                        'text_value' => $value,
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
+            }
+        }
     }
 
     private function getSubaspekFromExistingQuestions($questions, $questionId)
@@ -336,6 +391,9 @@ class PenilaianController extends Controller
 
         //Get aspek pekerjaan question
         $pertanyaan_pekerjaan = $this->getPekerjaanQuestion($pa_employee);
+
+        //Get kesimpulan dan saran
+        $pertanyaan_kesimpulan = $this->getKesimpulanQuestion();
 
         // Update kepribadian questions with scores
         $pertanyaan_kepribadian = array_map(function ($subaspek) use ($scores) {
@@ -388,7 +446,9 @@ class PenilaianController extends Controller
         //Variable for scores
         $scores = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'];
 
-        return view('penilaian.penilaian-detail-revisi', compact(['pa_employee', 'questions', 'stringRevisi', 'scores', 'defaultScore']));
+        $detailPA = DetailPA::where('id_header_pa', $id)->get()->keyBy('id_master_question_pa');
+
+        return view('penilaian.penilaian-detail-revisi', compact(['pa_employee', 'questions', 'stringRevisi', 'scores', 'defaultScore', 'pertanyaan_kesimpulan', 'detailPA']));
     }
 
     public function penilaian_detail_revisi_store(Request $request)
@@ -429,6 +489,34 @@ class PenilaianController extends Controller
             ]);
         }
 
+        $id_header_pa = $pa_employee->id;
+        $ektp_penilai = auth()->user()->ektp;
+        $nama_penilai = auth()->user()->name;
+
+        //Store kesimpulan & saran
+        foreach ($request->input('kesimpulan') as $kesimpulanId => $value) {
+            if($value != null) {
+                $detailPA = DetailPA::where("id_header_pa", $id_header_pa)->where("id_master_question_pa", $kesimpulanId)->first();
+                if ($detailPA == null) {
+                    DetailPA::create([
+                        'id_header_pa' => $id_header_pa,
+                        'id_master_question_pa' => $kesimpulanId,
+                        'ektp_penilai' => $ektp_penilai,
+                        'nama_penilai' => $nama_penilai,
+                        'score' => 0,
+                        'text_value' => $value,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                } else {
+                    $detailPA->update([
+                        'text_value' => $value,
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
+            }
+        }
+
         session()->flash('success', "Penilaian berhasil ditambahkan untuk $pa_employee->nama_employee");
 
         $userRole = auth()->user()->userRole->id;
@@ -448,6 +536,9 @@ class PenilaianController extends Controller
 
         //Get aspek pekerjaan question
         $pertanyaan_pekerjaan = $this->getPekerjaanQuestion($pa_employee);
+
+        //Get kesimpulan dan saran
+        $pertanyaan_kesimpulan = $this->getKesimpulanQuestion();
 
         // Update kepribadian questions with scores
         $pertanyaan_kepribadian = array_map(function ($subaspek) use ($scores) {
@@ -499,37 +590,27 @@ class PenilaianController extends Controller
         //Pass ektp parameter
         $ektp = $request->input('ektp');
 
-        return view('penilaian.penilaian-detail-revisi-all', compact(['pa_employee', 'questions', 'stringRevisi', 'scores', 'defaultScoreHod', 'defaultScoreGM', 'defaultScoreAkhir', 'ektp']));
+        $detailPA = DetailPA::where('id_header_pa', $id)->get()->keyBy('id_master_question_pa');
+
+        return view('penilaian.penilaian-detail-revisi-all', compact(['pa_employee', 'questions', 'stringRevisi', 'scores', 'defaultScoreHod', 'defaultScoreGM', 'defaultScoreAkhir', 'ektp', 'pertanyaan_kesimpulan', 'detailPA']));
     }
 
     public function penilaian_detail_revisi_store_all(Request $request)
     {
         $pa_employee = json_decode($request->pa_employee);
-
-        $request->validate([
-            'revisi_input_hod' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    if ($value == '00') {
-                        $fail('Please select a score.');
-                    }
-                },
-            ],
-            'revisi_input_gm' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    if ($value == '00') {
-                        $fail('Please select a score.');
-                    }
-                },
-            ],
-        ]);
-
         $userRole = auth()->user()->userRole->id;
 
-        if($userRole == 1){
+        if($userRole == 3) {
             $request->validate([
-                'revisi_input_nilai_akhir' => [
+                'revisi_input_hod' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        if ($value == '00') {
+                            $fail('Please select a score.');
+                        }
+                    },
+                ],
+                'revisi_input_gm' => [
                     'required',
                     function ($attribute, $value, $fail) {
                         if ($value == '00') {
@@ -540,16 +621,35 @@ class PenilaianController extends Controller
             ]);
         }
 
+        // if($userRole == 1){
+        //     $request->validate([
+        //         'revisi_input_nilai_akhir' => [
+        //             'required',
+        //             function ($attribute, $value, $fail) {
+        //                 if ($value == '00') {
+        //                     $fail('Please select a score.');
+        //                 }
+        //             },
+        //         ],
+        //     ]);
+        // }
+
         $header_pa = HeaderPA::where('id', $pa_employee->id)->first();
 
         //Determine status penilaian
         if($userRole == 1) {
-            $status_penilaian = 500;
+
+            if($request->nilai_akhir != 00) {
+                $status_penilaian = 500;
+                $header_pa->update([
+                    'id_status_penilaian' => $status_penilaian,
+                ]);
+            }
+
             $header_pa->update([
-                'revisi_hod' => $request->revisi_input_hod,
-                'revisi_gm' => $request->revisi_input_gm,
-                'nilai_akhir' => $request->revisi_input_nilai_akhir,
-                'id_status_penilaian' => $status_penilaian,
+                'revisi_hod' => $request->revisi_input_hod == '00' ? null :$request->revisi_input_hod,
+                'revisi_gm' => $request->revisi_input_gm == '00' ? null :$request->revisi_input_gm,
+                'nilai_akhir' => $request->revisi_input_nilai_akhir == '00' ? null :$request->revisi_input_nilai_akhir,
                 'updated_at' => Carbon::now(),
                 'updated_by' => auth()->user()->name
             ]);
@@ -562,6 +662,34 @@ class PenilaianController extends Controller
                 'updated_at' => Carbon::now(),
                 'updated_by' => auth()->user()->name
             ]);
+        }
+
+        $id_header_pa = $pa_employee->id;
+        $ektp_penilai = auth()->user()->ektp;
+        $nama_penilai = auth()->user()->name;
+
+        //Store kesimpulan & saran
+        foreach ($request->input('kesimpulan') as $kesimpulanId => $value) {
+            if($value != null) {
+                $detailPA = DetailPA::where("id_header_pa", $id_header_pa)->where("id_master_question_pa", $kesimpulanId)->first();
+                if ($detailPA == null) {
+                    DetailPA::create([
+                        'id_header_pa' => $id_header_pa,
+                        'id_master_question_pa' => $kesimpulanId,
+                        'ektp_penilai' => $ektp_penilai,
+                        'nama_penilai' => $nama_penilai,
+                        'score' => 0,
+                        'text_value' => $value,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                } else {
+                    $detailPA->update([
+                        'text_value' => $value,
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
+            }
         }
 
         session()->flash('success', "Penilaian berhasil ditambahkan untuk $pa_employee->nama_employee");
@@ -613,5 +741,24 @@ class PenilaianController extends Controller
         })->values()->toArray();
 
         return $pertanyaan_pekerjaan;
+    }
+
+    private function getKesimpulanQuestion()
+    {
+        $subaspeks = MasterSubAspek::where('id_master_aspek', 3)->get()->pluck('nama_subaspek', 'id');
+        $pertanyaan_kesimpulan_query = MasterQuestionPA::whereIn('id_master_subaspek', $subaspeks->keys())->get();
+        $pertanyaan_kesimpulan = $pertanyaan_kesimpulan_query->groupBy('id_master_subaspek')->map(function ($questions, $subaspekId) use ($subaspeks) {
+            return [
+                'subaspek' => $subaspeks[$subaspekId],  // Get the subaspek name
+                'questions' => $questions->map(function ($question) {
+                    return [
+                        'id' => $question->id_question,
+                        'question' => $question->question,
+                    ];
+                })->toArray()
+            ];
+        })->values()->toArray();
+
+        return $pertanyaan_kesimpulan;
     }
 }

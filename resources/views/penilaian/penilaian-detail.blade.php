@@ -205,6 +205,34 @@ $userRole = auth()->user()->userRole->id;
     </div>
     </div>
 
+
+    <br>
+    <br>
+    <h5 class="pb-1 mb-2">Kesimpulan & Saran</h5>
+    @forelse ($pertanyaan_kesimpulan as $key => $question_kesimpulan)
+        @forelse ($question_kesimpulan['questions'] as $index => $question)
+            <label class="col-sm-12 col-form-label" for="nama_atasan">{{$index + 1}}. {{ $question['question'] }}</label>
+            <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <div class="input-group input-group-merge">
+                            <textarea type="text" id="kesimpulan[{{$question['id']}}]" name="kesimpulan[{{$question['id']}}]" class="form-control" placeholder="Saran..." aria-label="john.doe" aria-describedby="basic-default-email2" >{{isset($detailPA[$question['id']]) ? $detailPA[$question['id']]->text_value : ''}}</textarea>
+                        </div>
+                    </div>
+            </div>
+        @empty
+            <div class="alert alert-danger">
+                    Data Tidak Tersedia
+            </div>
+        @endforelse
+    @empty
+        <div class="alert alert-danger">
+                Data Tidak Tersedia
+        </div>
+    @endforelse
+
+
+
+
     <input type="hidden" name="pa_employee" value="{{json_encode($pa_employee)}}">
     <input type="hidden" name="questions" value="{{json_encode($questions)}}">
 
