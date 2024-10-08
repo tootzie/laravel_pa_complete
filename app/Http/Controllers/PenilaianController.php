@@ -89,7 +89,7 @@ class PenilaianController extends Controller
         $endDate = Carbon::parse($active_periode->end_date)->translatedFormat('j F Y');
         $stringPeriode = $startDate . ' s/d ' . $endDate;
 
-        return view('penilaian.index', compact('header_pa', 'is_in_periode', 'ktp_bawahan_langsung', 'tahunPeriodeFilter', 'kategoriPAFilter', 'jumlahAnakBuah', 'namaAtasan', 'stringPeriode'));
+        return view('penilaian.index', compact('header_pa', 'is_in_periode', 'ktp_bawahan_langsung', 'tahunPeriodeFilter', 'kategoriPAFilter', 'jumlahAnakBuah', 'namaAtasan', 'stringPeriode', 'data_subordinates'));
     }
 
     public function penilaian_detail($id)

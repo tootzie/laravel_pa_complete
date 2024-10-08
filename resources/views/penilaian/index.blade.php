@@ -114,6 +114,7 @@
                 <thead class="table-light">
                     <tr>
                         <th class="text-truncate sticky-column">User</th>
+                        <th class="text-truncate sticky-column">Atasan</th>
                         <th class="text-truncate">Kategori PA</th>
                         <th class="text-truncate">Nilai Awal</th>
                         <th class="text-truncate">Revisi Head of Dept</th>
@@ -142,6 +143,7 @@
                                 </div>
                             </div>
                         </td>
+                        <td class="text-truncate"> {{$data_subordinates[$pa->ektp_employee]['nama_atasan'] ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->kategori_pa ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->nilai_awal ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->revisi_hod ?? '-'}}</td>
