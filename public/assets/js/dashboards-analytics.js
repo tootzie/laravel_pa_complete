@@ -88,21 +88,29 @@
           },
           responsive: [
             {
-              breakpoint: 1350,
+              breakpoint: 1600,
               options: {
                 chart: {
-                  height: 190
+                  height: 400
                 }
               }
             },
             {
-              breakpoint: 1200,
+              breakpoint: 1350,
               options: {
                 chart: {
-                  height: 210
+                  height: 300
                 }
               }
             },
+            {
+                breakpoint: 1200,
+                options: {
+                  chart: {
+                    height: 210
+                  }
+                }
+              },
             {
               breakpoint: 768,
               options: {
@@ -142,11 +150,11 @@
             .catch(error => console.error('Error fetching data:', error));
     }
 
-    // Initialize the chart instance
-    const chart = new ApexCharts(document.querySelector("#chart"), options);
+    // // Initialize the chart instance
+    // const chart = new ApexCharts(document.querySelector("#chart"), options);
 
-    // Render the chart
-    chart.render();
+    // // Render the chart
+    // chart.render();
 
     // Function to update chart data
     function updateChart(data) {
