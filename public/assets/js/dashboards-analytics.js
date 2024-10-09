@@ -88,29 +88,21 @@
           },
           responsive: [
             {
-              breakpoint: 1600,
-              options: {
-                chart: {
-                  height: 400
-                }
-              }
-            },
-            {
               breakpoint: 1350,
               options: {
                 chart: {
-                  height: 300
+                  height: 190
                 }
               }
             },
             {
-                breakpoint: 1200,
-                options: {
-                  chart: {
-                    height: 210
-                  }
+              breakpoint: 1200,
+              options: {
+                chart: {
+                  height: 210
                 }
-              },
+              }
+            },
             {
               breakpoint: 768,
               options: {
