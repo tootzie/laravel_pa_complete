@@ -662,7 +662,6 @@ class PenilaianController extends Controller
 
         //Determine status penilaian
         if($userRole == 1) {
-
             if($request->nilai_akhir != 00) {
                 $status_penilaian = 500;
                 $header_pa->update([

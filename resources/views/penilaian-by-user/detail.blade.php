@@ -130,7 +130,7 @@
                     @forelse ($header_pa as $pa)
                     <tr>
                         <td class="sticky-column">
-                            <div class="d-flex align-items-center sticky-column ">
+                            <div class="d-flex align-items-center sticky-column">
                                 <div class="avatar avatar-sm me-3">
                                     <img src="{{asset('assets/img/avatars/1.png')}}" alt="Avatar" class="rounded-circle">
                                 </div>
