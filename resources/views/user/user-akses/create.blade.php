@@ -27,7 +27,6 @@
             var selectedEktp = $(this).val();
             $('#ektp').val(selectedEktp);
 
-            console.log('user_choice changed');
             var selectedOption = this.options[this.selectedIndex];
             var namaAtasan = selectedOption.getAttribute('data-nama-atasan');
             document.getElementById('nama_atasan').value = namaAtasan;

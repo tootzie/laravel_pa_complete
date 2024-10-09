@@ -16,7 +16,6 @@
 <script>
     $(document).ready(function() {
         var selectedEktp = "{{ $selectedEktp }}";
-        console.log('selectedEktp: ' + selectedEktp);
 
         // Initialize Select2 for searchable dropdown
         $('.select2').select2({
@@ -36,7 +35,6 @@
             var selectedEktp = $(this).val();
             $('#ektp').val(selectedEktp);
 
-            console.log('user_choice changed');
             selectedOption = this.options[this.selectedIndex];
             namaAtasan = selectedOption.getAttribute('data-nama-atasan');
             document.getElementById('nama_atasan').value = namaAtasan;

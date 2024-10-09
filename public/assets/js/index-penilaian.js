@@ -10,7 +10,6 @@
         // Trigger autosave every 2 minutes (120,000 milliseconds)
         setInterval(function () {
             autosave();
-            // console.log('2 minutes');
         }, 120000); // 2 minutes
 
         // Autosave function
@@ -18,9 +17,7 @@
             let formData = $('#penilaianForm').serialize(); // Get all form data
             let csrfToken = $('#penilaianForm input[name="_token"]').val();
 
-            // console.log(formData);
             let formArray = $('#penilaianForm').serializeArray();
-            console.log(formArray);
 
             $.ajax({
                 url: autosaveUrl, // Replace with your autosave route
@@ -47,8 +44,6 @@
 
         $('table tbody tr').each(function(){
             var status = $(this).find('td:nth-last-child(2)').text();
-            console.log('status');
-            console.log(status);
             if(selectedStatus == 'semua' || status == selectedStatus){
                 $(this).show();
             } else {

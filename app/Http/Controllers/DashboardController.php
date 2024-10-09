@@ -135,9 +135,11 @@ class DashboardController extends Controller
                 return [
                     'nilai' => $nilai,
                     'nilai_awal_count' => $groupedData->where('nilai_awal', $nilai)->count(),
-                    'revisi_hod_count' => $groupedData->where('revisi_hod', $nilai)->count(),
+                    'revisi_hod_count' => auth()->user()->userRole->id == 2 ? $groupedData->where('revisi_hod', $nilai)->count() :  $groupedData->where('revisi_gm', $nilai)->count(),
                 ];
             });
+
+
 
             return [
                 'kategori_pa' => $kategori_pa,

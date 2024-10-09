@@ -1,11 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const table = document.querySelector('.table');
     const headers = table.querySelectorAll('thead th');
-    // console.log(headers);
 
     headers.forEach((header, index) => {
         header.addEventListener('click', () => {
-            console.log('header clicked');
             // Determine the current sorting direction
             const isAscending = header.classList.contains('asc');
 

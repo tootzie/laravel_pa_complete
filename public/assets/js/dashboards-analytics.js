@@ -134,11 +134,9 @@
 
     // Function to load chart data
     function loadChartData(category) {
-        console.log('loadChartData');
         fetch(`/get-chart-data/${category}`)
             .then(response => response.json())
             .then(data => {
-                console.log('data: ', data);
                 updateChart(data);
             })
             .catch(error => console.error('Error fetching data:', error));
@@ -170,9 +168,6 @@
                 sebelumRevisi.push(...nilaiAwalCounts);
                 setelahRevisi.push(...revisiHodCounts);
             });
-
-            console.log("Sebelum Revisi:", sebelumRevisi);
-            console.log("Setelah Revisi:", setelahRevisi);
 
             // Update chart series
             totalProfitLineChart.updateSeries([
