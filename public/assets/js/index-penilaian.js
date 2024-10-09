@@ -51,4 +51,17 @@
             }
         });
     });
+
+
+
+    document.getElementById('previewButton').addEventListener('click', function() {
+        // Get the form element
+        var form = document.getElementById('penilaianForm');
+
+        // Change the form action to the Preview route
+        form.action = previewRoute;
+
+        // Submit the form
+        form.submit();
+    });
 })();

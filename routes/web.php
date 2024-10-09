@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         Route::get('/penilaian', 'index')->name('penilaian');
         Route::get('/penilaian/detail/{id}', 'penilaian_detail')->name('penilaian-detail');
         Route::post('/penilaian/detail/store', 'penilaian_detail_store')->name('penilaian-detail-store');
+        Route::post('/penilaian/detail/preview', 'penilaian_detail_preview')->name('penilaian-detail-preview');
         Route::post('/penilaian/detail/autosave', 'penilaian_detail_autosave')->name('penilaian-detail-autosave');
 
         Route::get('/penilaian/detail-revisi/{id}', 'penilaian_detail_revisi')->name('penilaian-detail-revisi');

@@ -13,17 +13,27 @@
 @section('page-script')
 <script>
     var autosaveUrl = '{{ route("penilaian-detail-autosave") }}';
+    var previewRoute = "{{ route('penilaian-detail-preview') }}";
 </script>
 <script src="{{asset('assets/js/index-penilaian.js')}}"></script>
 @endsection
 
 @section('content')
 
+<!-- ALERT -->
+@if (session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
+
 <h5 class="pb-1 mb-4">Detail Penilaian</h5>
 
 @php
 $userRole = auth()->user()->userRole->id;
 @endphp
+
+
 
 <!-- DETAIL INFORMATION -->
 <div class="row gy-4">
@@ -210,24 +220,24 @@ $userRole = auth()->user()->userRole->id;
     <br>
     <h5 class="pb-1 mb-2">Kesimpulan & Saran</h5>
     @forelse ($pertanyaan_kesimpulan as $key => $question_kesimpulan)
-        @forelse ($question_kesimpulan['questions'] as $index => $question)
-            <label class="col-sm-12 col-form-label" for="nama_atasan">{{$index + 1}}. {{ $question['question'] }}</label>
-            <div class="row mb-3">
-                    <div class="col-sm-12">
-                        <div class="input-group input-group-merge">
-                            <textarea type="text" id="kesimpulan[{{$question['id']}}]" name="kesimpulan[{{$question['id']}}]" class="form-control" placeholder="Saran..." aria-label="john.doe" aria-describedby="basic-default-email2" >{{isset($detailPA[$question['id']]) ? $detailPA[$question['id']]->text_value : ''}}</textarea>
-                        </div>
-                    </div>
+    @forelse ($question_kesimpulan['questions'] as $index => $question)
+    <label class="col-sm-12 col-form-label" for="nama_atasan">{{$index + 1}}. {{ $question['question'] }}</label>
+    <div class="row mb-3">
+        <div class="col-sm-12">
+            <div class="input-group input-group-merge">
+                <textarea type="text" id="kesimpulan[{{$question['id']}}]" name="kesimpulan[{{$question['id']}}]" class="form-control" placeholder="Saran..." aria-label="john.doe" aria-describedby="basic-default-email2">{{isset($detailPA[$question['id']]) ? $detailPA[$question['id']]->text_value : ''}}</textarea>
             </div>
-        @empty
-            <div class="alert alert-danger">
-                    Data Tidak Tersedia
-            </div>
-        @endforelse
-    @empty
-        <div class="alert alert-danger">
-                Data Tidak Tersedia
         </div>
+    </div>
+    @empty
+    <div class="alert alert-danger">
+        Data Tidak Tersedia
+    </div>
+    @endforelse
+    @empty
+    <div class="alert alert-danger">
+        Data Tidak Tersedia
+    </div>
     @endforelse
 
 
@@ -237,8 +247,11 @@ $userRole = auth()->user()->userRole->id;
     <input type="hidden" name="questions" value="{{json_encode($questions)}}">
 
     <div class="mt-5 d-flex justify-content-center">
+        <button type="button" id="previewButton" class="btn btn-warning me-2">Preview</button>
         <button type="submit" class="btn btn-primary">Simpan</button>
     </div>
+
+
 </form>
 
 
