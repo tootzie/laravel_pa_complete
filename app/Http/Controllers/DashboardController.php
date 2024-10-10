@@ -146,12 +146,88 @@ class DashboardController extends Controller
                 'jumlah' => $jumlah
             ];
         });
-
         return $data;
     }
 
     public function summary()
     {
-        return view('dashboard.summary');
+        $summaryData = $this->get_chart_data_summary();
+        $chartData = $summaryData['data'];
+        $years = array_reverse($summaryData['years']);
+
+        return view('dashboard.summary', compact(['chartData', 'years']));
+    }
+
+    public function get_chart_data_summary($year = null) {
+        $inputYear = '';
+        if ($year != null) {
+            $inputYear = $year;
+        } else {
+            $inputYear = Carbon::now()->format('Y');
+        }
+
+
+        $years = [$inputYear - 1, $inputYear];
+        $scores = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'];
+
+        $byTahun = [];
+        $byCompany = [];
+
+        $headerData = HeaderPA::with('MasterTahunPeriode')
+        ->whereHas('MasterTahunPeriode', function($query) use ($years){
+            $query->whereIn('tahun', $years);
+        })
+        ->get();
+
+
+        //Group by year and count scores
+        foreach ($years as $year) {
+            $byTahun[$year] = [];
+            foreach($scores as $score) {
+                // Filter records for the selected year
+                $filteredByYear = $headerData->filter(function ($record) use ($year) {
+                    return $record->masterTahunPeriode->tahun == $year;
+                });
+
+                $byTahun[$year][$score] = $filteredByYear->where('nilai_akhir', $score)->count();
+            }
+        }
+
+        //Group by company and count scores
+        $companies = $headerData->groupBy('perusahaan');
+        foreach ($companies as $company => $companyRecords) {
+            // Filter records for the selected year
+            $filteredByYear = $companyRecords->filter(function ($record) use ($inputYear) {
+                return $record->masterTahunPeriode->tahun == $inputYear;
+            });
+
+            $byCompany[$company] = [];
+            foreach ($scores as $score) {
+                $byCompany[$company][$score] = $filteredByYear->where('nilai_akhir', $score)->count();
+            }
+        }
+
+        $data = [
+            'byTahun' => $byTahun,
+            'byCompany' => $byCompany
+        ];
+
+        // dd(json_encode($data));
+
+        return [
+            'years' => $years,
+            'data' => $data,
+        ];;
+    }
+
+    public function get_summary_by_year($year)
+    {
+        // Call the function to get chart data based on these years
+        $chartData = $this->get_chart_data_summary($year);
+
+        // \Log::error($chartData['data']);
+
+        // Return the data as JSON to be consumed by JavaScript
+        return response()->json($chartData);
     }
 }

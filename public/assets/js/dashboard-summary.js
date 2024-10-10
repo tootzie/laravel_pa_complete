@@ -1,5 +1,5 @@
 /**
- * Dashboard Analytics
+ * Dashboard Summary
  */
 
 'use strict';
@@ -13,419 +13,343 @@
   chartBgColor = config.colors.chartBgColor;
   bodyColor = config.colors.bodyColor;
 
-  // Weekly Overview Line Chart
-  // --------------------------------------------------------------------
-  const weeklyOverviewChartEl = document.querySelector('#weeklyOverviewChart'),
-    weeklyOverviewChartConfig = {
-      chart: {
-        type: 'bar',
-        height: 200,
-        offsetY: -9,
-        offsetX: -16,
-        parentHeightOffset: 0,
-        toolbar: {
-          show: false
-        }
-      },
-      series: [
-        {
-          name: 'Sales',
-          data: [32, 55, 45, 75, 55, 35, 70]
-        }
-      ],
-      colors: [chartBgColor],
-      plotOptions: {
-        bar: {
-          borderRadius: 8,
-          columnWidth: '30%',
-          endingShape: 'rounded',
-          startingShape: 'rounded',
-          colors: {
-            ranges: [
-              {
-                from: 75,
-                to: 80,
-                color: config.colors.primary
-              },
-              {
-                from: 0,
-                to: 73,
-                color: chartBgColor
-              }
-            ]
-          }
-        }
-      },
-      dataLabels: {
-        enabled: false
-      },
-      legend: {
-        show: false
-      },
-      grid: {
-        strokeDashArray: 8,
-        borderColor,
-        padding: {
-          bottom: -10
-        }
-      },
-      xaxis: {
-        categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        tickPlacement: 'on',
-        labels: {
-          show: false
-        },
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      yaxis: {
-        min: 0,
-        max: 90,
-        show: true,
-        tickAmount: 3,
-        labels: {
-          formatter: function (val) {
-            return parseInt(val) + 'K';
+  document.addEventListener('DOMContentLoaded', function() {
+    const options = {
+        chart: {
+            height: 200,
+            type: 'line',
+            parentHeightOffset: 0,
+            toolbar: {
+              show: true
+            }
           },
-          style: {
-            fontSize: '0.75rem',
-            fontFamily: 'Inter',
-            colors: labelColor
-          }
-        }
-      },
-      states: {
-        hover: {
-          filter: {
-            type: 'none'
-          }
-        },
-        active: {
-          filter: {
-            type: 'none'
-          }
-        }
-      },
-      responsive: [
-        {
-          breakpoint: 1500,
-          options: {
-            plotOptions: {
-              bar: {
-                columnWidth: '40%'
+          grid: {
+            borderColor: labelColor,
+            strokeDashArray: 6,
+            xaxis: {
+              lines: {
+                show: true
+              }
+            },
+            yaxis: {
+              lines: {
+                show: true
+              }
+            },
+            padding: {
+              top: -15,
+              left: -7,
+              right: 9,
+              bottom: 0
+            }
+          },
+          colors: [config.colors.warning, config.colors.primary],
+          stroke: {
+            width: 3,
+            curve: 'smooth'
+          },
+          series: [
+            {
+                name: 'year1', // Name for the first data series
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            {
+                name: 'year2', // Name for the second data series
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }
+          ],
+          tooltip: {
+            enabled: true,
+            shared: false,
+            // intersect: true,
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+          },
+          xaxis: {
+            categories: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'],
+            labels: {
+              show: true
+            },
+            axisTicks: {
+              show: false
+            },
+            axisBorder: {
+              show: false
+            }
+          },
+          yaxis: {
+            // categories: ['0', '2', '4', '6', '8', '10'],
+            labels: {
+              show: true
+            }
+          },
+          responsive: [
+            {
+              breakpoint: 1350,
+              options: {
+                chart: {
+                  height: 190
+                }
+              }
+            },
+            {
+              breakpoint: 1200,
+              options: {
+                chart: {
+                  height: 210
+                }
+              }
+            },
+            {
+              breakpoint: 768,
+              options: {
+                chart: {
+                  height: 220
+                }
               }
             }
-          }
-        },
-        {
-          breakpoint: 1200,
-          options: {
-            plotOptions: {
-              bar: {
-                columnWidth: '30%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 815,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 5
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 768,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 10,
-                columnWidth: '20%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 568,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 8,
-                columnWidth: '30%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 410,
-          options: {
-            plotOptions: {
-              bar: {
-                columnWidth: '50%'
-              }
-            }
-          }
-        }
-      ]
+          ]
     };
-  if (typeof weeklyOverviewChartEl !== undefined && weeklyOverviewChartEl !== null) {
-    const weeklyOverviewChart = new ApexCharts(weeklyOverviewChartEl, weeklyOverviewChartConfig);
-    weeklyOverviewChart.render();
-  }
 
-  // Total Profit line chart
-  // --------------------------------------------------------------------
-  const totalProfitLineChartEl = document.querySelector('#totalProfitLineChart'),
-    totalProfitLineChartConfig = {
-      chart: {
-        height: 200,
-        type: 'line',
-        parentHeightOffset: 0,
-        toolbar: {
-          show: true
-        }
-      },
-      grid: {
-        borderColor: labelColor,
-        strokeDashArray: 6,
-        xaxis: {
-          lines: {
-            show: true
-          }
-        },
-        yaxis: {
-          lines: {
-            show: true
-          }
-        },
-        padding: {
-          top: -15,
-          left: -7,
-          right: 9,
-          bottom: 0
-        }
-      },
-      colors: [config.colors.warning, config.colors.primary],
-      stroke: {
-        width: 3,
-        curve: 'smooth'
-      },
-      series: [
-        {
-            name: '2023', // Name for the first data series
-            data: [54, 176, 302, 363, 144, 97, 48, 10, 5, 6, 0, 0, 0]
-        },
-        {
-            name: '2024', // Name for the second data series
-            data: [58, 194, 333, 498, 407, 145, 100, 55, 10, 5, 6, 0, 0]
-        }
-      ],
-      tooltip: {
-        enabled: true,
-        shared: false,
-        // intersect: true,
-        y: {
-            formatter: function (val) {
-                return val
-            }
-        }
-      },
-      xaxis: {
-        categories: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'],
-        labels: {
-          show: true
-        },
-        axisTicks: {
-          show: false
-        },
-        axisBorder: {
-          show: false
-        }
-      },
-      yaxis: {
-        categories: ['0', '2', '4', '6', '8', '10'],
-        labels: {
-          show: true
-        }
-      },
-      responsive: [
-        {
-          breakpoint: 1350,
-          options: {
-            chart: {
-              height: 190
-            }
-          }
-        },
-        {
-          breakpoint: 1200,
-          options: {
-            chart: {
-              height: 210
-            }
-          }
-        },
-        {
-          breakpoint: 768,
-          options: {
-            chart: {
-              height: 220
-            }
-          }
-        }
-      ]
-    };
-  if (typeof totalProfitLineChartEl !== undefined && totalProfitLineChartEl !== null) {
-    const totalProfitLineChart = new ApexCharts(totalProfitLineChartEl, totalProfitLineChartConfig);
+    // Initialize the chart instance
+    const totalProfitLineChart = new ApexCharts(document.querySelector("#totalProfitLineChart"), options);
+
+    // Render the chart
     totalProfitLineChart.render();
-  }
 
-  // Sessions Column Chart
-  // --------------------------------------------------------------------
-  const sessionsColumnChartEl = document.querySelector('#sessionsColumnChart'),
-    sessionsColumnChartConfig = {
-      chart: {
-        height: 90,
-        parentHeightOffset: 0,
-        type: 'bar',
-        toolbar: {
-          show: false
+    // Default category (first value of dropdown)
+    let defaultYear = document.querySelector('#tahunDropdown .dropdown-item').getAttribute('data-tahun');
+    loadChartData(defaultYear);
+
+    document.querySelectorAll('#tahunDropdown .dropdown-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+            const selectedYear = this.getAttribute('data-tahun');
+            document.getElementById('dropdown-status-label').innerText = selectedYear;
+            loadChartData(selectedYear);
+
+            // Send an AJAX request to fetch data for the selected year
+            fetch(`/get-summary-by-year/${selectedYear}`)
+            .then(response => response.json()) // Convert response to JSON
+            .then(data => {
+                // Assuming 'data' contains the new chartData
+                console.log(data);
+                updateTableYear(data);
+                updateTableCompany(data);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        });
+    });
+
+    function updateTableYear(data) {
+        data = data.data;
+        if (!data || !data.byTahun) {
+            console.error('No data provided or data format is incorrect.');
+            return; // Exit if data is undefined or null
         }
-      },
-      tooltip: {
-        enabled: false
-      },
-      plotOptions: {
-        bar: {
-          barHeight: '100%',
-          columnWidth: '20px',
-          startingShape: 'rounded',
-          endingShape: 'rounded',
-          borderRadius: 4,
-          colors: {
-            ranges: [
-              {
-                from: 25,
-                to: 32,
-                color: config.colors.danger
-              },
-              {
-                from: 60,
-                to: 75,
-                color: config.colors.primary
-              },
-              {
-                from: 45,
-                to: 50,
-                color: config.colors.danger
-              },
-              {
-                from: 35,
-                to: 42,
-                color: config.colors.primary
-              }
-            ],
-            backgroundBarColors: [chartBgColor, chartBgColor, chartBgColor, chartBgColor, chartBgColor],
-            backgroundBarRadius: 4
-          }
+
+        // Clear existing rows in the table, if needed
+        const tableBody = document.querySelector('#tableYear'); // Update with your table body ID
+        tableBody.innerHTML = ''; // Clear existing content
+
+        // Loop through the years and create rows for each year
+        Object.keys(data.byTahun).forEach(year => {
+            const scores = data.byTahun[year];
+            const row = document.createElement('tr');
+            const yearCell = document.createElement('th');
+
+            yearCell.scope = "row"; // Set scope for the header cell
+            yearCell.innerText = year; // Set the year text
+            row.appendChild(yearCell); // Append year cell to the row
+
+            let total = 0; // Initialize total for the current year
+
+            // Loop through the scores for this year
+            Object.keys(scores).forEach(score => {
+                const count = scores[score];
+                const scoreCell = document.createElement('td');
+                scoreCell.innerText = count; // Set the score count
+                row.appendChild(scoreCell); // Append score cell to the row
+
+                total += count; // Update the total
+            });
+
+            // Add total cell for this row
+            const totalCell = document.createElement('td');
+            totalCell.innerText = total; // Set the total count
+            row.appendChild(totalCell); // Append total cell to the row
+
+            // Append the row to the table body
+            tableBody.appendChild(row);
+        });
+
+        // Row for 'Jumlah'
+        const totalRow = document.createElement('tr');
+        const jumlahCell = document.createElement('th');
+        jumlahCell.scope = "row";
+        jumlahCell.innerText = "Jumlah"; // Set the 'Jumlah' label
+        totalRow.appendChild(jumlahCell); // Append 'Jumlah' cell to total row
+
+        const grandTotal = Object.keys(data.byTahun).reduce((acc, year) => {
+            const scores = data.byTahun[year];
+            // Sum all scores for 'Jumlah' row
+            return acc + Object.values(scores).reduce((sum, count) => sum + count, 0);
+        }, 0);
+
+        // Loop through the scores to create the 'Jumlah' row
+        Object.keys(data.byTahun[Object.keys(data.byTahun)[0]]).forEach(score => {
+            const columnTotal = Object.keys(data.byTahun).reduce((sum, year) => {
+                return sum + (data.byTahun[year][score] || 0); // Sum across all years for each score
+            }, 0);
+
+            const totalCell = document.createElement('td');
+            totalCell.innerText = columnTotal; // Set the column total for this score
+            totalRow.appendChild(totalCell); // Append to total row
+        });
+
+        // Total for all scores
+        const grandTotalCell = document.createElement('td');
+        grandTotalCell.innerText = grandTotal; // Set the grand total count
+        totalRow.appendChild(grandTotalCell); // Append grand total cell to total row
+
+        // Append the 'Jumlah' row to the table body
+        tableBody.appendChild(totalRow);
+    }
+
+    function updateTableCompany(data) {
+        const rekapTitle = document.getElementById('rekapTitle');
+        rekapTitle.innerHTML = `Rekap Nilai per PT (${data.years[1]})`;
+
+
+        data = data.data;
+        if (!data || !data.byCompany) {
+            console.error('No data provided or data format is incorrect.');
+            return; // Exit if data is undefined or null
         }
-      },
-      grid: {
-        show: false,
-        padding: {
-          top: -10,
-          left: -10,
-          bottom: -15
+
+        // Clear existing rows in the table, if needed
+        const tableBody = document.querySelector('#tableCompany'); // Update with your table body ID
+        tableBody.innerHTML = ''; // Clear existing content
+
+        // Loop through the years and create rows for each year
+        Object.keys(data.byCompany).forEach(company => {
+            const scores = data.byCompany[company];
+            const row = document.createElement('tr');
+            const companyCell = document.createElement('th');
+
+            companyCell.scope = "row"; // Set scope for the header cell
+            companyCell.innerText = company; // Set the company text
+            row.appendChild(companyCell); // Append company cell to the row
+
+            let total = 0; // Initialize total for the current company
+
+            // Loop through the scores for this company
+            Object.keys(scores).forEach(score => {
+                const count = scores[score];
+                const scoreCell = document.createElement('td');
+                scoreCell.innerText = count; // Set the score count
+                row.appendChild(scoreCell); // Append score cell to the row
+
+                total += count; // Update the total
+            });
+
+            // Add total cell for this row
+            const totalCell = document.createElement('td');
+            totalCell.innerText = total; // Set the total count
+            row.appendChild(totalCell); // Append total cell to the row
+
+            // Append the row to the table body
+            tableBody.appendChild(row);
+        });
+
+        // Row for 'Jumlah'
+        const totalRow = document.createElement('tr');
+        const jumlahCell = document.createElement('th');
+        jumlahCell.scope = "row";
+        jumlahCell.innerText = "Jumlah"; // Set the 'Jumlah' label
+        totalRow.appendChild(jumlahCell); // Append 'Jumlah' cell to total row
+
+        const grandTotal = Object.keys(data.byCompany).reduce((acc, company) => {
+            const scores = data.byCompany[company];
+            // Sum all scores for 'Jumlah' row
+            return acc + Object.values(scores).reduce((sum, count) => sum + count, 0);
+        }, 0);
+
+        // Loop through the scores to create the 'Jumlah' row
+        Object.keys(data.byCompany[Object.keys(data.byCompany)[0]]).forEach(score => {
+            const columnTotal = Object.keys(data.byCompany).reduce((sum, company) => {
+                return sum + (data.byCompany[company][score] || 0); // Sum across all years for each score
+            }, 0);
+
+            const totalCell = document.createElement('td');
+            totalCell.innerText = columnTotal; // Set the column total for this score
+            totalRow.appendChild(totalCell); // Append to total row
+        });
+
+        // Total for all scores
+        const grandTotalCell = document.createElement('td');
+        grandTotalCell.innerText = grandTotal; // Set the grand total count
+        totalRow.appendChild(grandTotalCell); // Append grand total cell to total row
+
+        // Append the 'Jumlah' row to the table body
+        tableBody.appendChild(totalRow);
+    }
+
+    // Function to load chart data
+    function loadChartData(year) {
+        fetch(`/get-chart-data-summary/${year}`)
+            .then(response => response.json())
+            .then(data => {
+                updateChart(data);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    // Function to update chart data
+    function updateChart(data) {
+
+        // console.log(data['years']);
+        const years = data['years'];
+        const chartData = data['data']['byTahun'];
+
+        // Initialize arrays to store counts
+        const year0Datas = [];
+        const year1Datas = [];
+
+        // Check if data is an object
+        if (typeof chartData === 'object' && !Array.isArray(chartData)) {
+                // const categoryData = data[category];
+
+                const year0Data = chartData[years[0]] || {};
+                const year1Data = chartData[years[1]] || {};
+
+                // Extract counts from each category
+                Object.entries(year0Data).forEach(([score, year0Count]) => {
+                    // Get the corresponding count from year2Data, defaulting to 0 if not present
+                    const year1Count = year1Data[score] || 0;
+
+                    // Push the counts to the respective arrays
+                    year0Datas.push(year0Count);
+                    year1Datas.push(year1Count);
+                });
+            // Update chart series
+            totalProfitLineChart.updateSeries([
+                {
+                    name: years[0],
+                    data: year0Datas
+                },
+                {
+                    name: years[1],
+                    data: year1Datas
+                }
+            ]);
+        } else {
+            console.error('Unexpected data format:', data);
         }
-      },
-      dataLabels: {
-        enabled: false
-      },
-      legend: {
-        show: false
-      },
-      xaxis: {
-        labels: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        },
-        axisBorder: {
-          show: false
-        }
-      },
-      yaxis: {
-        labels: {
-          show: false
-        }
-      },
-      series: [
-        {
-          data: [30, 70, 50, 40, 60]
-        }
-      ],
-      responsive: [
-        {
-          breakpoint: 1350,
-          options: {
-            chart: {
-              height: 80
-            },
-            plotOptions: {
-              bar: {
-                columnWidth: '40%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 1200,
-          options: {
-            chart: {
-              height: 100
-            },
-            plotOptions: {
-              bar: {
-                columnWidth: '20%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 768,
-          options: {
-            chart: {
-              height: 110
-            },
-            plotOptions: {
-              bar: {
-                columnWidth: '10%'
-              }
-            }
-          }
-        },
-        {
-          breakpoint: 480,
-          options: {
-            plotOptions: {
-              bar: {
-                columnWidth: '20%'
-              }
-            }
-          }
-        }
-      ]
-    };
-  if (typeof sessionsColumnChartEl !== undefined && sessionsColumnChartEl !== null) {
-    const sessionsColumnChart = new ApexCharts(sessionsColumnChartEl, sessionsColumnChartConfig);
-    sessionsColumnChart.render();
-  }
+    }
+
+  });
 })();

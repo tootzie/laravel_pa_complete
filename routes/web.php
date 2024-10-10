@@ -32,6 +32,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         Route::get('/', 'index')->name('dashboard');
         Route::get('/get-chart-data/{category}', 'get_chart_data')->name('get-chart-data');
         Route::get('/summary', 'summary')->name('summary')->middleware('checkrole:1');
+        Route::get('/get-chart-data-summary/{year}', 'get_chart_data_summary')->name('get-chart-data-summary')->middleware('checkrole:1');
+        Route::get('/get-summary-by-year/{year}', 'get_summary_by_year')->name('get-summary-by-year')->middleware('checkrole:1');
     });
 
     Route::controller(PenilaianController::class)->group(function () {
