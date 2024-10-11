@@ -23,29 +23,14 @@
         <div class="col-auto">
             <div>
                 <div>
-                    <label for="tahunDropdown" class="form-label">Tahun</label>
+                    <label for="tahunDropdown" class="form-label">Tahun - Periode</label>
                 </div>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">2024</button>
+                    <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">2024 - 1</button>
                     <ul class="dropdown-menu" id="tahunDropdown">
-                        <li><a class="dropdown-item" href="javascript:void(0);">2023</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);">2022</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);">2021</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Period Selection -->
-        <div class="col-auto">
-            <div>
-                <div>
-                    <label for="periodeDropdown" class="form-label">Periode</label>
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">1: Jan-Jul</button>
-                    <ul class="dropdown-menu" id="periodeDropdown">
-                        <li><a class="dropdown-item" href="javascript:void(0);">2: Aug-Des</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);">2024 - 2</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);">2023 - 1</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);">2023 - 2</a></li>
                     </ul>
                 </div>
             </div>
@@ -92,7 +77,7 @@
     <br>
 
     <!-- SEARCH BAR -->
-    <form method="GET" action="{{ url('/user-akses') }}">
+    <form method="GET" action="{{ url('/penilaian-menu-all') }}">
         <div class="input-group input-group-merge">
             <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-magnify"></i></span>
             <input type="text" class="form-control" name="search" value="{{ request()->input('search') }}" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon-search31" />
@@ -103,240 +88,85 @@
     <br>
 
     <div class="col-12">
-        <div class="card">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="text-truncate">User</th>
-                            <th class="text-truncate">Penilaian Awal</th>
-                            <th class="text-truncate">Revisi Head of Dept</th>
-                            <th class="text-truncate">Revisi GM</th>
-                            <th class="text-truncate">Nilai Akhir</th>
-                            <th class="text-truncate">Terakhir Update</th>
-                            <th class="text-truncate">User Update</th>
-                            <th class="text-truncate">Status</th>
-                            <th class="text-truncate">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-sm me-3">
-                                        <img src="{{asset('assets/img/avatars/1.png')}}" alt="Avatar" class="rounded-circle">
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 text-truncate">Jordan Stevenson</h6>
-                                        <small class="text-truncate">WIN*1465</small>
-                                    </div>
+    <div class="card">
+        <div class="table-responsive">
+            @php
+            $userRole = auth()->user()->userRole->id;
+            @endphp
+            <table class="table">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-truncate sticky-column">User</th>
+                        <th class="text-truncate sticky-column">Atasan</th>
+                        <th class="text-truncate">Kategori PA</th>
+                        <th class="text-truncate">Perusahaan</th>
+                        <th class="text-truncate">Nilai Awal</th>
+                        <th class="text-truncate">Revisi Head of Dept</th>
+                        <th class="text-truncate">Revisi GM</th>
+                        <th class="text-truncate">Nilai Akhir</th>
+                        <th class="text-truncate">Action</th>
+                        <!-- <th class="text-truncate">Terakhir Update</th>
+                        <th class="text-truncate">User Update</th>
+                        <th class="text-truncate">Status</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($header_pa as $pa)
+                    <tr>
+                        <td class="sticky-column">
+                            <div class="d-flex align-items-center sticky-column">
+                                <div class="avatar avatar-sm me-3">
+                                    <img src="{{asset('assets/img/avatars/1.png')}}" alt="Avatar" class="rounded-circle">
                                 </div>
-                            </td>
-                            <td class="text-truncate">A+</td>
-                            <td class="text-truncate">A</td>
-                            <td class="text-truncate">-</td>
-                            <td class="text-truncate">-</td>
-                            <td class="text-truncate">10 Juli 2024, 10:00</td>
-                            <td class="text-truncate">Jessica Clarensia</td>
-                            <td><span class="badge bg-label-warning rounded-pill">Revisi Head of Dept</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <a type="button" class="btn btn-icon btn-success" href="{{ url('/penilaian-menu-all/detail') }}">
-                                        <span class="tf-icons mdi mdi-eye-outline"></span>
-                                    </a>
-                                    <a type="button" class="btn btn-icon btn-warning" href="#" data-bs-toggle="modal" data-bs-target="#modalCenter">
-                                        <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                                    </a>
+                                <div>
+                                    <h6 class="mb-0 text-truncate">{{$pa->nama_employee}}</h6>
+                                    <!-- <small class="text-truncate">WIN*1465</small> -->
                                 </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                        <td class="text-truncate"> {{$data_subordinates[$pa->ektp_employee]['nama_atasan'] ?? '-'}}</td>
+                        <td class="text-truncate"> {{$pa->kategori_pa ?? '-'}}</td>
+                        <td class="text-truncate"> {{$pa->perusahaan ?? '-'}}</td>
+                        <td class="text-truncate"> {{$pa->nilai_awal ?? '-'}}</td>
+                        <td class="text-truncate"> {{$pa->revisi_hod ?? '-'}}</td>
+                        <td class="text-truncate"> {{$pa->revisi_gm ?? '-'}}</td>
+                        <td class="text-truncate"> {{$pa->nilai_akhir ?? '-'}}</td>
+                        @php
+                            // Encrypt the ID
+                            $encryptedId = Crypt::encrypt($pa->id);
+                        @endphp
+                        <td>
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-icon btn-warning"
+                                    onclick="window.location.href='{{ $pa->id_status_penilaian === 100 ? route('penilaian-detail', ['id' => $encryptedId]) : route('penilaian-detail-revisi-all', ['id' => $encryptedId]) }}'"
+                                    @if (!$is_in_periode)
+                                        disabled
+                                    @endif>
+                                    <span class="tf-icons mdi mdi-square-edit-outline"></span>
+                                </button>
+                            </div>
+                        </td>
+                        <!-- <td class="text-truncate">{{$pa->updated_at}}</td>
+                            <td class="text-truncate">{{$pa->updated_by}}</td>
+                            <td><span class="badge bg-label-warning rounded-pill">{{$pa->StatusPenilaian->name ?? '-'}}</span></td> -->
+                    </tr>
+                    @empty
+                    <div class="alert alert-danger">
+                        Data Tidak Tersedia
+                    </div>
+                    @endforelse
 
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-sm me-3">
-                                        <img src="{{asset('assets/img/avatars/1.png')}}" alt="Avatar" class="rounded-circle">
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 text-truncate">Jordan Stevenson</h6>
-                                        <small class="text-truncate">WIN*1465</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-truncate">A+</td>
-                            <td class="text-truncate">A</td>
-                            <td class="text-truncate">-</td>
-                            <td class="text-truncate">-</td>
-                            <td class="text-truncate">10 Juli 2024, 10:00</td>
-                            <td class="text-truncate">Jessica Clarensia</td>
-                            <td><span class="badge bg-label-warning rounded-pill">Revisi Head of Dept</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <a type="button" class="btn btn-icon btn-success" href="{{ url('/penilaian-menu-all/detail') }}">
-                                        <span class="tf-icons mdi mdi-eye-outline"></span>
-                                    </a>
-                                    <a type="button" class="btn btn-icon btn-warning" href="#">
-                                        <span class="tf-icons mdi mdi-square-edit-outline"></span>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                </tbody>
+            </table>
+
+            <br>
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center">
+                {{ $header_pa->appends(['search' => request()->input('search')])->links() }}
             </div>
         </div>
     </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modalCenterTitle">Edit Penilaian Karyawan</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row gy-4 mb-4">
-                        <div class="col-12">
-                            <table>
-                                <tr>
-                                    <td>Jessica Clarensia Suko (WIN*1465)</td>
-                                </tr>
-                                <tr>
-                                    <td>PT Wings Surya</td>
-                                </tr>
-                                <tr>
-                                    <td>Adiministrasi - HRD</td>
-                                </tr>
-                                <tr>
-                                    <td>Periode 1 - 2024</td>
-                                </tr>
-                            </table>
-                        </div>
-
-
-                    </div>
-
-                    <div class="row gy-4">
-                        <!-- Nilai Awal -->
-                        <div class="col-auto">
-                            <div>
-                                <div>
-                                    <label for="statusDropdown" class="form-label">Nilai Awal</label>
-                                </div>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">A+</button>
-                                    <ul class="dropdown-menu" id="statusDropdown">
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A+">A+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A">A</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A-">A-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B+">B+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B">B</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B-">B-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C+">C+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C">C</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C-">C-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D+">D+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D">D</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D-">D-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="E">E</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Revisi Head of Dept -->
-                        <div class="col-auto">
-                            <div>
-                                <div>
-                                    <label for="statusDropdown" class="form-label">Revisi Head of Dept</label>
-                                </div>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">A+</button>
-                                    <ul class="dropdown-menu" id="statusDropdown">
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A+">A+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A">A</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A-">A-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B+">B+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B">B</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B-">B-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C+">C+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C">C</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C-">C-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D+">D+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D">D</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D-">D-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="E">E</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Revisi GM -->
-                        <div class="col-auto">
-                            <div>
-                                <div>
-                                    <label for="statusDropdown" class="form-label">Revisi GM</label>
-                                </div>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">A+</button>
-                                    <ul class="dropdown-menu" id="statusDropdown">
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A+">A+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A">A</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A-">A-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B+">B+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B">B</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B-">B-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C+">C+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C">C</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C-">C-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D+">D+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D">D</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D-">D-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="E">E</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Nilai Akhir -->
-                        <div class="col-auto">
-                            <div>
-                                <div>
-                                    <label for="statusDropdown" class="form-label">Nilai Akhir</label>
-                                </div>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">A+</button>
-                                    <ul class="dropdown-menu" id="statusDropdown">
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A+">A+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A">A</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="A-">A-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B+">B+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B">B</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="B-">B-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C+">C+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C">C</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="C-">C-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D+">D+</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D">D</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="D-">D-</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="E">E</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 
 
 @endsection

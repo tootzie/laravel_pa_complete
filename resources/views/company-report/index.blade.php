@@ -18,10 +18,13 @@
     <h5 class="pb-1 mb-4">Laporan Perusahaan</h5>
 
     <!-- SEARCH BAR -->
-    <div class="input-group input-group-merge">
-        <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-magnify"></i></span>
-        <input type="text" class="form-control" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon-search31" />
-    </div>
+    <form method="GET" action="{{ url('/company') }}">
+        <div class="input-group input-group-merge">
+            <span class="input-group-text" id="basic-addon-search31"><i class="mdi mdi-magnify"></i></span>
+            <input type="text" class="form-control" name="search" value="{{ request()->input('search') }}" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon-search31" />
+            <button type="submit" class="btn btn-sm btn-primary">Search</button>
+        </div>
+    </form>
 
     <br>
     <br>

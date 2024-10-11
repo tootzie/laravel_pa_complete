@@ -15,14 +15,24 @@ class CompanyReportController extends Controller
         $this->apiUrl = env('API_URL');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $api_url = $this->apiUrl . '/get_all_company/';
         $companiesAPI = Http::timeout(50)
             ->get($api_url);
         $companies = collect(json_decode($companiesAPI->body())->data);
 
-        return view('company-report.index', compact('companies'));
+        // Get the search query input from the request
+        $search = $request->input('search');
+
+        // Filter companies based on the search query (if present)
+        if ($search) {
+            $companies = $companies->filter(function ($company) use ($search) {
+                return str_contains(strtolower($company->companycode), strtolower($search));
+            });
+        }
+
+        return view('company-report.index', compact('companies', 'search'));
     }
 
     public function company_detail()
