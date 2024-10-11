@@ -40,6 +40,8 @@ class DashboardController extends Controller
                             'id_status_penilaian' => 100,
                             'ektp_employee' => $ektp_subordinate,
                             'nama_employee' => $data_subordinates[$ektp_subordinate]['name'],
+                            'ektp_atasan' => $data_subordinates[$ektp_subordinate]['ektp_atasan'],
+                            'nama_atasan' => $data_subordinates[$ektp_subordinate]['nama_atasan'],
                             'perusahaan' => $data_subordinates[$ektp_subordinate]['companyCode'],
                             'departemen' => $data_subordinates[$ektp_subordinate]['department'],
                             'kategori_pa' => $data_subordinates[$ektp_subordinate]['paCode'],
@@ -71,6 +73,8 @@ class DashboardController extends Controller
                                 'id_status_penilaian' => 100,
                                 'ektp_employee' => $subordinate['ektp'],
                                 'nama_employee' => $subordinate['name'],
+                                'ektp_atasan' => $subordinate['ektp_atasan'],
+                                'nama_atasan' => $subordinate['nama_atasan'],
                                 'perusahaan' => $subordinate['companyCode'],
                                 'departemen' => $subordinate['department'],
                                 'kategori_pa' => $subordinate['paCode'],
@@ -84,6 +88,17 @@ class DashboardController extends Controller
                         }
                     }
                 }
+            }
+
+            //Update everytime data accessed
+            foreach ($header_pa as $pa) {
+                $pa->update([
+                    'ektp_atasan' => $data_subordinates[$pa->ektp_employee]['ektp_atasan'],
+                    'nama_atasan' => $data_subordinates[$pa->ektp_employee]['nama_atasan'],
+                    'perusahaan' => $data_subordinates[$pa->ektp_employee]['companyCode'],
+                    'departemen' => $data_subordinates[$pa->ektp_employee]['department'],
+                    'kategori_pa' => $data_subordinates[$pa->ektp_employee]['paCode'],
+                ]);
             }
         }
 

@@ -119,6 +119,17 @@ class PenilaianByUserController extends Controller
                     }
                 }
             }
+
+            //Update everytime data accessed
+            foreach ($header_pa as $pa) {
+                $pa->update([
+                    'ektp_atasan' => $data_subordinates[$pa->ektp_employee]['ektp_atasan'],
+                    'nama_atasan' => $data_subordinates[$pa->ektp_employee]['nama_atasan'],
+                    'perusahaan' => $data_subordinates[$pa->ektp_employee]['companyCode'],
+                    'departemen' => $data_subordinates[$pa->ektp_employee]['department'],
+                    'kategori_pa' => $data_subordinates[$pa->ektp_employee]['paCode'],
+                ]);
+            }
         }
 
         //Renew $header_pa variable

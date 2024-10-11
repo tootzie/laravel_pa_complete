@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\HeaderPA;
+use App\Models\MasterTahunPeriode;
+use App\Models\StatusPenilaian;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -32,6 +34,7 @@ class PenilaianAllController extends Controller
 
         //Renew $header_pa variable
         $header_pa = HeaderPA::where('id_master_tahun_periode', $active_periode->id)
+            ->where('id_status_penilaian', '!=', '100')
             ->when($search, function ($query, $search) {
                 // Get all columns from the 'header_pa' table
                 $columns = Schema::getColumnListing('header_pa');
@@ -44,7 +47,14 @@ class PenilaianAllController extends Controller
 
                 return $query;
             })->orderBy('nama_employee', 'asc')->paginate(20);
-        return view('penilaian-all.index', compact(['header_pa', 'is_in_periode']));
+
+        //Filter Data
+        $all_periode = MasterTahunPeriode::all();
+        $all_status = StatusPenilaian::all();
+        $HelperController = new HelperController();
+        $all_companies = $HelperController->get_all_companies();
+
+        return view('penilaian-all.index', compact(['header_pa', 'is_in_periode', 'all_periode', 'active_periode', 'all_status', 'all_companies']));
     }
 
     public function penilaian_all_detail() {

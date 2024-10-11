@@ -17,10 +17,8 @@ class CompanyReportController extends Controller
 
     public function index(Request $request)
     {
-        $api_url = $this->apiUrl . '/get_all_company/';
-        $companiesAPI = Http::timeout(50)
-            ->get($api_url);
-        $companies = collect(json_decode($companiesAPI->body())->data);
+        $HelperController = new HelperController();
+        $companies = $HelperController->get_all_companies();
 
         // Get the search query input from the request
         $search = $request->input('search');

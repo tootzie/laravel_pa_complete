@@ -76,4 +76,13 @@ class HelperController extends Controller
 
         return $users;
     }
+
+    public function get_all_companies() {
+        $api_url = $this->apiUrl . '/get_all_company/';
+        $companiesAPI = Http::timeout(50)
+            ->get($api_url);
+        $companies = collect(json_decode($companiesAPI->body())->data);
+
+        return $companies;
+    }
 }

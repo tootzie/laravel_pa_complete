@@ -26,11 +26,13 @@
                     <label for="tahunDropdown" class="form-label">Tahun - Periode</label>
                 </div>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">2024 - 1</button>
+                    <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">{{$active_periode->tahun}} - {{$active_periode->periode}}</button>
                     <ul class="dropdown-menu" id="tahunDropdown">
-                        <li><a class="dropdown-item" href="javascript:void(0);">2024 - 2</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);">2023 - 1</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);">2023 - 2</a></li>
+                        @foreach ($all_periode as $periode)
+                            <li><a class="dropdown-item" href="javascript:void(0);" data-periode="{{ $periode->id }}">
+                                {{ $periode->tahun }} - {{ $periode->periode }}
+                            </a></li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -44,9 +46,12 @@
                 </div>
                 <div class="btn-group">
                     <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">PT Wings Surya</button>
-                    <ul class="dropdown-menu" id="companyDropdown">
-                        <li><a class="dropdown-item" href="javascript:void(0);">PT Karunia Alam Segar</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);">PT Adyabuana Persada</a></li>
+                    <ul class="dropdown-menu" id="tahunDropdown">
+                        @foreach ($all_companies as $company)
+                            <li><a class="dropdown-item" href="javascript:void(0);" data-periode="{{ $company->companycode }}">
+                                {{ $company->companycode }}
+                            </a></li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -61,12 +66,14 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">Semua</button>
                     <ul class="dropdown-menu" id="statusDropdown">
-                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="semua">Semua</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="Belum Dinilai">Belum Dinilai</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="Penilaian Awal">Penilaian Awal</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="Revisi Head of Dept">Revisi Head of Dept</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="Revisi GM">Revisi GM</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="Nilai Akhir">Nilai Akhir</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);" data-status="00">
+                            Semua
+                        </a></li>
+                        @foreach ($all_status as $status)
+                            <li><a class="dropdown-item" href="javascript:void(0);" data-status="{{ $status->kode_status }}">
+                                {{ $status->name }}
+                            </a></li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -124,7 +131,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="text-truncate"> {{$data_subordinates[$pa->ektp_employee]['nama_atasan'] ?? '-'}}</td>
+                        <td class="text-truncate"> {{$pa->nama_atasan ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->kategori_pa ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->perusahaan ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->nilai_awal ?? '-'}}</td>

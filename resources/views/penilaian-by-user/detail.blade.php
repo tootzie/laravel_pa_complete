@@ -140,7 +140,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="text-truncate"> {{$data_subordinates[$pa->ektp_employee]['nama_atasan'] ?? '-'}}</td>
+                        <td class="text-truncate"> {{$pa->nama_atasan ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->kategori_pa ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->nilai_awal ?? '-'}}</td>
                         <td class="text-truncate"> {{$pa->revisi_hod ?? '-'}}</td>
