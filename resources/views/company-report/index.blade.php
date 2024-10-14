@@ -33,7 +33,7 @@
     <div class="row">
         @forelse ($companies as $company)
             <div class="col-md-6 col-xl-4">
-                <a href="{{ url('/company/detail') }}" class="card-link">
+                <a href="{{ url('/company/detail/' . $company->companycode) }}" class="card-link">
                     <div class="card bg-dark border-0 text-white mb-3">
                     @php
                         $images = [
