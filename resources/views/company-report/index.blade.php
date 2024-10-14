@@ -35,11 +35,21 @@
             <div class="col-md-6 col-xl-4">
                 <a href="{{ url('/company/detail') }}" class="card-link">
                     <div class="card bg-dark border-0 text-white mb-3">
-                        <img class="overlay-img" src="{{asset('assets/img/companies/company1.jpg')}}" alt="Card image"/>
+                    @php
+                        $images = [
+                            'company1.jpg',
+                            'company2.jpg',
+                            'company3.jpg',
+                            'company4.jpg',
+                            'company5.jpg',
+                            'company6.jpg',
+                        ];
+                        $randomImage = $images[array_rand($images)];
+                    @endphp
+                        <img class="overlay-img" src="{{asset('assets/img/companies/' . $randomImage)}}" alt="Card image"/>
                         <div class="overlay-img-dark"></div>
                         <div class="card-company">
                             <h5 class="card-title">{{$company->companycode}}</h5>
-                            <!-- <p class="card-text">KAS</p> -->
                         </div>
                     </div>
                 </a>
