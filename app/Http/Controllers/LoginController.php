@@ -24,12 +24,14 @@ class LoginController extends Controller
 
     public function redirectToGoogle()
     {
+        \Log::error('redirectToGoogle');
         return Socialite::driver('google')->stateless()->redirect();
     }
 
 
     public function handleGoogleCallback(Request $request)
     {
+        \Log::error('handleGoogleCallback');
         try {
             $user = Socialite::driver('google')->stateless()->user();
 
@@ -74,6 +76,7 @@ class LoginController extends Controller
                 }
             }
         } catch (Exception $e) {
+            \Log::error('Exception' . $e);
             return redirect()->route('login');
             // dd($e);
         }

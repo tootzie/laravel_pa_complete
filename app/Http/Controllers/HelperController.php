@@ -94,4 +94,16 @@ class HelperController extends Controller
 
         return $departments;
     }
+
+    public function get_employee_department($company, $department) {
+        $apiString = '/get_employee_department/' . $company . '/' . $department;
+        $api_url = $this->apiUrl . $apiString;
+
+        // dd($api_url);
+        $employeesAPI = Http::timeout(50)
+            ->get($api_url);
+        $employees = collect(json_decode($employeesAPI->body())->data);
+        // dd($employees);
+        return $employees;
+    }
 }

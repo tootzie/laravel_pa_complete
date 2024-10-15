@@ -152,7 +152,10 @@
     $randomImage = $images[array_rand($images)];
     @endphp
     <div class="col-md-6 col-xl-4">
-        <a href="{{ url('/company/department') }}" class="card-link">
+        @php
+            $urlDepartment = '/company/department/' . $master_perusahaan->kode_perusahaan . '/' . $department->department;
+        @endphp
+        <a href="{{ url($urlDepartment) }}" class="card-link">
             <div class="card bg-dark border-0 text-white mb-3">
                 <img class="overlay-img" src="{{asset('assets/img/departments/' . $randomImage)}}" alt="Card image" />
                 <div class="overlay-img-dark"></div>

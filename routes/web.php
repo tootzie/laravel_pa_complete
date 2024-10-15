@@ -53,9 +53,10 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::controller(CompanyReportController::class)->middleware('checkrole:1')->group(function (){
         Route::get('/company', 'index')->name('company');
         Route::get('/company/detail/{company}', 'company_detail')->name('company-detail');
-        Route::get('/company/department', 'company_department')->name('company-department');
+        Route::get('/company/department/{company}/{department}', 'company_department')->name('company-department');
         Route::get('/company/employee', 'company_employee')->name('company-employee');
         Route::get('/get-chart-data-company/{company}/{year}', 'get_chart_data_company')->name('get-chart-data-company');
+        Route::get('/get-chart-data-department/{company}/{department}/{year}', 'get_chart_data_department')->name('get-chart-data-department');
     });
 
     Route::controller(PenilaianAllController::class)->middleware('checkrole:1')->group(function (){

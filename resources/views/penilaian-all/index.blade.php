@@ -181,6 +181,7 @@
                 'search' => request()->input('search'),
                 'company' => request()->input('company'),
                 'status' => request()->input('status'),
+                'status_id' => request()->input('status_id'),
                 'periode' => request()->input('periode')
                 ])->links()
             }}
