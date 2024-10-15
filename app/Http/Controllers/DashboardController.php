@@ -204,7 +204,14 @@ class DashboardController extends Controller
                     return $record->masterTahunPeriode->tahun == $year;
                 });
 
-                $byTahun[$year][$score] = $filteredByYear->where('nilai_akhir', $score)->count();
+                // $byTahun[$year][$score] = $filteredByYear->where('nilai_akhir', $score)->count();
+                $byTahun[$year][$score] = $filteredByYear->filter(function ($item) use ($score) {
+                    // Determine the latest non-null value
+                    $latestScore = $item->nilai_akhir ?? $item->revisi_gm ?? $item->revisi_hod ?? $item->nilai_awal;
+
+                    // Return true if the dynamic score matches the given $score
+                    return $latestScore == $score;
+                })->count();
             }
         }
 
@@ -218,7 +225,14 @@ class DashboardController extends Controller
 
             $byCompany[$company] = [];
             foreach ($scores as $score) {
-                $byCompany[$company][$score] = $filteredByYear->where('nilai_akhir', $score)->count();
+                // $byCompany[$company][$score] = $filteredByYear->where('nilai_akhir', $score)->count();
+                $byCompany[$company][$score] = $filteredByYear->filter(function ($item) use ($score) {
+                    // Determine the latest non-null value
+                    $latestScore = $item->nilai_akhir ?? $item->revisi_gm ?? $item->revisi_hod ?? $item->nilai_awal;
+
+                    // Return true if the dynamic score matches the given $score
+                    return $latestScore == $score;
+                })->count();
             }
         }
 
