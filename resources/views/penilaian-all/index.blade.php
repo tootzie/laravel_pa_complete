@@ -86,6 +86,29 @@
                 </div>
             </div>
         </div>
+
+        <!-- Filter Score -->
+        <div class="col-auto">
+            <div>
+                <div>
+                    <label for="statusDropdown" class="form-label">Filter Nilai</label>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-primary fixed-width-dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-nilai-label">{{ request('selected_score') ? request('selected_score') : 'Semua' }}</button>
+                    <ul class="dropdown-menu" id="nilaiDropdown">
+                        <li><a class="dropdown-item" href="javascript:void(0);" data-nilai="00">
+                                Semua
+                            </a></li>
+                        @foreach ($scores as $score)
+                        <li><a class="dropdown-item" href="javascript:void(0);" data-nilai="{{ $score }}" data-nilai-label="{{ $score }}">
+                                {{ $score }}
+                            </a></li>
+                        @endforeach
+                    </ul>
+                    <input type="hidden" name="selected_score" id="selectedNilai" value="{{ request('selected_score') }}">
+                </div>
+            </div>
+        </div>
     </div>
 
     <br>
@@ -182,7 +205,8 @@
                 'company' => request()->input('company'),
                 'status' => request()->input('status'),
                 'status_id' => request()->input('status_id'),
-                'periode' => request()->input('periode')
+                'periode' => request()->input('periode'),
+                'selected_score' => request()->input('selected_score')
                 ])->links()
             }}
             </div>

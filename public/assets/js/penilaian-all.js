@@ -68,4 +68,14 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('filterForm').submit();
         });
     });
+
+    document.querySelectorAll('#nilaiDropdown .dropdown-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+            const selectedNilai = this.getAttribute('data-nilai') == '00' ? 'Semua' : this.getAttribute('data-nilai');
+            document.getElementById('dropdown-nilai-label').innerText = selectedNilai;
+            document.getElementById('selectedNilai').value = selectedNilai;
+            // Auto-submit the form
+            document.getElementById('filterForm').submit();
+        });
+    });
 });

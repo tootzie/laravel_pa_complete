@@ -22,6 +22,7 @@ class PenilaianAllController extends Controller
         $selected_company = $request->input('company');
         $selected_status = $request->input('status');
         $selected_status_id = $request->input('status_id');
+        $selected_score = $request->input('selected_score');
 
 
         //Get active master_tahun_periode
@@ -65,6 +66,26 @@ class PenilaianAllController extends Controller
             ->when($selected_status_id, function ($query, $selected_status_id) {
                 return $query->where('id_status_penilaian', $selected_status_id);
             })
+            ->when($selected_score, function ($query, $selected_score) {
+                return $query->where(function ($query) use ($selected_score) {
+                    // Check the fields in priority order and match the first non-null value to $selected_score
+                    $query->where('nilai_akhir', $selected_score)
+                          ->orWhere(function ($query) use ($selected_score) {
+                              $query->whereNull('nilai_akhir')->where('revisi_gm', $selected_score);
+                          })
+                          ->orWhere(function ($query) use ($selected_score) {
+                              $query->whereNull('nilai_akhir')
+                                    ->whereNull('revisi_gm')
+                                    ->where('revisi_hod', $selected_score);
+                          })
+                          ->orWhere(function ($query) use ($selected_score) {
+                              $query->whereNull('nilai_akhir')
+                                    ->whereNull('revisi_gm')
+                                    ->whereNull('revisi_hod')
+                                    ->where('nilai_awal', $selected_score);
+                          });
+                });
+            })
             ->orderBy('nama_employee', 'asc')->paginate(20);
 
         //Filter Data
@@ -73,7 +94,9 @@ class PenilaianAllController extends Controller
         $HelperController = new HelperController();
         $all_companies = $HelperController->get_all_companies();
 
-        return view('penilaian-all.index', compact(['header_pa', 'is_in_periode', 'all_periode', 'active_periode', 'all_status', 'all_companies']));
+        $scores = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'];
+
+        return view('penilaian-all.index', compact(['header_pa', 'is_in_periode', 'all_periode', 'active_periode', 'all_status', 'all_companies', 'scores']));
     }
 
     public function penilaian_all_detail() {
