@@ -72,7 +72,9 @@ class PAController extends Controller
         }
 
         $totalAll = round(array_sum($arrSubaspectSum), 2) / 10000;
+        $totalAll = round($totalAll, 3);
         $score = "";
+
         // Define the ranges and their corresponding values
         $ranges = [
             ['min' => 0.1, 'max' => 0.254, 'value' => 'E'],
@@ -87,9 +89,10 @@ class PAController extends Controller
             ['min' => 0.775, 'max' => 0.824, 'value' => 'B+'],
             ['min' => 0.825, 'max' => 0.884, 'value' => 'A-'],
             ['min' => 0.885, 'max' => 0.943, 'value' => 'A'],
-            ['min' => 0.94, 'max' => 10.00, 'value' => 'A+'],
+            ['min' => 0.944, 'max' => 10.00, 'value' => 'A+'],
             // Add more ranges as needed
         ];
+
 
         foreach ($ranges as $range) {
             // Check if $total falls within the current range
@@ -102,7 +105,7 @@ class PAController extends Controller
             "id_employee" => $data['id_employee'],
             "kode_question_category" => $data['kode_question_category'],
             "total_score" => $score,
-            "total_all" => round(array_sum($arrSubaspectSum), 2),
+            "total_all" => $totalAll,
             "score_details" => []
         ];
         for ($i = 0; $i < count($arrSubaspect); $i++) {
