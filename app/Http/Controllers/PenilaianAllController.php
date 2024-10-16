@@ -46,6 +46,10 @@ class PenilaianAllController extends Controller
             $selected_status_id = null;
         }
 
+        if($selected_score == '00' || $selected_score == 'Semua') {
+            $selected_score = null;
+        }
+
         //Renew $header_pa variable
         $header_pa = HeaderPA::where('id_master_tahun_periode', $selected_periode)
             ->when($search, function ($query, $search) {
