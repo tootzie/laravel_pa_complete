@@ -153,7 +153,7 @@
                         <td>
                             <div class="action-buttons">
                                 <button type="button" class="btn btn-icon btn-warning"
-                                    onclick="window.location.href='{{ $pa->id_status_penilaian === 100 ? route('penilaian-detail', ['id' => $encryptedId]) : route('penilaian-detail-revisi-all', ['id' => $encryptedId, 'ektp' => $ektpUser]) }}'"
+                                    onclick="window.location.href='{{ $pa->id_status_penilaian === 100 ? route('penilaian-detail', ['id' => $encryptedId, 'ektp' => $ektpUser]) : route('penilaian-detail-revisi-all', ['id' => $encryptedId, 'ektp' => $ektpUser]) }}'"
                                     @if (!$is_in_periode)
                                         disabled
                                     @endif>

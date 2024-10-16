@@ -160,6 +160,6 @@ class PenilaianByUserController extends Controller
             $endDate = Carbon::parse($active_periode->end_date)->translatedFormat('j F Y');
             $stringPeriode = $startDate . ' s/d ' . $endDate;
 
-        return view('penilaian-by-user.detail', compact('header_pa', 'is_in_periode', 'ektpUser', 'jumlahAnakBuah', 'namaAtasan', 'stringPeriode', 'data_subordinates'));
+        return view('penilaian-by-user.detail', compact('header_pa', 'is_in_periode', 'ektpUser', 'jumlahAnakBuah', 'namaAtasan', 'ektpUser', 'stringPeriode', 'data_subordinates'));
     }
 }

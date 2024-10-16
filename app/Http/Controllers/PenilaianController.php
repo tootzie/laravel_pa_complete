@@ -94,7 +94,7 @@ class PenilaianController extends Controller
         return view('penilaian.index', compact('header_pa', 'is_in_periode', 'ktp_bawahan_langsung', 'tahunPeriodeFilter', 'kategoriPAFilter', 'jumlahAnakBuah', 'namaAtasan', 'stringPeriode', 'data_subordinates'));
     }
 
-    public function penilaian_detail($id)
+    public function penilaian_detail($id, Request $request)
     {
         // Decrypt the ID
         try {
@@ -123,7 +123,9 @@ class PenilaianController extends Controller
         $id_header_pa = $pa_employee->id;
         $detailPA = DetailPA::where('id_header_pa', $id_header_pa)->get()->keyBy('id_master_question_pa');
 
-        return view('penilaian.penilaian-detail', compact(['pa_employee', 'questions', 'detailPA', 'pertanyaan_kesimpulan']));
+        $ektpUser = $request->input('ektp');
+
+        return view('penilaian.penilaian-detail', compact(['pa_employee', 'questions', 'detailPA', 'pertanyaan_kesimpulan', 'ektpUser']));
     }
 
     public function penilaian_detail_store(Request $request)
@@ -269,8 +271,15 @@ class PenilaianController extends Controller
 
 
         session()->flash('success', "Penilaian berhasil ditambahkan. Nilai awal untuk $pa_employee->nama_employee : $nilai_awal");
+        $userRole = auth()->user()->userRole->id;
 
-        return redirect()->route('penilaian');
+        if($userRole == 1) {
+            //Pass ektp parameter
+            $ektp = $request->input('ektp');
+            return redirect()->route('penilaian-menu-by-user-detail', compact(['ektp']));
+        } else {
+            return redirect()->route('penilaian');
+        }
     }
 
     public function penilaian_detail_preview(Request $request)
@@ -678,7 +687,15 @@ class PenilaianController extends Controller
 
         $userRole = auth()->user()->userRole->id;
 
-        return redirect()->route('penilaian');
+        if($userRole == 1) {
+            //Pass ektp parameter
+            $ektp = $request->input('ektp');
+            return redirect()->route('penilaian-menu-by-user-detail', compact(['ektp']));
+        } else {
+            return redirect()->route('penilaian');
+        }
+
+
     }
 
     public function penilaian_detail_revisi_all($id, Request $request)

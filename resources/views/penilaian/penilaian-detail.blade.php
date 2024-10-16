@@ -245,6 +245,7 @@ $userRole = auth()->user()->userRole->id;
 
     <input type="hidden" name="pa_employee" value="{{json_encode($pa_employee)}}">
     <input type="hidden" name="questions" value="{{json_encode($questions)}}">
+    <input type="hidden" name="ektp" value="{{$ektpUser}}">
 
     <div class="mt-5 d-flex justify-content-center">
         <button type="button" id="previewButton" class="btn btn-warning me-2">Preview</button>
