@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CompanyReportController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DownloadLaporanController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PenilaianAllController;
@@ -96,6 +97,13 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         Route::patch('/user-roles/update/{id}', 'userRolesUpdate')->name('user-roles-update');
         Route::post('/user-roles/delete/{id}', 'userRolesDelete')->name('user-roles-delete');
     });
+
+    Route::controller(DownloadLaporanController::class)->middleware('checkrole:1')->group(function (){
+        Route::get('/index-laporan-nilai-akhir', 'index_laporan_nilai_akhir')->name('index-laporan-nilai-akhir');
+        Route::get('/download-laporan-nilai-akhir', 'laporan_nilai_akhir')->name('download-laporan-nilai-akhir');
+    });
+
+
 
 
 });

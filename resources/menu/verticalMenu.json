@@ -63,6 +63,18 @@
             "slug": "user-roles"
           }
         ]
+    },
+    {
+        "name": "Download Laporan",
+        "icon": "menu-icon tf-icons mdi mdi-file-chart-outline",
+        "slug": "download-laporan",
+        "submenu": [
+          {
+            "url": "/index-laporan-nilai-akhir",
+            "name": "Laporan Nilai Akhir",
+            "slug": "index-laporan-nilai-akhir"
+          }
+        ]
     }
   ]
 }
