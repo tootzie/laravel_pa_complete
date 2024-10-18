@@ -103,7 +103,7 @@ class DashboardController extends Controller
         }
 
         //Get data for chart and table
-        $data = $this->get_chart_data();
+        $data = $this->get_chart_data('null');
 
         //Category PA (for dropdown)
         $kategori_pa = collect($data)->pluck('kategori_pa')->unique();
@@ -129,16 +129,19 @@ class DashboardController extends Controller
 
 
         //Select all employees in $ektp_subordinates from  where id_master_tahun_periode is $active_periode
-        if ($category != null) {
+        if ($category != 'null') {
+            \Log::error('category is not null' . $category);
             $header_pa = HeaderPA::where('id_master_tahun_periode', $active_periode->id)
                 ->whereIn('ektp_employee', $ektp_subordinates)
                 ->where('kategori_pa', $category) // Filter by category
                 ->get();
         } else {
-            // dd($active_periode->id);
+            \Log::error('category is null');
             $header_pa = HeaderPA::where('id_master_tahun_periode', $active_periode->id)->whereIn('ektp_employee', $ektp_subordinates)->get();
             // dd($header_pa);
         }
+
+
 
         // Define the score levels
         $scores = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E'];
@@ -149,19 +152,20 @@ class DashboardController extends Controller
             $jumlah = collect($scores)->map(function ($nilai) use ($groupedData) {
                 return [
                     'nilai' => $nilai,
-                    'nilai_awal_count' => $groupedData->where('nilai_awal', $nilai)->count(),
+                    'nilai_awal_count' => auth()->user()->userRole->id == 2 ? $groupedData->where('nilai_awal', $nilai)->count() : $groupedData->where('revisi_hod', $nilai)->count(),
                     'revisi_hod_count' => auth()->user()->userRole->id == 2 ? $groupedData->where('revisi_hod', $nilai)->count() :  $groupedData->where('revisi_gm', $nilai)->count(),
                 ];
             });
-
-
 
             return [
                 'kategori_pa' => $kategori_pa,
                 'jumlah' => $jumlah
             ];
         });
+        \Log::error('dataa:' . json_encode($data));
+        // dd(json_encode($data));
         return $data;
+
     }
 
     public function summary()

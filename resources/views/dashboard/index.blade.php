@@ -49,8 +49,9 @@
         <div class="card h-100">
             <div class="card-header pb-0">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">{{ auth()->user()->userRole->id == 1 ? '-' : $kategori_pa[0] }}</button>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-status-label">{{ auth()->user()->userRole->id == 1 ? '-' : 'Semua' }}</button>
                     <ul class="dropdown-menu" id="kategoriList">
+                        <li><a class="dropdown-item" href="javascript:void(0);" data-kategori="null">Semua</a></li>
                         @foreach($kategori_pa as $kategori)
                         <li><a class="dropdown-item" href="javascript:void(0);" data-kategori="{{ $kategori }}">{{ $kategori }}</a></li>
                         @endforeach
